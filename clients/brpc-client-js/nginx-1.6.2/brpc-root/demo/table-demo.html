@@ -1,0 +1,358 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+<head> 
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" /> 
+<title>无标题文档</title> 
+<style type="text/css"> 
+#Chgrid_container{ font:12px "宋体"; width:600px; height:100%; color:#827200;} 
+.Chgrid_head_row{ width:100%;  border-top:1px solid #ffb517; border-bottom:1px solid #ffb517; background-color:#ffe6b3; height:20px;} 
+.Chgrid_row{ width:100%; border-bottom:1px solid #ffb517; height:20px; background-color:#fff} 
+.Chgrid_row_interval{width:100%;  border-bottom:1px solid #ffb517; height:20px; background-color:#fff2d9} 
+.Chgrid_row_hilight{width:100%;  border-bottom:1px solid #ffb517; height:20px; background-color:#ffe6b3} 
+.Chgrid_column{ float:left; height:20px; overflow:hidden; line-height:20px; text-align: center;} 
+.Chgrid_column_sort_desc{ float:left; height:20px; overflow:hidden; line-height:20px; text-align: center;background-image:url(http://bbs.blueidea.com/attachments/2007/3/15/20070315_2402590937239704896fuxTNS4SQ9xDC.gif); background-position:right center;background-repeat:no-repeat;} 
+.Chgrid_column_sort_asc{ float:left; height:20px; overflow:hidden; line-height:20px; text-align: center;background-image:url(http://bbs.blueidea.com/attachments/2007/3/15/20070315_6f504cdc131612d66f08J1jtbM8fwxHJ.gif); background-position:right center;background-repeat:no-repeat;} 
+.Chgrid_head_split{float:left; height:20px; width:2px;  background-image:url(http://bbs.blueidea.com/attachments/2007/3/15/20070315_2aedec010331a8ccc38caDdGOQhsA048.gif); background-position:center;background-repeat:no-repeat; cursor: e-resize; cursor: col-resize; } 
+.Chgrid_table_cell0{ float:left; height:20px; line-height:20px; overflow:hidden; text-align: center;} 
+.Chgrid_table_cell{ float:left; height:20px; line-height:20px; overflow:hidden; text-align: center; border-left:1px solid #ffb517;} 
+
+.Chgrid_column0{ width:20px;} 
+.Chgrid_column1{ width:100px;} 
+.Chgrid_column2{ width:80px;} 
+.Chgrid_column3{ width:120px;} 
+.Chgrid_column4{ width:100px;} 
+
+.button{ font:12px "宋体"; color:#827200; padding-left:12px; padding-right:12px; background-color:#ffe6b3; border-left:2px solid #fff;border-top:2px solid #fff;border-right:2px solid #ffb517;border-bottom:2px solid #ffb517;}  
+</style> 
+<script type="text/javascript"> 
+var Chgrid = { 
+    dragobj : null, 
+    cloneobj : null, 
+    init : function(id,ps,minirows,show,inter,hili,sortby,columnArr,dataArr,sortable){ 
+        this.container = $(id);  //容器对象，字符串 
+        this.pageSize = ps; //分页大小,整数 
+        this.minirows = minirows; //最少行数，整数 
+        this.rowInterval = inter; //是否隔行,boolean值 
+        this.hilight = hili; //是否高亮,boolean值 
+        this.showAutoGridNum = show; //是否显示自动编号,boolean值 
+        this.sortBy = sortby; //排序规则，0表示降序或1表示升序 
+        this.column = columnArr; //栏目，数组 
+        this.data = dataArr; //数据，数组 
+        this.selectedRowIndex = 0; //当前选中行的索引，整数 
+        this.startPage = 0; //当前分页号，整数 
+        Chgrid.setSortAble(sortable); //确定哪些列可以排序，数组 
+        Chgrid.drawGrid(); 
+        document.onmousemove = Chgrid.drag; 
+        document.onmouseup = Chgrid.end; 
+    }, 
+    setSortAble : function(){ 
+        this.sortColumn = []; 
+        if(sortable){ 
+            this.sortColumn = sortable; 
+        }else{ 
+            this.sortColumn[0] = false; 
+            for(var i=0;i<this.column.length;i++){ 
+                this.sortColumn[i] = true; 
+            } 
+        } 
+    }, 
+    start : function(e){ 
+        if(!e) e = window.event; 
+        var obj = Chgrid.getTarget(e); 
+        var objOffsetLeft = Chgrid.getRealPosition(obj).x; 
+        var objOffsetTop = Chgrid.getRealPosition(obj).y; 
+        Chgrid.dragobj = obj.cloneNode(true); 
+        Chgrid.cloneobj = obj; 
+        Chgrid.dragobj.style.position = "absolute"; 
+        Chgrid.dragobj.style.left = objOffsetLeft + "px"; 
+        Chgrid.dragobj.style.top = objOffsetTop + "px"; 
+        obj.parentNode.appendChild(Chgrid.dragobj); 
+        Chgrid.initMouseX = Chgrid.getMousePosition(e); 
+    }, 
+    drag : function(e) { 
+        if(Chgrid.cloneobj==null)return; 
+        if(!e) e = window.event; 
+        Chgrid.finalMouseX = Chgrid.getMousePosition(e); 
+
+        var objPrevOffsetLeft = Chgrid.getRealPosition(Chgrid.cloneobj.previousSibling).x; 
+        var objNextOffsetLeft = Chgrid.getRealPosition(Chgrid.cloneobj.nextSibling).x; 
+        var realOffset = Chgrid.finalMouseX - Chgrid.initMouseX; 
+        if(Chgrid.finalMouseX < objPrevOffsetLeft +2){ 
+            Chgrid.finalMouseX = objPrevOffsetLeft + 2; 
+        }else if(Chgrid.finalMouseX > objNextOffsetLeft + Chgrid.cloneobj.nextSibling.offsetWidth - 2){ 
+            Chgrid.finalMouseX = objNextOffsetLeft + Chgrid.cloneobj.nextSibling.offsetWidth - 2; 
+        } 
+        Chgrid.dragobj.style.left = Chgrid.finalMouseX + "px"; 
+    }, 
+    end : function(e) { 
+        if(Chgrid.cloneobj==null)return; 
+        var obj = Chgrid.cloneobj; 
+        obj.previousSibling.style.width = obj.previousSibling.offsetWidth + (Chgrid.finalMouseX - Chgrid.initMouseX) + "px"; 
+        obj.nextSibling.style.width = obj.nextSibling.offsetWidth - (Chgrid.finalMouseX - Chgrid.initMouseX) + "px"; 
+        Chgrid.resizeWidth(obj); 
+        Chgrid.cloneobj = null; 
+        Chgrid.dragobj.parentNode.removeChild(Chgrid.dragobj); 
+    }, 
+    resizeWidth : function(obj){ 
+        var j = this.getObjectIndex(this.header,obj); 
+        for(var i=1;i<this.container.childNodes.length;i++){ 
+            if(j==1){ 
+                this.container.childNodes[i].childNodes[(j-1)/2].style.width = this.container.childNodes[0].childNodes[j-1].offsetWidth + "px"; 
+            }else{ 
+                this.container.childNodes[i].childNodes[(j-1)/2].style.width = this.container.childNodes[0].childNodes[j-1].offsetWidth + 1 + "px"; 
+            } 
+            this.container.childNodes[i].childNodes[(j-1)/2+1].style.width = this.container.childNodes[0].childNodes[j+1].offsetWidth + 1 + "px";     
+        } 
+    }, 
+    drawGrid : function(){ 
+        Chgrid.drawHeader(); 
+    }, 
+    drawHeader : function(){ 
+        var oDiv = document.createElement("div"); 
+        this.container.appendChild(oDiv); 
+        this.header = oDiv; 
+        oDiv.className = "Chgrid_head_row"; 
+        oDiv.id = "Chgrid_head_row"; 
+        Chgrid.drawColumn(); 
+    }, 
+    drawColumn : function(){ 
+        var totalWidth = 0; 
+        for(var i=0;i<this.column.length;i++){ 
+            if(i==0){ 
+                var oDiv = document.createElement("div");     
+                this.header.appendChild(oDiv); 
+                oDiv.className = "Chgrid_column Chgrid_column0"; 
+                oDiv.id = "Chgrid_head_column0"; 
+                oDiv.innerHTML = this.column[0]; 
+                totalWidth += oDiv.offsetWidth; 
+            }else{ 
+                var oDiv = document.createElement("div"); 
+                this.header.appendChild(oDiv); 
+                oDiv.className = "Chgrid_head_split"; 
+                oDiv.onmousedown = Chgrid.start; 
+                totalWidth += oDiv.offsetWidth; 
+
+                oDiv = document.createElement("div"); 
+                this.header.appendChild(oDiv); 
+                oDiv.className = "Chgrid_column Chgrid_column" + i; 
+                oDiv.id = "Chgrid_head_column" + i; 
+                oDiv.innerHTML = this.column[i]; 
+                //if(i < this.column.length - 1) 
+                totalWidth += oDiv.offsetWidth; 
+            } 
+
+            if(this.sortColumn[i]){ 
+                oDiv.onmouseover = function(){ 
+                    if(Chgrid.sortBy==0) 
+                        this.className = this.className.replace(/Chgrid_column /,"Chgrid_column_sort_desc "); 
+                    else 
+                        this.className = this.className.replace(/Chgrid_column /,"Chgrid_column_sort_asc "); 
+                } 
+                oDiv.onmouseout =  function(){     
+                    this.className = this.className.replace(/Chgrid_column_sort_desc /,"Chgrid_column "); 
+                    this.className = this.className.replace(/Chgrid_column_sort_asc /,"Chgrid_column "); 
+                }; 
+                oDiv.onclick = function(){ 
+                    var col = Chgrid.getObjectIndex(this.parentNode,this)/2; 
+                    Chgrid.data.sort(function(a,b){return (Chgrid.sortBy ? (a[col]>b[col] ? 1:(a[col]<b[col] ? -1:0)) : (a[col]<b[col] ? 1:(a[col]>b[col] ? -1:0)));}); 
+                    Chgrid.fillData(Chgrid.startPage); 
+                    if(Chgrid.sortBy==0) 
+                        this.className = this.className.replace(/Chgrid_column /,"Chgrid_column_sort_asc "); 
+                    else 
+                        this.className = this.className.replace(/Chgrid_column /,"Chgrid_column_sort_desc "); 
+                    Chgrid.sortBy = (Chgrid.sortBy == 0 ? 1 : 0); 
+                }; 
+            } 
+        } 
+        if(totalWidth>this.header.offsetWidth){ 
+            this.header.style.width  = totalWidth + "px"; 
+        }else{ 
+            if(totalWidth < this.header.offsetWidth - 2){ 
+                this.header.lastChild.style.width = this.header.offsetWidth + this.header.lastChild.offsetWidth - totalWidth + "px"; 
+            }         
+        } 
+        Chgrid.drawDataRow(); 
+        Chgrid.fillData(1); 
+    }, 
+    fillData : function(startPage){ 
+        var pageNum = this.data.length/this.pageSize; 
+        if(pageNum > parseInt(pageNum))pageNum=parseInt(pageNum)+1; 
+        if(startPage<=0 || startPage>pageNum)return; 
+        this.startPage = startPage; 
+        Chgrid.removeData(); 
+        var endNum = startPage * this.pageSize; 
+        if(endNum > this.data.length) endNum = this.data.length; 
+        var oRow = this.container.childNodes[1]; 
+        for(var i=(startPage-1)*this.pageSize;i<endNum;i++){ 
+            if(this.showAutoGridNum){ 
+                oRow.childNodes[0].innerHTML = i+1; 
+            }else{ 
+                oRow.childNodes[0].innerHTML = this.data[0][0]; 
+            } 
+            for(var j=1 ;j < this.data[i].length; j++){ 
+                oRow.childNodes[j].innerHTML = this.data[i][j]; 
+            } 
+            if(oRow.nextSibling)oRow=oRow.nextSibling; 
+        } 
+    }, 
+    removeData : function(){ 
+        for(var i=1;i<this.container.childNodes.length;i++){ 
+            for(var j=0;j<this.container.childNodes[i].childNodes.length;j++){ 
+                this.container.childNodes[i].childNodes[j].innerHTML = ""; 
+            } 
+        } 
+    }, 
+    updateData : function(i,j,value){ 
+        this.data[i][j] = value; 
+    }, 
+    drawDataRow : function(){ 
+        var endNum = this.minirows; 
+        if (endNum < this.pageSize) endNum = this.pagesiz; 
+        for(var i=0;i<endNum;i++){ 
+            var oRow = document.createElement("div"); 
+            this.container.appendChild(oRow); 
+            if(this.rowInterval && i%2!=0) 
+                oRow.className = "Chgrid_row_interval";     
+            else 
+                oRow.className = "Chgrid_row"; 
+            oRow.style.width = this.header.offsetWidth + "px"; 
+            oRow.id = "Chgrid_row"+i; 
+            oRow.oldClass = oRow.className; 
+            Chgrid.drawDataCell(oRow,i); 
+            oRow.onclick = Chgrid.hilightHandle; 
+        } 
+    }, 
+    drawDataCell : function(oRow,j){ 
+        for(var i=0;i<this.column.length;i++){ 
+            var oCell = document.createElement("div"); 
+            oRow.appendChild(oCell); 
+            if(i==0){ 
+                oCell.className = "Chgrid_table_cell0"; 
+                oCell.style.width = this.header.childNodes[i*2].offsetWidth + "px"; 
+            }else{ 
+                oCell.className = "Chgrid_table_cell";     
+                oCell.style.width = this.header.childNodes[i*2].offsetWidth + 1 + "px"; 
+            } 
+            oCell.id = "Chgrid_row"+j+"_column" + i; 
+        } 
+    }, 
+    hilightHandle : function(){ 
+        if(Chgrid.hilight){ 
+            var k = Chgrid.selectedRowIndex; 
+            if(k>0){ 
+                Chgrid.container.childNodes[k].className = Chgrid.container.childNodes[k].oldClass;  
+            } 
+            this.className = "Chgrid_row_hilight"; 
+        } 
+         
+        var j= Chgrid.getObjectIndex(Chgrid.container,this); 
+        Chgrid.selectedRowIndex = j; 
+    }, 
+    getObjectIndex : function(parent,obj){ 
+        var j = 0; 
+        for(var i=0;i<parent.childNodes.length;i++){ 
+            if(parent.childNodes[i] == obj){ 
+                j = i; 
+            } 
+        } 
+        return j; 
+    }, 
+    getChgridRow : function(i){ 
+        return Chgrid.childNodes[i]; 
+    }, 
+    getTarget : function(e){ 
+        return e.target || e.srcElement; 
+    }, 
+    getRealPosition : function(o){ 
+        var l = 0; t = 0;     
+        while(o){ 
+            l += o.offsetLeft - o.scrollLeft; 
+            t += o.offsetTop - o.scrollTop; 
+            o = o.offsetParent; 
+        } 
+        return {x:l,y:t}; 
+    }, 
+    getMousePosition : function(e){ 
+        var x = 0; 
+        if(e.pageX){ 
+            x = e.pageX; 
+        }else{ 
+            x = e.clientX + document.body.scrollLeft - document.body.clientLeft; 
+        } 
+        return x; 
+    }, 
+    registerCallBack : function(evtname,arr,evthandle){ 
+        /*注册返回函数 
+        参数含义: 
+        evtname:事件名称，如click,mouseover,注意，前面不要加on 
+        arr:要注册到的对象索引，为数组，第一个为行号，第一个为列号，如果为-1，表示整行或者整栏 
+        evthandle:外部定义好的函数名 
+        */ 
+        var objCollection = Chgrid.getObjectCollection(arr); 
+        for(var i=0;i<objCollection.length;i++){ 
+            if(window.attachEvent) 
+                objCollection[i].attachEvent("on"+evtname,evthandle); 
+            else if(window.addEventListener) 
+                objCollection[i].addEventListener(evtname,evthandle,false); 
+        } 
+    }, 
+    getObjectCollection : function(arr){ 
+        var objArr = []; 
+        if(arr[0]==0)arr[0]==1; 
+        if(arr[0]!=-1 && !this.container.childNodes[arr[0]])return objArr; 
+        if(arr[0]==-1 && arr[1]==-1){ 
+            for(var i=1;i<this.container.childNodes.length;i++){ 
+                for(var j=0;j<this.container.childNodes[i].childNodes.length;j++){ 
+                    objArr[objArr.length++]=this.container.childNodes[i].childNodes[j]; 
+                } 
+            } 
+        }else if(arr[0]!=-1 && arr[1]==-1){ 
+            for(var j=0;j<this.container.childNodes[arr[0]].childNodes.length;j++){ 
+                objArr[objArr.length++]=this.container.childNodes[arr[0]].childNodes[j]; 
+            } 
+
+        }else if(arr[0]==-1 && arr[1]!=-1){ 
+            for(var i=1;i<this.container.childNodes.length;i++){ 
+                if(this.container.childNodes[i].childNodes[arr[1]]) 
+                    objArr[objArr.length++]=this.container.childNodes[i].childNodes[arr[1]]; 
+            } 
+        }else{ 
+            objArr[objArr.length++]=this.container.childNodes[arr[0]].childNodes[arr[1]]; 
+        } 
+        return objArr; 
+    } 
+
+} 
+function renewData(e){ 
+    if(!e) e = window.event; 
+    var obj = e.target || e.srcElement; 
+    //if(!obj.editStatus){ 
+        //alert("你点击的是第"+Chgrid.getObjectIndex(obj.parentNode.parentNode,obj.parentNode)+"行第"+(Chgrid.getObjectIndex(obj.parentNode,obj)+1)+"列数据"); 
+        var i = (Chgrid.startPage-1)*Chgrid.pageSize+Chgrid.getObjectIndex(obj.parentNode.parentNode,obj.parentNode)-1; 
+        if(i+1 > Chgrid.startPage*Chgrid.pageSize || !data[i])return; 
+        var promp = prompt("请输入新的值",""); 
+        if(promp!=null){ 
+
+            var j = Chgrid.getObjectIndex(obj.parentNode,obj); 
+            obj.innerHTML = promp; 
+            Chgrid.updateData(i,j,promp); 
+        } 
+        //obj.editStatus = true; 
+    //} 
+} 
+
+function $(id){ 
+    return document.getElementById(id); 
+} 
+
+var column = ["编号","姓名","性别","职位","电话","住址"]; 
+var sortable = [false,true,true,true] 
+var data = [["","cityvoice","帅哥","Javascript Programmer","13300000000","康定路112弄4号"],["","melody","美女","UI Programmer","13400000000","南京西路112弄4号"],["","jeson","帅哥","Board","13500000000","北京路112弄4号"],["","yanguo","帅哥","Project Manager","13600000000","武定路112弄4号"],["","duanyu","帅哥","C# Programmer","13700000000","河南南路112弄4号"],["","xiaolonglv","美女","ASP Programmer","13800000000","陕西北路112弄4号"],["","rose","美女","Java Programmer","13900000000","西康路112弄4号"],["","cityvoice","帅哥","Javascript Programmer","13300000000","康定路112弄4号"],["","melody","美女","UI Programmer","13400000000","南京西路112弄4号"],["","jeson","帅哥","Board","13500000000","北京路112弄4号"],["","yanguo","帅哥","Project Manager","13600000000","武定路112弄4号"],["","duanyu","帅哥","C# Programmer","13700000000","河南南路112弄4号"],["","xiaolonglv","美女","ASP Programmer","13800000000","陕西北路112弄4号"],["","rose","美女","Java Programmer","13900000000","西康路112弄4号"],["","cityvoice","帅哥","Javascript Programmer","13300000000","康定路112弄4号"],["","melody","美女","UI Programmer","13400000000","南京西路112弄4号"],["","jeson","帅哥","Board","13500000000","北京路112弄4号"],["","yanguo","帅哥","Project Manager","13600000000","武定路112弄4号"],["","duanyu","帅哥","C# Programmer","13700000000","河南南路112弄4号"],["","xiaolonglv","美女","ASP Programmer","13800000000","陕西北路112弄4号"],["","rose","美女","Java Programmer","13900000000","西康路112弄4号"],["","cityvoice","帅哥","Javascript Programmer","13300000000","康定路112弄4号"],["","melody","美女","UI Programmer","13400000000","南京西路112弄4号"],["","jeson","帅哥","Board","13500000000","北京路112弄4号"],["","yanguo","帅哥","Project Manager","13600000000","武定路112弄4号"],["","duanyu","帅哥","C# Programmer","13700000000","河南南路112弄4号"],["","xiaolonglv","美女","ASP Programmer","13800000000","陕西北路112弄4号"],["","rose","美女","Java Programmer","13900000000","西康路112弄4号"],["","cityvoice","帅哥","Javascript Programmer","13300000000","康定路112弄4号"],["","melody","美女","UI Programmer","13400000000","南京西路112弄4号"],["","jeson","帅哥","Board","13500000000","北京路112弄4号"],["","yanguo","帅哥","Project Manager","13600000000","武定路112弄4号"],["","duanyu","帅哥","C# Programmer","13700000000","河南南路112弄4号"],["","xiaolonglv","美女","ASP Programmer","13800000000","陕西北路112弄4号"],["","rose","美女","Java Programmer","13900000000","西康路112弄4号"],["","cityvoice","帅哥","Javascript Programmer","13300000000","康定路112弄4号"],["","melody","美女","UI Programmer","13400000000","南京西路112弄4号"],["","jeson","帅哥","Board","13500000000","北京路112弄4号"],["","yanguo","帅哥","Project Manager","13600000000","武定路112弄4号"],["","duanyu","帅哥","C# Programmer","13700000000","河南南路112弄4号"],["","xiaolonglv","美女","ASP Programmer","13800000000","陕西北路112弄4号"],["","rose","美女","Java Programmer","13900000000","西康路112弄4号"],["","cityvoice","帅哥","Javascript Programmer","13300000000","康定路112弄4号"],["","melody","美女","UI Programmer","13400000000","南京西路112弄4号"],["","jeson","帅哥","Board","13500000000","北京路112弄4号"],["","yanguo","帅哥","Project Manager","13600000000","武定路112弄4号"]]</script> 
+</head> 
+
+<body onload="Chgrid.init('Chgrid_container',20,20,true,true,true,1,column,data,sortable);"> 
+<div class="Chgrid_container" id="Chgrid_container"></div> 
+<input type="button" value="前一页" onclick="Chgrid.fillData(Chgrid.startPage-1)" class="button" /><input type="button" value="后一页" onclick="Chgrid.fillData(Chgrid.startPage+1)" class="button" /><input type="button" value="注册事件" onclick="Chgrid.registerCallBack('click',[-1,2],renewData)" class="button" /> 
+</body> 
+</html>

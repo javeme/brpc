@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>弹出层效果</title>
+<style type="text/css">
+    html, body {height:100%;}
+    body, h2, p {margin:0px;padding:0px; font-size:12px;}
+    body {font-size:12px; text-align:center; }
+    .size {width:100%;height:45px;text-align:center;line-height:45px;color:#000;}
+    .but {width:100%;height:22px;text-align:center;line-height:22px;}
+    .button {width:55px;height:22px;text-align:center;line-height:22px;color:#fff;background:url(./images/but.jpg) no-repeat;border:none;display:inline;margin:0 8px;cursor:pointer;}
+    .title {width:800px;height:35px;color:#fff;line-height:35px;font-family:Verdana;font-weight:bold;text-align:left;margin:20px auto 0 auto;font-size:24px;}
+    .table {width:800px;height:auto;overflow:hidden;margin:0 auto 20px auto;font-size:12px;border-top:1px solid #ddd;border-left:1px solid #ddd;background:#fff;}
+    .table ul {margin:0px;padding:0px;float:left;list-style-type:none;}
+    .table li {width:159px;height:30px;float:left;color:#3e3e3e;text-indent:10px;text-align:left;line-height:30px;font-family:Verdana,"微软雅黑";	border-right:1px solid #ddd;border-bottom:1px solid #ddd;}
+    .table li.td {color:#fff;font-size:14px;font-family:"微软雅黑";font-weight:bold;background:#424242;}
+    .table li.tit {width:479px;}
+    .table .tr {width:800px;height:30px;float:left;text-indent:10px;text-align:left;line-height:30px;font-size:14px;font-family:Verdana;border-right:1px solid #ddd;border-bottom:1px solid #ddd;}
+    .table .tr a {color:#ff6600;text-decoration:none;}
+    .table .tr a:hover {text-decoration:underline;}
+</style>
+<script type="text/javascript" src="js/pop-layer.js"></script>
+<script type="text/javascript">
+    window.onload = function(){
+        new Alert('but', 'box', {
+            title : '提示内容',
+            content : '<div class="size">hello hj？</div><div class="but"><button class="button">确定</button><button class="button">取消</button></div>',
+            width : '',
+            height : '',
+            top : '',
+            left : '',
+            fixed : '',
+            close : 'close'
+        });
+    };
+</script>
+</head>
+<body style="height:950px;">
+<div class="title">API</div>
+<div class="table">
+	<ul>
+    	<li class="td">属性</li>
+        <li class="td">默认值</li>
+        <li class="tit td">说明</li>
+        <li>ButId</li>
+        <li>but</li>
+        <li class="tit">点击按钮Id（必选）</li>
+        <li>ElementId</li>
+        <li>box</li>
+        <li class="tit">弹出层Id（必选）</li>
+        <li>title</li>
+        <li>提示信息</li>
+        <li class="tit">提示层标题（可选）</li>
+        <li>content</li>
+        <li>自行编辑</li>
+        <li class="tit">提示层内容（可选）</li>
+        <li>width</li>
+        <li>340px</li>
+        <li class="tit">提示层宽度（可选）</li>
+        <li>height</li>
+        <li>120px</li>
+        <li class="tit">提示层高度（可选）</li>
+        <li>top</li>
+        <li>绝对居中</li>
+        <li class="tit">提示层上间距（可选）</li>
+        <li>left</li>
+        <li>绝对居中</li>
+        <li class="tit">提示层上间距（可选）</li>
+        <li>fixed</li>
+        <li>相对定位</li>
+        <li class="tit">跟谁滚动条绝对定位/是否拖拽（fixed:'fixed'）（可选）</li>
+        <li>close</li>
+        <li>close</li>
+        <li class="tit">是否显示关闭按钮（close:'close'）（可选）</li>
+    </ul>
+    <div class="tr"><a href="javascript:;" id="but">Examples</a></div>
+</div>
+</body>
+</html>

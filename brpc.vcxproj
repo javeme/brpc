@@ -1,0 +1,259 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{AC749387-B532-4285-BA13-9532C2674A94}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>brpc</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)\src\bLib;$(ProjectDir)\src\util;$(ProjectDir)\src\type;$(ProjectDir)\src\fun;$(ProjectDir)\src\serializer;$(ProjectDir)\src\serializer\json;$(ProjectDir)\src\serializer\json\jsoncpp;$(ProjectDir)\src\serializer\xml;$(ProjectDir)\src\serializer\xml\parser;$(ProjectDir)\src\serializer\binary;$(ProjectDir)\src\auth;$(ProjectDir)\src\rpc;$(ProjectDir)\src\rpc\server;$(ProjectDir)\src\rpc\client;$(ProjectDir)\src\rpc\p2p;$(ProjectDir)\src\rpc\amqp;$(ProjectDir)\src\rpc\trans;$(ProjectDir)\src\rpc\trans\jmtp;$(ProjectDir)\src\rpc\trans\http</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>$(ProjectDir)\src\bLib\bluemeiLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)\src\bLib;$(ProjectDir)\src\util;$(ProjectDir)\src\type;$(ProjectDir)\src\fun;$(ProjectDir)\src\serializer;$(ProjectDir)\src\serializer\json;$(ProjectDir)\src\serializer\json\jsoncpp;$(ProjectDir)\src\serializer\xml;$(ProjectDir)\src\serializer\xml\parser;$(ProjectDir)\src\serializer\binary;$(ProjectDir)\src\auth;$(ProjectDir)\src\rpc;$(ProjectDir)\src\rpc\server;$(ProjectDir)\src\rpc\client;$(ProjectDir)\src\rpc\p2p;$(ProjectDir)\src\rpc\amqp;$(ProjectDir)\src\rpc\trans;$(ProjectDir)\src\rpc\trans\jmtp;$(ProjectDir)\src\rpc\trans\http</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>$(ProjectDir)\src\bLib\bluemeiLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CheckMemLeaks.h" />
+    <ClInclude Include="MyRpcApi.h" />
+    <ClInclude Include="src\auth\AuthChecker.h" />
+    <ClInclude Include="src\auth\AuthException.h" />
+    <ClInclude Include="src\auth\DefaultAuthChecker.h" />
+    <ClInclude Include="src\blib\AccurateTimeTicker.h" />
+    <ClInclude Include="src\blib\Application.h" />
+    <ClInclude Include="src\blib\ArrayList.h" />
+    <ClInclude Include="src\blib\BeanContainer.h" />
+    <ClInclude Include="src\blib\bluemeiLib.h" />
+    <ClInclude Include="src\blib\BString.h" />
+    <ClInclude Include="src\blib\ByteBuffer.h" />
+    <ClInclude Include="src\blib\CallStackUtil.h" />
+    <ClInclude Include="src\blib\Class.h" />
+    <ClInclude Include="src\bLib\ClassField.h" />
+    <ClInclude Include="src\blib\ClassNotFoundException.h" />
+    <ClInclude Include="src\blib\ClientSocket.h" />
+    <ClInclude Include="src\blib\CodeUtil.h" />
+    <ClInclude Include="src\blib\Context.h" />
+    <ClInclude Include="src\blib\CriticalLock.h" />
+    <ClInclude Include="src\blib\DataBuffer.h" />
+    <ClInclude Include="src\blib\Date.h" />
+    <ClInclude Include="src\blib\ErrorHandler.h" />
+    <ClInclude Include="src\blib\Exception.h" />
+    <ClInclude Include="src\blib\File.h" />
+    <ClInclude Include="src\blib\FtpConnection.h" />
+    <ClInclude Include="src\blib\FtpException.h" />
+    <ClInclude Include="src\blib\HashCoder.h" />
+    <ClInclude Include="src\blib\HashMap.h" />
+    <ClInclude Include="src\blib\IOCompletionPort.h" />
+    <ClInclude Include="src\blib\IOCompletionPortImpl.h" />
+    <ClInclude Include="src\blib\IOCompletionPortImplLinux.h" />
+    <ClInclude Include="src\blib\IOCompletionPortImplWin32.h" />
+    <ClInclude Include="src\blib\IOCPEvent.h" />
+    <ClInclude Include="src\blib\IOCPException.h" />
+    <ClInclude Include="src\blib\IOCPModel.h" />
+    <ClInclude Include="src\blib\IOException.h" />
+    <ClInclude Include="src\blib\Iterator.h" />
+    <ClInclude Include="src\blib\KVPairTree.h" />
+    <ClInclude Include="src\blib\LambdaThread.h" />
+    <ClInclude Include="src\blib\LinkedList.h" />
+    <ClInclude Include="src\blib\Log.h" />
+    <ClInclude Include="src\blib\MemoryPool.h" />
+    <ClInclude Include="src\blib\MultiValueHashMap.h" />
+    <ClInclude Include="src\blib\NotFoundException.h" />
+    <ClInclude Include="src\blib\NullPointerException.h" />
+    <ClInclude Include="src\blib\Object.h" />
+    <ClInclude Include="src\blib\ObjectFactory.h" />
+    <ClInclude Include="src\blib\Observer.h" />
+    <ClInclude Include="src\blib\OutOfBoundException.h" />
+    <ClInclude Include="src\blib\OutOfMemoryException.h" />
+    <ClInclude Include="src\blib\Pair.h" />
+    <ClInclude Include="src\blib\ReferencePointer.h" />
+    <ClInclude Include="src\blib\ResourceLock.h" />
+    <ClInclude Include="src\blib\Runnable.h" />
+    <ClInclude Include="src\blib\RuntimeException.h" />
+    <ClInclude Include="src\blib\ServerSocket.h" />
+    <ClInclude Include="src\blib\Session.h" />
+    <ClInclude Include="src\blib\SmartPtr.h" />
+    <ClInclude Include="src\blib\SmartPtrManager.h" />
+    <ClInclude Include="src\blib\SocketException.h" />
+    <ClInclude Include="src\blib\SocketTools.h" />
+    <ClInclude Include="src\blib\SortArray.h" />
+    <ClInclude Include="src\blib\StackWalker.h" />
+    <ClInclude Include="src\blib\StringBuilder.h" />
+    <ClInclude Include="src\blib\System.h" />
+    <ClInclude Include="src\blib\Task.h" />
+    <ClInclude Include="src\blib\Thread.h" />
+    <ClInclude Include="src\blib\ThreadException.h" />
+    <ClInclude Include="src\blib\ThreadParameter.h" />
+    <ClInclude Include="src\blib\ThreadPool.h" />
+    <ClInclude Include="src\blib\TimeoutException.h" />
+    <ClInclude Include="src\blib\Timer.h" />
+    <ClInclude Include="src\blib\TypeManager.h" />
+    <ClInclude Include="src\blib\Util.h" />
+    <ClInclude Include="src\blib\Vector.h" />
+    <ClInclude Include="src\blib\WorkThread.h" />
+    <ClInclude Include="src\fun\FuncDispatcher.h" />
+    <ClInclude Include="src\fun\FunctionDefine.h" />
+    <ClInclude Include="src\fun\FunctionWrapper.h" />
+    <ClInclude Include="src\fun\AnyFunction.h" />
+    <ClInclude Include="src\fun\TemplateFunction.h" />
+    <ClInclude Include="src\rpc\amqp\AmqpRpcContext.h" />
+    <ClInclude Include="src\rpc\AbstructRpcContext.h" />
+    <ClInclude Include="src\rpc\client\RpcApi.h" />
+    <ClInclude Include="src\rpc\p2p\P2pRpcClient.h" />
+    <ClInclude Include="src\rpc\p2p\P2pRpcContext.h" />
+    <ClInclude Include="src\rpc\p2p\P2pRpcServer.h" />
+    <ClInclude Include="src\rpc\RpcContext.h" />
+    <ClInclude Include="src\rpc\RpcMethod.h" />
+    <ClInclude Include="src\rpc\server\RpcServer.h" />
+    <ClInclude Include="src\rpc\server\RpcService.h" />
+    <ClInclude Include="src\rpc\trans\DataPackage.h" />
+    <ClInclude Include="src\rpc\trans\http\HttpException.h" />
+    <ClInclude Include="src\rpc\trans\http\HttpHeader.h" />
+    <ClInclude Include="src\rpc\trans\http\HttpParser.h" />
+    <ClInclude Include="src\rpc\trans\http\RpcOnHttpSocket.h" />
+    <ClInclude Include="src\rpc\trans\jmtp\JmtpHeader.h" />
+    <ClInclude Include="src\rpc\trans\jmtp\RpcOnJmtpSocket.h" />
+    <ClInclude Include="src\rpc\trans\RpcSocket.h" />
+    <ClInclude Include="src\rpc\trans\RpcSocketManager.h" />
+    <ClInclude Include="src\serializer\binary\BinaryReader.h" />
+    <ClInclude Include="src\serializer\binary\BinarySerializer.h" />
+    <ClInclude Include="src\serializer\json\jsoncpp\config.h" />
+    <ClInclude Include="src\serializer\json\jsoncpp\features.h" />
+    <ClInclude Include="src\serializer\json\jsoncpp\forwards.h" />
+    <ClInclude Include="src\serializer\json\jsoncpp\reader.h" />
+    <ClInclude Include="src\serializer\json\jsoncpp\value.h" />
+    <ClInclude Include="src\serializer\json\JsonSerializer.h" />
+    <ClInclude Include="src\serializer\RpcSerializeable.h" />
+    <ClInclude Include="src\serializer\RpcSerializerFactory.h" />
+    <ClInclude Include="src\serializer\xml\parser\Markup.h" />
+    <ClInclude Include="src\serializer\xml\parser\XmlReader.h" />
+    <ClInclude Include="src\serializer\xml\parser\XmlParseException.h" />
+    <ClInclude Include="src\serializer\xml\XmlSerializer.h" />
+    <ClInclude Include="src\type\Number.h" />
+    <ClInclude Include="src\type\ObjectList.h" />
+    <ClInclude Include="src\type\ObjectMap.h" />
+    <ClInclude Include="src\type\ObjectRef.h" />
+    <ClInclude Include="src\type\TString.h" />
+    <ClInclude Include="src\type\TypeVisitor.h" />
+    <ClInclude Include="src\util\BRpcUtil.h" />
+    <ClInclude Include="src\util\RpcException.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="brpc.cpp" />
+    <ClCompile Include="MyRpcService.h" />
+    <ClCompile Include="src\auth\AuthException.cpp" />
+    <ClCompile Include="src\auth\DefaultAuthChecker.cpp" />
+    <ClCompile Include="src\blib\DataBuffer.cpp" />
+    <ClCompile Include="src\blib\KVPairTree.cpp" />
+    <ClCompile Include="src\blib\LinkedList.cpp" />
+    <ClCompile Include="src\blib\MemoryPool.cpp" />
+    <ClCompile Include="src\blib\Vector.cpp" />
+    <ClCompile Include="src\fun\FuncDispatcher.cpp" />
+    <ClCompile Include="src\rpc\AbstructRpcContext.cpp" />
+    <ClCompile Include="src\rpc\client\RpcApi.cpp" />
+    <ClCompile Include="src\rpc\p2p\P2pRpcClient.cpp" />
+    <ClCompile Include="src\rpc\p2p\P2pRpcContext.cpp" />
+    <ClCompile Include="src\rpc\p2p\P2pRpcServer.cpp" />
+    <ClCompile Include="src\rpc\server\RpcServer.cpp" />
+    <ClCompile Include="src\rpc\server\RpcService.cpp" />
+    <ClCompile Include="src\rpc\trans\http\HttpException.cpp" />
+    <ClCompile Include="src\rpc\trans\http\HttpHeader.cpp" />
+    <ClCompile Include="src\rpc\trans\http\HttpParser.cpp" />
+    <ClCompile Include="src\rpc\trans\http\RpcOnHttpSocket.cpp" />
+    <ClCompile Include="src\rpc\trans\jmtp\JmtpHeader.cpp" />
+    <ClCompile Include="src\rpc\trans\jmtp\RpcOnJmtpSocket.cpp" />
+    <ClCompile Include="src\rpc\trans\RpcSocket.cpp" />
+    <ClCompile Include="src\rpc\trans\RpcSocketManager.cpp" />
+    <ClCompile Include="src\serializer\binary\BinaryReader.cpp" />
+    <ClCompile Include="src\serializer\binary\BinarySerializer.cpp" />
+    <ClCompile Include="src\serializer\json\jsoncpp\reader.cpp" />
+    <ClCompile Include="src\serializer\json\JsonSerializer.cpp" />
+    <ClCompile Include="src\serializer\RpcSerializerFactory.cpp" />
+    <ClCompile Include="src\serializer\xml\parser\Markup.cpp" />
+    <ClCompile Include="src\serializer\xml\parser\XmlReader.cpp" />
+    <ClCompile Include="src\serializer\xml\parser\XmlParseException.cpp" />
+    <ClCompile Include="src\serializer\xml\XmlSerializer.cpp" />
+    <ClCompile Include="src\type\ObjectList.cpp" />
+    <ClCompile Include="src\type\ObjectMap.cpp" />
+    <ClCompile Include="src\util\BRpcUtil.cpp" />
+    <ClCompile Include="src\util\RpcException.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="test.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="src\blib\bluemeiLib.lib" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

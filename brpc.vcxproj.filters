@@ -1,0 +1,584 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{d04aa983-97d3-4735-96b2-ed2df7bea30d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\fun">
+      <UniqueIdentifier>{84c53feb-bf46-4e67-9f2e-5572d5c8f993}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\type">
+      <UniqueIdentifier>{71e4e84f-72d3-49bb-bae6-cc79376b104c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\blib">
+      <UniqueIdentifier>{a10e20ad-0c0c-4820-9009-fd9ca17bafa8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\util">
+      <UniqueIdentifier>{ed2dca64-30da-4fae-a7d8-346cb60e1efa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\serializer">
+      <UniqueIdentifier>{0265a5e4-3f83-4813-b93b-ac6f5a8756e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\rpc">
+      <UniqueIdentifier>{2238fb81-a800-4d67-9a33-00e921bced12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\rpc\p2p">
+      <UniqueIdentifier>{cbe7921c-ee40-440b-b7d6-45f1c4114d85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\rpc\amqp">
+      <UniqueIdentifier>{0e88eb7d-c405-4bdb-9ca3-96859bd989a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\rpc\trans">
+      <UniqueIdentifier>{366b56aa-7683-47e5-8efb-a9397e5ccd6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\rpc\trans\http">
+      <UniqueIdentifier>{97fed38f-5089-4ca7-9081-c1c79edfe4af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\serializer\json">
+      <UniqueIdentifier>{d76ee44f-d9f8-4e44-8e80-267c0964e45d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\serializer\json\jsoncpp">
+      <UniqueIdentifier>{99da414d-20d6-43e0-8255-fa8a05ac4111}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\auth">
+      <UniqueIdentifier>{e8ddd3ed-ce51-4663-91b6-d07c57173e4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\rpc\client">
+      <UniqueIdentifier>{a8349256-3f58-4427-9c25-6b29356d5ad1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\rpc\server">
+      <UniqueIdentifier>{25d7eb34-4e4b-4fa5-b969-4dd7574f0850}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\rpc\trans\jmtp">
+      <UniqueIdentifier>{b36e3a7d-063f-41af-9752-7babdacc64b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\serializer\xml">
+      <UniqueIdentifier>{a8276f4e-d556-4a7c-9b8d-b3d64c3ba11f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\serializer\xml\parser">
+      <UniqueIdentifier>{fc3242ab-8d27-4550-8fe2-2decad56bebe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\serializer\binary">
+      <UniqueIdentifier>{6eed73d6-3d77-4348-8612-e0a0efcbd147}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\AccurateTimeTicker.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\Application.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\ArrayList.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\BeanContainer.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\bluemeiLib.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\BString.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\ByteBuffer.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\CallStackUtil.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\Class.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\ClassNotFoundException.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\ClientSocket.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\CodeUtil.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\Context.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\CriticalLock.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\DataBuffer.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\Date.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\ErrorHandler.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\Exception.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\File.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\FtpConnection.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\FtpException.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\HashCoder.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\HashMap.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\IOCompletionPort.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\IOCompletionPortImpl.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\IOCompletionPortImplLinux.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\IOCompletionPortImplWin32.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\IOCPEvent.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\IOCPException.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\IOCPModel.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\IOException.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\Iterator.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\KVPairTree.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\LambdaThread.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\LinkedList.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\Log.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\MemoryPool.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\MultiValueHashMap.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\NotFoundException.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\NullPointerException.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\Object.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\ObjectFactory.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\Observer.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\OutOfBoundException.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\OutOfMemoryException.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\Pair.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\ReferencePointer.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\ResourceLock.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\Runnable.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\RuntimeException.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\ServerSocket.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\Session.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\SmartPtr.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\SmartPtrManager.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\SocketException.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\SocketTools.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\SortArray.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\StackWalker.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\StringBuilder.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\System.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\Task.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\Thread.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\ThreadException.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\ThreadParameter.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\ThreadPool.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\TimeoutException.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\Timer.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\TypeManager.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\Util.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\Vector.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blib\WorkThread.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\util\BRpcUtil.h">
+      <Filter>src\util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\type\Number.h">
+      <Filter>src\type</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fun\FuncDispatcher.h">
+      <Filter>src\fun</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fun\FunctionWrapper.h">
+      <Filter>src\fun</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fun\TemplateFunction.h">
+      <Filter>src\fun</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fun\FunctionDefine.h">
+      <Filter>src\fun</Filter>
+    </ClInclude>
+    <ClInclude Include="src\type\ObjectRef.h">
+      <Filter>src\type</Filter>
+    </ClInclude>
+    <ClInclude Include="CheckMemLeaks.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\type\ObjectList.h">
+      <Filter>src\type</Filter>
+    </ClInclude>
+    <ClInclude Include="src\type\ObjectMap.h">
+      <Filter>src\type</Filter>
+    </ClInclude>
+    <ClInclude Include="src\type\TypeVisitor.h">
+      <Filter>src\type</Filter>
+    </ClInclude>
+    <ClInclude Include="src\type\TString.h">
+      <Filter>src\type</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fun\AnyFunction.h">
+      <Filter>src\fun</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rpc\RpcContext.h">
+      <Filter>src\rpc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rpc\p2p\P2pRpcContext.h">
+      <Filter>src\rpc\p2p</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rpc\amqp\AmqpRpcContext.h">
+      <Filter>src\rpc\amqp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\util\RpcException.h">
+      <Filter>src\util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rpc\trans\RpcSocket.h">
+      <Filter>src\rpc\trans</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rpc\trans\RpcSocketManager.h">
+      <Filter>src\rpc\trans</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rpc\trans\http\RpcOnHttpSocket.h">
+      <Filter>src\rpc\trans\http</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rpc\p2p\P2pRpcClient.h">
+      <Filter>src\rpc\p2p</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rpc\p2p\P2pRpcServer.h">
+      <Filter>src\rpc\p2p</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rpc\RpcMethod.h">
+      <Filter>src\rpc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\serializer\RpcSerializeable.h">
+      <Filter>src\serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rpc\AbstructRpcContext.h">
+      <Filter>src\rpc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\serializer\json\jsoncpp\config.h">
+      <Filter>src\serializer\json\jsoncpp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\serializer\json\jsoncpp\features.h">
+      <Filter>src\serializer\json\jsoncpp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\serializer\json\jsoncpp\forwards.h">
+      <Filter>src\serializer\json\jsoncpp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\serializer\json\jsoncpp\reader.h">
+      <Filter>src\serializer\json\jsoncpp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\serializer\json\JsonSerializer.h">
+      <Filter>src\serializer\json</Filter>
+    </ClInclude>
+    <ClInclude Include="src\serializer\json\jsoncpp\value.h">
+      <Filter>src\serializer\json\jsoncpp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\auth\AuthException.h">
+      <Filter>src\auth</Filter>
+    </ClInclude>
+    <ClInclude Include="src\auth\AuthChecker.h">
+      <Filter>src\auth</Filter>
+    </ClInclude>
+    <ClInclude Include="src\auth\DefaultAuthChecker.h">
+      <Filter>src\auth</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rpc\server\RpcServer.h">
+      <Filter>src\rpc\server</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rpc\server\RpcService.h">
+      <Filter>src\rpc\server</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rpc\client\RpcApi.h">
+      <Filter>src\rpc\client</Filter>
+    </ClInclude>
+    <ClInclude Include="MyRpcApi.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rpc\trans\jmtp\RpcOnJmtpSocket.h">
+      <Filter>src\rpc\trans\jmtp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rpc\trans\jmtp\JmtpHeader.h">
+      <Filter>src\rpc\trans\jmtp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\serializer\RpcSerializerFactory.h">
+      <Filter>src\serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rpc\trans\DataPackage.h">
+      <Filter>src\rpc\trans</Filter>
+    </ClInclude>
+    <ClInclude Include="src\serializer\xml\XmlSerializer.h">
+      <Filter>src\serializer\xml</Filter>
+    </ClInclude>
+    <ClInclude Include="src\serializer\xml\parser\Markup.h">
+      <Filter>src\serializer\xml\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="src\serializer\xml\parser\XmlParseException.h">
+      <Filter>src\serializer\xml\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="src\serializer\xml\parser\XmlReader.h">
+      <Filter>src\serializer\xml\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="src\serializer\binary\BinarySerializer.h">
+      <Filter>src\serializer\binary</Filter>
+    </ClInclude>
+    <ClInclude Include="src\serializer\binary\BinaryReader.h">
+      <Filter>src\serializer\binary</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rpc\trans\http\HttpHeader.h">
+      <Filter>src\rpc\trans\http</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rpc\trans\http\HttpParser.h">
+      <Filter>src\rpc\trans\http</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rpc\trans\http\HttpException.h">
+      <Filter>src\rpc\trans\http</Filter>
+    </ClInclude>
+    <ClInclude Include="src\bLib\ClassField.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="brpc.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\blib\DataBuffer.cpp">
+      <Filter>src\blib</Filter>
+    </ClCompile>
+    <ClCompile Include="src\blib\KVPairTree.cpp">
+      <Filter>src\blib</Filter>
+    </ClCompile>
+    <ClCompile Include="src\blib\LinkedList.cpp">
+      <Filter>src\blib</Filter>
+    </ClCompile>
+    <ClCompile Include="src\blib\MemoryPool.cpp">
+      <Filter>src\blib</Filter>
+    </ClCompile>
+    <ClCompile Include="src\blib\Vector.cpp">
+      <Filter>src\blib</Filter>
+    </ClCompile>
+    <ClCompile Include="src\fun\FuncDispatcher.cpp">
+      <Filter>src\fun</Filter>
+    </ClCompile>
+    <ClCompile Include="src\type\ObjectList.cpp">
+      <Filter>src\type</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rpc\p2p\P2pRpcContext.cpp">
+      <Filter>src\rpc\p2p</Filter>
+    </ClCompile>
+    <ClCompile Include="src\util\RpcException.cpp">
+      <Filter>src\util</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rpc\trans\RpcSocket.cpp">
+      <Filter>src\rpc\trans</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rpc\trans\http\RpcOnHttpSocket.cpp">
+      <Filter>src\rpc\trans\http</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rpc\p2p\P2pRpcClient.cpp">
+      <Filter>src\rpc\p2p</Filter>
+    </ClCompile>
+    <ClCompile Include="src\type\ObjectMap.cpp">
+      <Filter>src\type</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rpc\p2p\P2pRpcServer.cpp">
+      <Filter>src\rpc\p2p</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rpc\AbstructRpcContext.cpp">
+      <Filter>src\rpc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\serializer\json\jsoncpp\reader.cpp">
+      <Filter>src\serializer\json\jsoncpp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\serializer\json\JsonSerializer.cpp">
+      <Filter>src\serializer\json</Filter>
+    </ClCompile>
+    <ClCompile Include="src\auth\AuthException.cpp">
+      <Filter>src\auth</Filter>
+    </ClCompile>
+    <ClCompile Include="src\auth\DefaultAuthChecker.cpp">
+      <Filter>src\auth</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rpc\trans\RpcSocketManager.cpp">
+      <Filter>src\rpc\trans</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rpc\server\RpcServer.cpp">
+      <Filter>src\rpc\server</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rpc\server\RpcService.cpp">
+      <Filter>src\rpc\server</Filter>
+    </ClCompile>
+    <ClCompile Include="MyRpcService.h">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rpc\client\RpcApi.cpp">
+      <Filter>src\rpc\client</Filter>
+    </ClCompile>
+    <ClCompile Include="test.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rpc\trans\jmtp\RpcOnJmtpSocket.cpp">
+      <Filter>src\rpc\trans\jmtp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rpc\trans\jmtp\JmtpHeader.cpp">
+      <Filter>src\rpc\trans\jmtp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\serializer\RpcSerializerFactory.cpp">
+      <Filter>src\serializer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\serializer\xml\XmlSerializer.cpp">
+      <Filter>src\serializer\xml</Filter>
+    </ClCompile>
+    <ClCompile Include="src\serializer\xml\parser\Markup.cpp">
+      <Filter>src\serializer\xml\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="src\serializer\xml\parser\XmlParseException.cpp">
+      <Filter>src\serializer\xml\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="src\serializer\xml\parser\XmlReader.cpp">
+      <Filter>src\serializer\xml\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="src\serializer\binary\BinarySerializer.cpp">
+      <Filter>src\serializer\binary</Filter>
+    </ClCompile>
+    <ClCompile Include="src\serializer\binary\BinaryReader.cpp">
+      <Filter>src\serializer\binary</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rpc\trans\http\HttpHeader.cpp">
+      <Filter>src\rpc\trans\http</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rpc\trans\http\HttpParser.cpp">
+      <Filter>src\rpc\trans\http</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rpc\trans\http\HttpException.cpp">
+      <Filter>src\rpc\trans\http</Filter>
+    </ClCompile>
+    <ClCompile Include="src\util\BRpcUtil.cpp">
+      <Filter>src\util</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="src\blib\bluemeiLib.lib">
+      <Filter>src\blib</Filter>
+    </Library>
+  </ItemGroup>
+</Project>

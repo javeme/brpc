@@ -1,0 +1,514 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>brpc service outline</title>
+<style type="text/css">
+    html, body { height:100%; font-family: "Times New Roman",Georgia,Serif; }
+    /*body, h2, p {margin:0px;padding:0px;}*/    
+    
+    .normalTreeNode {
+		font-family: "Times New Roman",Georgia,Serif;
+        line-height: 22px;
+        cursor:pointer;
+	}
+	.selectedTreeNode {
+		font-weight: bolder;
+	}
+    
+    .overCell {
+		background-color: #F8F8F8;
+	}
+    
+    .tableStyle{ 
+        background:#D5D5D5; 
+        color:#333333;
+        margin:auto;
+    }      
+    .trStyle{ 
+        background:#F4F4F4; 
+    } 
+    .thStyle{ 
+		font-family: "Times New Roman",Georgia,Serif;
+        height:20px; 
+        padding:5px; 
+        background:#E0E0E0; 
+    } 
+    .tdStyle{ 
+		font-family: "Times New Roman",Georgia,Serif;
+        padding:5px; 
+    } 
+    
+    .treeStyle {
+		margin:20px;
+	}
+    .methodStyle { font-weight:bolder; line-height:28px; color:#000; padding-left:4px;  }
+    .signatureStyle { line-height:22px; color:#000; padding-left:12px; }
+    .requestStyle {text-align:center;line-height:30px;color:#000;margin:5px; }/*border:1px solid #F00;*/
+    .responseStyle {line-height:24px;color:#000;margin:5px;}
+    .contentStyle {text-align:center;line-height:30px;color:#000;margin:5px;}
+    .buttonsDiv {height:22px;text-align:right;line-height:22px;padding-right:4px;}
+    .buttonStyle {width:55px;height:22px;text-align:center;line-height:22px;color:#fff;
+                  background:url(./images/but.jpg) no-repeat;border:none;
+                  display:inline;margin:0 10px;cursor:pointer;}
+    .disableButtonStyle {color:#ccc;}
+</style>
+<script type="text/javascript" src="js/prototype-1.7.js"></script>
+<script type="text/javascript" src="js/tree2.js"></script>
+<script type="text/javascript" src="js/table.js"></script>
+<script type="text/javascript" src="js/pop-layer.js"></script>
+<script type="text/javascript" src="js/brpc-client.js"></script>
+<script type="text/javascript">
+
+//tree node
+var NODE_SERVICE = 0;
+var NODE_METHOD = 1;
+function createNode(type, value, api, parent){
+    var label = value;
+    if (type == NODE_SERVICE)
+        label = 'service ' + value;
+    else if (type == NODE_METHOD)
+        label = 'function ' + value + '()';
+    var node = {
+        type: type,
+        label: label,
+        value: value,
+        api: api,
+        parent: parent,
+        children: null
+    };
+    return node;
+}
+function createServiceNode(value, api, parent){    
+    return createNode(NODE_SERVICE, value, api, parent);
+}
+function createMethodNode(value, parent){
+    return createNode(NODE_METHOD, value, null, parent);
+}
+function createNodes(type, values, parent){
+    var length = values.length;
+    var nodes = new Array(length);
+    for (var i = 0; i < length; i++) {
+        var value = values[i];
+        var api = (parent && parent.api) ? parent.api[value] : null;
+        nodes[i] = createNode(type, value, api, parent);
+    }
+    return nodes;
+}
+function createServiceNodes(values, parent){
+    return createNodes(NODE_SERVICE, values, parent);
+}
+function createMethodNodes(values, parent){
+    return createNodes(NODE_METHOD, values, parent);
+}
+
+function parseValue(value, type){
+    //string, int, double, boolean, object, null
+    if (type == 'string')
+        return value;
+    else if (type == 'int')
+        return parseInt(value.strip(), 10);
+    else if (type == 'double')
+        return parseFloat(value.strip());
+    else if (type == 'boolean')
+        return !(value.strip()=='false' || value.strip()=='0');
+    else if (type == 'object')
+        return value;
+    else if (type == 'null')
+        return null;
+}
+
+function loadSubNodes(node, onSuccess, onFailure, onException) {
+    var api = node.api;    
+    //request sub services
+    api.listServices({
+        onSuccess: function(result){
+            result = result.responseJSON;
+            //alert('Result:\n' +result.returnValue);
+            services = result.returnValue;
+            for (var i=0; i<services.length; i++)
+                api.addSubService(services[i]);
+            
+            var nodes = createServiceNodes(services, node);
+            node.children = nodes;
+            
+            /*var subService = services[0];
+            subService = subService.split('.').pop();
+            api.addSubService(subService);
+            api = api.getSubService(subService);*/
+            
+            //request methods
+            api.listMethods({
+                onSuccess: function(result){
+                    result = result.responseJSON;
+                    //alert('Result:\n' +result.returnValue);
+                    methods = result.returnValue;
+                    nodes.extend(createMethodNodes(methods, node));
+                    onSuccess(nodes);
+                },
+                onFailure: onFailure,
+                onException: onException
+            });
+        },
+        onFailure: onFailure,
+        onException: onException
+    });
+}
+
+function loadServices(data, tree, parentNode){
+    function getLabel(item){
+        return item.label;
+    }
+    function getChildren(item){
+        if (Object.isArray(item))
+            return item;
+        else if (item.children)
+            return item.children;
+        //else if (item.type == NODE_SERVICE)
+        //    return createMethodNodes(['child1()', 'child2()'], item);
+        return [];
+    }
+    function onDblClick(e) {
+        var content = e.element().innerHTML;
+        //alert(content);
+    }
+    
+    function onClick(e) {
+        var ele = e.element();
+        
+        var node = ele.up().retrieve('object');
+        if (!node)
+            return;
+        if (!node.children){ //leaf node
+            if (node.type == NODE_METHOD) { //method
+                var api = node.parent.api;
+                var method = node.value;
+                //show view
+                var invokerView = new Alert('invoker_box', {
+                    title : 'brpc method invoker',
+                    content : '<div id="invokerMethod" class="methodStyle">' + method + ':</div>' +
+                              '<div id="invokerSignature" class="signatureStyle"></div>' +
+                              '<div id="invokerRequest" class="requestStyle"> loading... </div>' +
+                              '<div class="buttonsDiv">' +
+                                '<button id="btnInvoke" class="buttonStyle">invoke</button>' +
+                                '<button id="btnCancel" class="buttonStyle">back</button>' +
+                              '</div>' +
+                              '<div id="invokerResponse" class="responseStyle"></div>',
+                    width : '800',
+                    height : '600',
+                    top : '',
+                    left : '',
+                    fixed : '',
+                    close : 'close'
+                }); 
+                invokerView.load();
+                
+                //init table
+                var table = showMethodParas($('invokerRequest'));
+                table.setWidth('100%');
+                
+                //method signature
+                api.signatureOf(method, {
+                    onSuccess: function(result){
+                        result = result.responseJSON;
+                        var signature = result.returnValue;
+                        signature = signature.replace(/\|/g, '<br/>');//f()|f(int)|f(bool)
+                        $('invokerSignature').update(signature);
+                    },
+                    onFailure: function(result){
+                        var msg = 'Failed to get signature, ' + statusText(result);
+                        //alert(msg);
+                        $('invokerSignature').update(msg);
+                    },
+                    onException: function(request, e){
+                        var msg = 'Exception when getting signature: ' + e.toString();
+                        //alert(msg);
+                        $('invokerSignature').update(msg);
+                    }
+                });
+                
+                function disableBtn(btn) {
+                    btn.disable();
+                    btn.addClassName('disableButtonStyle');
+                }
+                function enableBtn(btn) {
+                    btn.enable();
+                    btn.removeClassName('disableButtonStyle');
+                }
+                
+                //invoke button listener
+                $('btnInvoke').observe('click', function(e) {                     
+                    var btn = e.element();
+                    disableBtn(btn);                    
+                    setTimeout(function(){
+                        enableBtn(btn);
+                    }, 1000*1);
+                    //invoke method
+                    var loadView = null;
+                    //method = method.substring(method.indexOf('.')+1, method.indexOf('('));
+                    var data = table.getData();
+                    var paras = [];
+                    for (var i=0; i<data.length; i++) {
+                        var ele = data[i];
+                        if(ele.type != 'none')
+                            paras.push(parseValue(ele.value, ele.type));
+                    }
+                    api.call(method, paras, {
+                        onLoading: function(){
+                            loadView = showLoadView('invoking method');
+                            showMethodResponse($('invokerResponse'), 'loading...');
+                        },
+                        onSuccess: function(transport){ 
+                            var result = transport.responseJSON.returnValue;
+                            showMethodResponse($('invokerResponse'), result);
+                            loadView.destroy();
+                        },
+                        onFailure: function(transport){ 
+                            var result = 'Failed to invoke method, ' + statusText(transport);
+                            showMethodResponse($('invokerResponse'), result);
+                            loadView.destroy();
+                        },
+                        onException: function(request, e){
+                            var result = e.toString();
+                            showMethodResponse($('invokerResponse'), result);
+                            loadView.destroy();
+                        }
+                    });
+                });
+                $('btnCancel').observe('click', function() {
+                    invokerView.close();
+                });
+            } 
+            else if (node.type == NODE_SERVICE){ //load sub service
+                var loadView = showLoadView('load sub services and method');
+                loadSubNodes(node,
+                    function(nodes){
+                        loadView.close();
+                        loadServices(nodes, tree, ele.up());
+                    },
+                    function(transport){
+                        loadView.close();
+                        handleFailure(transport);
+                    },
+                    function(request, exception){
+                        loadView.close();
+                        handleException(request, exception);
+                    }
+                );
+            }
+        }
+    }
+    
+    if (parentNode) {
+        tree.updateChildren(parentNode, data);
+    }
+    else {
+        tree = showTree(data, $('dTree'), getLabel, getChildren, onClick, onDblClick);
+    }
+    return tree;
+}
+
+function showMethodParas(tableDiv) {
+    var operation = "<input name='btnAddRow' type='button' onclick='' value='Add Row'>";
+    //var header = {id:"id", name:"name", type:"type", value:"parameter value",operation:"operation"};
+    var types = "string:string, int:int, double:double, boolean:boolean, object:object, null:null, none:none";
+    var header = [{name:"id",value:"Id",type:"id"}, {name:"name",value:"Name"}, 
+                  {name:"type",value:"Type",type:"select",meta:types}, 
+                  {name:"value",value:"Value",type:"text"}, {name:"operation",value:operation}];
+    var operation = "<input type='button' onclick='deleteThisRow(this)' value='Remove'>";
+    var data = [{id:1, name:'para1', type:'none', value:'none', operation:operation, toString: function(){ return this.value; }},
+               ];
+    
+    function observeAddRowBtns() {    
+        $$('input[name="btnAddRow"]').each(function(item){ 
+            item.stopObserving('click');
+            item.observe('click', function(e) {
+                var table = BrpcTable.getTableByElement(e.element());
+                table = table.retrieve('object');
+                table.appendRow({id:table.size(), name:'para', type:'int', value:'0', operation:operation, toString: function(){ return this.value; }});
+            });
+        });
+    }
+    function onUpdateData(e) {
+        var cellName = e.cellName;
+        if (cellName == 'type') {            
+            var oldValue = e.oldValue;
+            var newValue = e.newValue;
+            var table = e.table;
+            var rowIndex = e.rowIndex;
+            var row = table.getRow(rowIndex);
+            if (row && oldValue == 'object') {//such as: object -> string
+                row[cellName] = newValue;
+                row['value'] = row['value'].value || row['value'].toString();
+                table.updateRow(rowIndex, row);
+            }
+            else if (row && newValue == 'object') {//such as: string -> object
+                row[cellName] = newValue;
+                //var obj new Object({value: row['value']});
+                var obj = {id:0, name:'para', type:'string', value:row['value'], operation:operation, toString: function(){ return this.value; }};
+                row['value'] = [obj];
+                table.updateRow(rowIndex, row);
+                observeAddRowBtns();
+            }
+        }
+    }    
+    function onCellClick(e) {
+        var ele = e.element();
+    }
+      
+	tableDiv.update('');
+    var table = showTable(tableDiv, header, data, onUpdateData, onCellClick);
+    observeAddRowBtns();
+    header[1]['type'] = "text";
+    return table;    
+}
+
+function showMethodResponse(responseDiv, data) {
+    var currentTime = new Date().toLocaleString();
+    var html = '<div>Result [' + currentTime + '] :</div>'
+    if (Object.isSimpleObject(data)) {
+        if(data) {
+            data = data.toString();
+            data = data.escapeHTML();
+            //data = data.replace((/[\r\n]/g, '<br/>');
+            data = data.replace(/\n/g, '<br/>');
+        }
+        html += '<div style="padding-left:10px">' + data + '</div>';
+        responseDiv.update(html);
+    }
+    else {
+        var header = null;
+        var onUpdateData = null;
+        var onCellClick = null;
+        responseDiv.update(html);
+        var table = showTable(responseDiv, header, data, onUpdateData, onCellClick);  
+        table.setWidth('100%');
+    }
+}
+
+
+function showLoadView(title, content) {
+    if (Object.isUndefined(content))
+        content = 'loading...'
+    var loadView = new Alert('load_box', {
+        title : title,
+        content : '<div id="loadContent" class="contentStyle">' + content + '</div>',
+        width : '250',
+        height : '84',
+        top : '',
+        left : '',
+        fixed : '',
+        close : ''
+    }); 
+    loadView.load();
+    return loadView;
+}
+
+//生成并显示表格
+function showTable(div4Table, header, data, onUpdateData, onCellClick) {  
+    var table = new BrpcTable(div4Table, {  header: header,
+                                            onUpdateData: onUpdateData,
+                                            onCellClick: onCellClick,
+                                            //onCellDblClick: onCellDblClick,
+                                            overCellStyle: 'overCell',
+                                            tableStyle: 'tableStyle',
+                                            trStyle: 'trStyle',
+                                            thStyle: 'thStyle',
+                                            tdStyle: 'tdStyle'
+                                          });
+    table.load(data);
+    return table;
+}
+        
+//生成并显示树。divJSON：显示JSON格式的数据；divTree：树所在的DIV。
+function showTree(data, divTree, getLabel, getChildren, onClick, onDblClick) {        
+	divTree.update('');
+	//var data = randomData(3);
+	//$('dJSON').update(Object.toJSON(data));
+	var tree = new Tree(divTree, {
+                        data: null,
+                        getLabel: getLabel,
+                        getChildren: getChildren,
+                        onNodeClick: onClick,
+                        onNodeDblClick: onDblClick,
+                        selectedStyle: 'selectedTreeNode',
+                        normalStype: 'normalTreeNode'
+                        });
+	tree.load(data);
+	return tree;
+}
+
+// 随机整数[bottom, top)
+function randomInt(bottom, top) {
+    return Math.floor(Math.random() * (top - bottom)) + bottom;
+}
+
+// 使用CHARS生成随机字符串。length：字符串长度，返回的字符串一定是这个长度。用数组join的方法实现，高效简洁。
+function randomString(length) {
+    var CHARS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789';
+    var CHARS_LENGTH = CHARS.length;
+    var a = new Array(length);
+    for (var i = 0; i < length; ++i) {
+        a[i] = CHARS.charAt(randomInt(0, CHARS_LENGTH));
+    }
+    return a.join('');
+}
+
+function statusText(transport) {
+    return 'Status: ' + transport.statusText + '[' + transport.status + ']';
+}
+
+function handleFailure(transport) {
+    var status = statusText(transport);
+    alert(status );
+}
+
+function handleException(request, e) {
+    var msg = e.toString();
+    alert(msg);
+}
+
+Event.observe(window, 'load', function() {
+    var serviceName = 'nova';
+    var api = new RpcApi(serviceName, 'test', '123456', {
+        onSuccess: function(transport){
+            var root = createServiceNode(serviceName, api);
+            loadSubNodes(root, 
+                function(nodes){
+                    loadServices(root, null);
+                },
+                handleFailure,
+                handleException
+            );
+        },
+        onFailure: handleFailure,
+        onException: handleException
+    });
+    
+    /*
+    var functionsTree = null;
+	$('btnTree').observe('click', function() { 
+		var root = createServiceNode('nova');
+        var services = ['service1', 'service2', 'service2.subServiceA'];
+        var methods = ['fun1()', 'fun2()', 'fun3()'];
+        var nodes = createServiceNodes(services, root);
+        nodes.extend(createMethodNodes(methods, root));
+        root.children = nodes;
+        
+        functionsTree = loadServices(root);
+	});
+    
+	$('btnShow').observe('click', function(e) {
+		var next = e.element().next();
+		var content = functionsTree.selectedNode ? functionsTree.selectedNode.innerHTML : ''; 
+		next.update(content);
+	});*/         
+    
+});  
+</script>
+</head>
+<body>
+    <div id="dJSON" class="normal"></div>
+    <div id="dTree" class="treeStyle">loading...</div>                    
+</body>
+</html>

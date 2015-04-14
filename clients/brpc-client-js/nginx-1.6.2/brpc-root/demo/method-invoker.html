@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml" > 
+<head> 
+    <title>brpc method invoker</title> 
+    <style type="text/css"> 
+    *{ 
+        font-size:12px; 
+    } 
+    #myTable{ 
+        background:#D5D5D5; 
+        color:#333333; 
+    } 
+     
+    #myTable tr{ 
+        background:#F7F7F7; 
+    } 
+    #myTable tr th{ 
+        height:20px; 
+        padding:5px; 
+    } 
+    #myTable tr td{ 
+        padding:5px; 
+    } 
+    </style> 
+    <script type="text/javascript"> 
+    function $(obj){ 
+        return document.getElementById(obj); 
+    } 
+     
+    var num = 0; 
+    function row(id){ 
+        //构造函数 
+        this.id = $(id); 
+    } 
+    row.prototype = { 
+        //插入行 
+        insert:function(){ 
+            num = num + 1; 
+            var newTr = this.id.insertRow(-1); 
+            var td_1 = newTr.insertCell(0); 
+            var td_2 = newTr.insertCell(1); 
+            var td_3 = newTr.insertCell(2); 
+            td_1.innerHTML = num; 
+            td_2.innerHTML = "脚本之家 www.jb51.net"; 
+            td_3.innerHTML = "<input type='button' onclick='delRow(this)' value='删除' >"; 
+        }, 
+        //删除行 
+        del:function(obj){ 
+            var i = obj.parentNode.parentNode.rowIndex; 
+            this.id.deleteRow(i); 
+        } 
+    } 
+       
+    function addRow(){ 
+        var row2 = new row("myTable"); 
+        row2.insert(); 
+    } 
+     
+    function delRow(obj){  
+        var row1 = new row("myTable"); 
+        row1.del(obj); 
+    } 
+     
+    var inputItem; // 输入框句柄 
+    var activeItem; // 保存正在编辑的单元格 
+     
+    //转成文本 
+    function changeToText(obj){ 
+        if( obj && inputItem ) { 
+            // 如果存在正在编辑的单元格， 则取消编辑状态， 并将编辑的数据保存起来 
+            var str = " "; 
+            if(inputItem.value != "")  
+                str = inputItem.value; 
+            obj.innerText = str;    
+        } 
+    } 
+     
+    //转成编辑 
+    function changeToEdit(obj){ 
+         if( !inputItem ) { 
+              inputItem = document.createElement('input'); 
+              inputItem.type = 'text'; 
+              inputItem.style.width = '100%'; 
+         } 
+        // inputItem.style.display = ''; 
+         inputItem.value = obj.innerText; // 将该单元格的数据文本读到控件上 
+         obj.innerHTML = ''; // 清空单元格的数据 
+         obj.appendChild(inputItem); 
+         inputItem.focus(); 
+         activeItem = obj; 
+    } 
+     
+     
+    //双击时文本变成文本框 
+    document.ondblclick = function(){ 
+        if(event.srcElement.tagName.toLowerCase() == "td"){ 
+            if(!inputItem){ 
+                inputItem = document.createElement("input"); 
+                inputItem.type = "text"; 
+                inputItem.style.width = "100%"; 
+            } 
+            changeToText(); 
+            changeToEdit(event.srcElement); 
+        }else{ 
+            event.returnValue = false; 
+            return false; 
+        } 
+    } 
+     
+    //单击时文本框变成文本 
+    document.onclick = function(){ 
+        if(event.srcElement.parentNode == activeItem || event.srcElement == activeItem) 
+            return; 
+        else 
+            changeToText(activeItem); 
+    } 
+    </script> 
+</head> 
+<body> 
+<input type="button" onclick="addRow()" value="插入一行" /> 
+<table id="myTable" border="0" cellpadding="0" cellspacing="1"> 
+<tr><th>编号</th><th>姓名</th><th>操作</th></tr> 
+</table> 
+</body> 
+</html> 

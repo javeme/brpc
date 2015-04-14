@@ -1,0 +1,361 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>brpc service outline</title>
+<style type="text/css">
+    html, body {height:100%;}
+    /*body, h2, p {margin:0px;padding:0px;}*/
+    
+	.selected {
+		font-weight: bolder;
+	}
+    .overCell {
+		background-color: #F8F8F8;
+	}
+    .normal {
+		font-family: "Times New Roman",Georgia,Serif;
+	}
+    
+    .tableStyle{ 
+        background:#D5D5D5; 
+        color:#333333;
+        margin:auto;
+    }      
+    .trStyle{ 
+        background:#F4F4F4; 
+    } 
+    .thStyle{ 
+		font-family: "Times New Roman",Georgia,Serif;
+        height:20px; 
+        padding:5px; 
+        background:#E0E0E0; 
+    } 
+    .tdStyle{ 
+		font-family: "Times New Roman",Georgia,Serif;
+        padding:5px; 
+    } 
+    
+    .contentStyle {text-align:center;line-height:30px;color:#000;margin:5px; border:1px solid #F00;}
+    .buttonsDiv {width:100%;height:22px;text-align:center;line-height:22px;}
+    .buttonStyle {width:55px;height:22px;text-align:center;line-height:22px;color:#fff;background:url(./images/but.jpg) no-repeat;border:none;display:inline;margin:0 8px;cursor:pointer;}
+</style>
+<script type="text/javascript" src="js/prototype-1.7.js"></script>
+<script type="text/javascript" src="js/tree2.js"></script>
+<script type="text/javascript" src="js/table.js"></script>
+<script type="text/javascript" src="js/pop-layer.js"></script>
+<script type="text/javascript">
+
+Event.observe(window, 'load', function() {
+    var client = null;
+	// 初始化两个按钮事件
+    var trees = new Array(2);
+	$('btnTree').observe('click', function() {
+		trees[0] = showTree($('dJSON'), $('dTree'));
+		trees[1] = showTree($('dJSON2'), $('dTree2'));
+        
+        client = new RpcClient('/rpcservice', 'test', '123456');
+	});
+    
+    var count = 0;
+	$('btnShow').observe('click', function(e) {
+		var next = e.element().next();
+		var content = trees[0].selectedNode ? trees[0].selectedNode.innerHTML : ''; 
+		next.update(content);
+        
+        count++;
+        client.call('system.ping', [], 
+                function(transport){
+                    var response = transport.responseJSON;
+                    alert('Result: ' + response.returnValue);
+                    /*client.call('system.listMethods', [], 
+                        function(transport){
+                            var response = transport.responseJSON;
+                            alert('Result:\n' + response.returnValue);
+                        },
+                        function(transport){
+                            alert(transport.statusText);
+                        });*/
+                },
+                function(transport){
+                    alert(transport.statusText);
+                });  
+        
+        client.call('system.help', [], 
+                    function(transport){
+                        var response = transport.responseJSON;
+                        alert('Result:\n' + response.returnValue);
+                    },
+                    function(transport){
+                        alert(transport.statusText);
+                    });
+	});
+         
+    $('btnMethod').observe('click', function(e) {
+        /*var header = ['col1', 'col2', 'col3'];
+        var data = [{col1:11,col2:12,col3:13}, {col1:21,col2:22,col3:23}];*/
+        
+        /*
+        //var header = [{name:"col1",value:"col-1"}, {name:"col2",value:"col-2"}, {name:"col3",value:"col-3"}];
+        var header = {col1:"col-1",col2:"col-2",col3:"col-3"};
+        var data = [{col1:11,col2:12,col3:13}, {col1:21,col2:22,col3:23}];*/
+        
+        /*var header = [123, true, 2.5];
+        var data = [[11,12,13], [21,22,23]];*/
+        
+        var operation = "<input name='btnAddRow' type='button' onclick='' value='Add Row'>";
+        //var header = {id:"id", name:"name", type:"type", value:"parameter value",operation:"operation"};
+        var types = "string:string, int:int, double:double, boolean:boolean, object:object, none:null";
+        var header = [{name:"id",value:"Id"}, {name:"name",value:"Name"}, 
+                      {name:"type",value:"Type",type:"select",meta:types}, 
+                      {name:"value",value:"value",type:"text"}, {name:"operation",value:operation}];
+        var operation = "<input type='button' onclick='deleteThisRow(this)' value='Remove'>";
+        var obj3 = [{id:1, name:'para1', type:'string', value:'blue', operation:operation, toString: function(){ return this.value; }},
+                    {id:2, name:'para2', type:'double', value:3.14, operation:operation, toString: function(){ return this.value; }}
+                   ];
+        var obj4 = {name:'blue', age:18, sex:'mail'};//user
+		var data = [{id:1, name:'para1', type:'int', value:10, operation:operation, toString: function(){ return this.value; }},
+                    {id:2, name:'para2', type:'bool', value:true, operation:operation, toString: function(){ return this.value; }},
+                    {id:3, name:'para3', type:'object', value:obj3, operation:operation, toString: function(){ return this.value; }},
+                    {id:4, name:'para4', type:'object', value:obj4, operation:operation, toString: function(){ return this.value; }},
+                   ];
+                   
+        var table = showTable($('divTable'), header, data, onUpdateData, onCellClick);
+        
+        $$('input[name="btnAddRow"]').each(function(item){ item.observe('click', function(e) {
+            var table = BrpcTable.getTableByElement(e.element());
+            table = table.retrieve('object');
+            table.appendRow({id:0, name:'para', type:'int', value:0, operation:operation, toString: function(){ return this.value; }});
+        })});
+        
+        /*$('btnRemoveRow').observe('click', function(e) {
+            var index = table.getRowIndex(e.element());
+            table.removeRow(index);
+        });*/
+        
+        function onUpdateData(e) {
+            var cellName = e.cellName;
+            if (cellName == 'type') {            
+                var oldValue = e.oldValue;
+                var newValue = e.newValue;
+                var table = e.table;
+                var rowIndex = e.rowIndex;
+                var row = table.getRow(rowIndex);
+                if (row && oldValue == 'object') {//such as: object -> string
+                    row[cellName] = newValue;
+                    row['value'] = row['value'].value || row['value'].toString();
+                    table.updateRow(rowIndex, row);
+                }
+                else if (row && newValue == 'object') {//such as: string -> object
+                    row[cellName] = newValue;
+                    row['value'] = new Object({value: row['value']});
+                    table.updateRow(rowIndex, row);
+                }
+            }
+        }
+        
+        function onCellClick(e) {
+            var content = e.element().innerText;
+            $('btnMethod').next().update(content);
+        }  
+	});  
+
+
+    //showTable($('invokerContent'), header, data);
+    
+});
+
+//rpc client for js
+var RpcClient = Class.create({
+    initialize: function(url, username, passwd) {
+        this.url = url;
+        this.username = username;
+        this.passwd = passwd;
+        this.authToken = null;
+        
+        this.login(username, passwd);
+    },
+    //send http post
+    doPost: function(url, data, onSuccess, onFailure) {
+        return new Ajax.Request(url, {
+            //method: 'get',
+            //parameters: {para1: '12', para2: 12},
+            method: 'post',
+            contentType: 'application/json',
+            postBody: Object.toJSON(data),
+            onSuccess: onSuccess,
+            onFailure: onFailure
+        });
+    },
+    //invoke method
+    call: function(method, args, onSuccess, onFailure) {
+        var body = {method: method,
+                    args: args,        
+                    authToken: this.authToken,
+                    needReturn: true,
+                    status: 10,
+                    version: '1.0',
+                    owner: ''
+                   };
+                   
+        var url = this.url + "?id=" + randomString(16); 
+        this.doPost(url, body, onSuccess, onFailure);
+    },
+    //login
+    login: function(username, passwd) {
+        var body = {method: 'login',
+                    args: [username, passwd],        
+                    authToken: this.authToken,
+                    needReturn: true,
+                    status: 11,
+                    version: '1.0',
+                    owner: ''
+                   };
+        var that = this;
+        this.doPost(this.url, body,     
+                    function onSuccess(transport){
+                        //var response = transport.responseText || "no response text";
+                        var response = transport.responseJSON;
+                        that.authToken = response.authToken;
+                    },
+                    function onFailure(transport){
+                        alert(transport.statusText);
+                    });
+    },
+    //logout
+    logout: function() {
+        var body = {method: 'logout',
+                    args: null,        
+                    authToken: this.authToken,
+                    needReturn: true,
+                    status: 12,
+                    version: '1.0',
+                    owner: ''
+                   };
+        var that = this;
+        this.doPost(this.url, body,     
+                    function onSuccess(transport){
+                        var response = transport.responseJSON;
+                        that.authToken = null;
+                    },
+                    function onFailure(transport){
+                        alert(transport.statusText);
+                    });
+    },
+    //is login
+    hasLogin: function() {
+        return this.authToken != null;
+    }
+});
+
+//生成并显示表格
+function showTable(div4Table, header, data, onUpdateData, onCellClick) {    
+	div4Table.update('');
+    var table = new BrpcTable(div4Table, {  header: header,
+                                            onUpdateData: onUpdateData,
+                                            onCellClick: onCellClick,
+                                            //onCellDblClick: onCellDblClick,
+                                            overCellStyle: 'overCell',
+                                            tableStyle: 'tableStyle',
+                                            trStyle: 'trStyle',
+                                            thStyle: 'thStyle',
+                                            tdStyle: 'tdStyle'
+                                          });
+    table.load(data);
+    return table;
+}
+        
+//生成并显示树。divJSON：显示JSON格式的数据；divTree：树所在的DIV。
+function showTree(divJSON, divTree) {
+	function onClick(e) {
+		var content = e.element().innerHTML;
+		$('btnTree').next().update(content);
+	}
+    
+	function onDblClick(e) {
+		var ele = e.element();
+		$('btnTree').next().update('onDblClick: ' + ele.innerHTML);
+        
+        invokerView.load();
+        /*var header = ['col1', 'col2', 'col3'];
+        var data = [{col1:11,col2:12,col3:13}, {col1:21,col2:22,col3:23}];
+        showTable($('invokerContent'), header, data);*/
+	}
+    
+    var invokerView = new Alert('invoker_box', {
+            title : 'brpc method invoker',
+            content : '<div class="contentStyle"><div id="invokerContent" class="contentStyle2">hello hj</div></div> <div class="buttonsDiv"><button class="buttonStyle">invoke</button><button class="buttonStyle">back</button></div>',
+            width : '500',
+            height : '400',
+            top : '',
+            left : '',
+            fixed : '',
+            close : 'close'
+        }); 
+        
+	divTree.update('');
+	var data = randomData(3);
+	divJSON.update(Object.toJSON(data));
+	var tree = new Tree(divTree, {
+                        data: null,
+                        onNodeClick: onClick,
+                        onNodeDblClick: onDblClick,
+                        selectedStyle: 'selected',
+                        normalStype: 'normal'
+                        });
+	tree.load(data);
+	return tree;
+}
+
+// 随机整数[bottom, top)
+function randomInt(bottom, top) {
+    return Math.floor(Math.random() * (top - bottom)) + bottom;
+}
+
+// 使用CHARS生成随机字符串。length：字符串长度，返回的字符串一定是这个长度。用数组join的方法实现，高效简洁。
+function randomString(length) {
+    var CHARS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789';
+    var CHARS_LENGTH = CHARS.length;
+    var a = new Array(length);
+    for (var i = 0; i < length; ++i) {
+        a[i] = CHARS.charAt(randomInt(0, CHARS_LENGTH));
+    }
+    return a.join('');
+}
+    
+//随机生成数据。level：树的深度。
+function randomData(level) {
+	// 真正干活的函数。
+	function createData(level) {
+		var o = {};
+		o.label = randomString(10);
+
+		if (level > 0) {
+			var seed = randomInt(0, 10);
+			if (seed > 2) {
+				o.children = new Array(randomInt(2, 4));
+				for (var i = 0, n = o.children.length; i < n; ++i) {
+					o.children[i] = createData(level - 1);
+				}
+			}
+		}
+		return o;
+	}
+	return createData(level);	
+}
+</script>
+</head>
+    <body>
+        <div id="dJSON" class="normal"></div>
+        <div id="dTree"></div>
+
+        <div id="dJSON2" class="normal"></div>
+        <div id="dTree2"></div>
+
+        <div><input id="btnTree" type="button" value="create tree" /><span></span></div>
+        <div><input id="btnShow" type="button" value="show current"/><span></span></div>
+                
+        <div><input id="btnMethod" type="button" value="invoke method" /><span></span></div>
+        <div id="divTable"></div>        
+    </body>
+</html>
