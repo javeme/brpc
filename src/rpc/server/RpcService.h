@@ -71,8 +71,16 @@ public:
 		fname = fname.splitWith("::").getLast();
 		return dispatcher.registerFunction(fname, func);
 	}
-	#define asnf(name,fun) assert(regFunctionWithMemberName(name, fun))
-	#define as(fun) assert(regFunctionWithMemberName(_CODE2STRING(fun), &fun))
+	template <typename Func>
+	void regFunctionWithException(cstring funcName, Func func) {
+		if(!regFunctionWithMemberName(funcName, func)) {
+			String msg = String("failed to register function: ") + funcName;
+			throwpe(RuntimeException(msg));
+		}
+	}
+
+	#define asnf(name,fun) regFunctionWithException(name, fun)
+	#define as(fun) regFunctionWithException(_CODE2STRING(fun), &fun)
 
 	bool regObject(cstring name, Object* obj){ 
 		return dispatcher.registerVar(name, obj); 

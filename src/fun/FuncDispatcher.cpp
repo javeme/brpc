@@ -166,7 +166,7 @@ Object* FuncDispatcher::call(cstring obj, cstring name, const ObjectList& args)
 bool FuncDispatcher::addFunction(AnyFunction* func)
 {
 	checkNullPtr(func);
-	printf(":> %s\n",func->toString().c_str());
+	BRpcUtil::debug(":> %s\n", func->toString().c_str());
 	auto& funcList = m_funcMap[func->name()];
 	for(auto itor = funcList.begin(); itor != funcList.end(); ++itor) {
 		if(func->operator==(**itor))

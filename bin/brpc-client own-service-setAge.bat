@@ -1,0 +1,1 @@
+brpc.exe client nova.am.setAge 18

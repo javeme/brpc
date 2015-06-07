@@ -54,3 +54,6 @@ Debug/brpc_manifest.rc
 Debug/brpc.exe.intermediate.manifest
 Debug/brpc.exe.embed.manifest
 Debug/brpc.exe.embed.manifest.res
+Release/brpc.lastbuildstate
+Release/brpc.exe.intermediate.manifest
+Release/brpc.vcxprojResolveAssemblyReference.cache

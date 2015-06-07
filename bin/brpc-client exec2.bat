@@ -1,0 +1,1 @@
+brpc.exe client nova.execute "\"G:\quick\无聊的\其他\123.rm""

@@ -1,0 +1,1 @@
+brpc.exe client nova.sub.sub2.print "\"hello sub-rpc\""

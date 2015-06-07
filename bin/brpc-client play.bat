@@ -1,0 +1,1 @@
+brpc.exe client nova.playMusic "\"F:\ธ่ว๚\พญตไา๔ภึ\Beyond-นโปิห๊ิย.mp3\""

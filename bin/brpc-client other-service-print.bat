@@ -1,0 +1,1 @@
+brpc.exe client other.print "\"hello world.\""
