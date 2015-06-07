@@ -6,21 +6,33 @@
 CHECK_MEMORY_LEAKS
 
 #include "SocketTools.h"
-#include "P2pRpcServer.h"
-#include "P2pRpcClient.h"
+#include "RpcServer.h"
+#include "RpcClient.h"
 #include "DefaultAuthChecker.h"
 #include "JsonSerializer.h"
 #include "MyRpcService.h"
 #include "ObjectMap.h"
 #include "ObjectFactory.h"
 #include "Log.h"
+#include "ErrorHandler.h"
 
 using namespace bluemei;
+
+class LogErrorHandler : public IErrorHandler
+{
+public:
+	virtual bool handle(Exception& e)
+	{
+		Log* log = Log::getLogger();
+		log->warn(e.toString());
+		return true;
+	}
+};
 
 #include "MyRpcApi.h"
 void testMyRpcApi()
 {
-	cstring url = "jmtp://127.0.0.1";
+	cstring url = "http://127.0.0.1"; // jmtp://127.0.0.1
 	cstring name = "test", password = "123456";
 	MyRpcApi myApi(url, name, password);
 		
@@ -39,8 +51,8 @@ void testMyRpcApi()
 
 	double f = myApi.sum(55, 33.8);
 	bool sucess = myApi.playMusic("F:/¸èÇú/¾­µäÒôÀÖ/Beyond-¹â»ÔËêÔÂ.mp3");
-	String result = myApi.execute("notepad test-notepad.txt");
-	result = myApi.execute("ping baidu.com");
+	/*String result = myApi.execute("ping baidu.com");
+	result = myApi.execute("notepad test-notepad.txt");*/
 	
 	MySubRpcApi* sub = (MySubRpcApi*)myApi.getSubService("sub");
 	int len = sub->print("hello, sub rpc-api");
@@ -62,18 +74,20 @@ int run(int argc, char* argv[])
 
 			MyRpcService dispatcher("nova");
 			DefaultAuthChecker checker("test", "123456");
-			P2pRpcServer server("http://0.0.0.0", &checker, "text/json");
+			RpcServer server("http://0.0.0.0", &checker, "text/json");
 			printf("server start...\n");
-			server.run(&dispatcher);
+			server.start(&dispatcher);
+			server.wait();
 		}
 		else if(arg1 == "client")
 		{
 			logger->info("brpc client starting...");
 
-			cstring url = "http://127.0.0.1";//http://192.168.1.106
+			cstring url = "http://127.0.0.1";//http://192.168.1.131
 			RpcService dispatcher;
 			DefaultAuthChecker checker("", "");
-			P2pRpcClient client(url, &dispatcher, &checker,"text/json");//"text/xml", "text/json", "application/brpc.bin"
+			//"text/xml", "text/json", "application/brpc.bin"
+			RpcClient client(url, &dispatcher, &checker,"text/json", 1000*3);
 
 			printf("client start...\n");
 			//such as: echo "hello rpc"
@@ -141,100 +155,43 @@ int run(int argc, char* argv[])
 }
 
 
-#include "ClassField.h"
-
-
-class TestField : public Object
-{
-public:
-	DECLARE_DCLASS(TestField);
-public:
-	int aa;
-	float bb;
-	double cc;
-	Double obj;
-		
-	Field<bool> sex;
-	Field<int> age;
-	Field<float> weight;
-	FIELD(int, ival);
-	FIELD(float, fval);
-	FIELD(Object*, oval);
-public:
-	TestField(): oval(null) {}
-	int ff();
-};
-
-REGISTER_CLASS(TestField);
-REG_CLS_FIELD(TestField, bb);
-REG_CLS_FIELD(TestField, cc);
-
-void testField()
-{
-	REG_FIELD(TestField::obj);
-	TestField test;
-	test.oval = new TestField();
-	auto aa = regField("aa", &TestField::aa);
-	aa.set(test, 123);
-	String sssaa=Value2String<const FieldInfo*>(&aa);
-
-	regField("sex", &TestField::sex);
-	auto field = regField("age", &TestField::age);
-	test.sex = true;
-	test.age = 28;
-	int age = test.age + 2;
-	field.set(test, 80);
-
-	test.setAttributeT("bb", 3.14f);
-	test.setAttributeT<Double>("obj", 3.14159260);
-	test.setAttributeT<Field<int>>("age", (88));
-	age = test.getAttributeT<Field<int>>("age");
-
-	test.setAttribute("cc", &Double(6.28));
-
-	String sss=Value2String<const FieldInfo*>(&field);
-	auto cls = TestField::thisClass();
-	auto flds = cls->allFields();
-	std::cout<<flds.toString().c_str()<<std::endl;
-
-	auto map = objectToMap(&test);
-	//auto map = MapObjectHelper<TestField*, true>::object2map(&test);
-	std::cout<<map->toString().c_str()<<std::endl;
-	delete map;
-
-	ObjectMap* map2 = new ObjectMap();
-	map2->putValue("aa", 38);
-	map2->put("age", new Field<int>(38));
-	auto obj = valueOf<TestField*>(map2);
-	delete obj;
-	delete map2;
-
-	valueOf<TestField*>(&sss);
-}
-
-
 int main(int argc, char* argv[])
 {
+	BRpcUtil::setBrpcDebug(true);
 	//main2(argc, argv);
+
+	String name = "brpc";
+	if (argc > 1){
+		name += "-";
+		name += argv[1];
+	}
+
 	try{
-		LogManager::instance().initLogger("brpc", "/var/log/brpc.log", Log::LOG_DEBUG);
+		String file = String::format("/var/log/%s.log", name.c_str());
+		LogManager::instance().initLogger(name, file, Log::LOG_DEBUG);
 	}catch (Exception& e){
 		e.printStackTrace();
 	}
-	Log* log = Log::getLogger("brpc");
+
+	Log* log = Log::getLogger(name);
 	log->info("brpc starting...");
-		
+	log->updateFormatter("$time [Thread-$thread] [$level] $message");
+
+	LogErrorHandler logHandler;
+	ErrorHandler::setHandler(&logHandler);
+
 	SocketTools::initSocketContext();
+	
 	try
 	{
 		log->trace("before running");
-		//testField();
 		run(argc, argv);
 		log->trace("after running");
 	}catch (Exception& e){
 		e.printStackTrace();
-		log->error(e.toString());
+		log->error("exit with exception: " + e.toString());
 	}
+
 	SocketTools::cleanUpSocketContext();
 
 	log->info("brpc end");

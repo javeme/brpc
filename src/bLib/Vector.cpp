@@ -45,6 +45,12 @@ bool Vector<T>::remove(unsigned int pos,T& value)
 }
 
 template <class T>
+bool Vector<T>::pop(T& value)
+{
+	return remove(size()-1, value);
+}
+
+template <class T>
 bool Vector<T>::get(unsigned int pos,T& value)const
 {
 	if(pos<0||pos>=m_dataArray.size())
@@ -55,6 +61,18 @@ bool Vector<T>::get(unsigned int pos,T& value)const
 
 template <class T>
 T& Vector<T>::operator[](unsigned int pos)
+{
+	if(pos<0||pos>=m_dataArray.size())
+	{
+		char buf[100];
+		sprintf_s(buf,"Vector size is %d, can't access %d.",m_dataArray.size(),pos);
+		throw OutOfBoundException(buf);
+	}
+	return m_dataArray[pos];
+}
+
+template <class T>
+const T& Vector<T>::operator[](unsigned int pos)const
 {
 	if(pos<0||pos>=m_dataArray.size())
 	{

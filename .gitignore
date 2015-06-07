@@ -41,3 +41,16 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+*.log
+*.obj
+*.tlog
+*.pdb
+*.idb
+*.pch
+Debug/brpc.lastbuildstate
+Debug/brpc.unsuccessfulbuild
+Debug/brpc.vcxprojResolveAssemblyReference.cache
+Debug/brpc_manifest.rc
+Debug/brpc.exe.intermediate.manifest
+Debug/brpc.exe.embed.manifest
+Debug/brpc.exe.embed.manifest.res

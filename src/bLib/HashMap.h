@@ -99,14 +99,22 @@ public:
 	{ 
 		if(this != &other)
 		{
-			this->m_nSize = other.m_nSize;
+			/*this->m_nSize = other.m_nSize;
 			this->m_fLoadFactor = other.m_fLoadFactor;
 			this->m_nThreshold = other.m_nThreshold;
 			this->m_nMaxSize = other.m_nMaxSize;
 
 			this->m_entryTable = ArrayList<HashEntry*>(this->m_nMaxSize,1.0);
 			initListNull(this->m_entryTable);
-			other.transfer(this->m_entryTable);
+			other.transfer(this->m_entryTable);*/
+			this->m_nSize = 0;
+			this->m_fLoadFactor = other.m_fLoadFactor;
+			this->m_nThreshold = other.m_nThreshold;
+			this->m_nMaxSize = other.m_nMaxSize;
+
+			this->m_entryTable = ArrayList<HashEntry*>(this->m_nMaxSize,1.0);
+			initListNull(this->m_entryTable);
+			this->merge(other);
 		}
 		return *this; 
 	}
@@ -133,6 +141,25 @@ public:
 		}
 		return *this;
 	}
+
+	const V& operator[](const K& key)const 
+	{ 
+		V* v = get(key);
+		if (v == null)
+			throwpe(NotFoundException("key " + (String)Value2String<K>(key)));		
+		return *v; 
+	}
+	V& operator[](const K& key)
+	{ 
+		V* v = get(key);
+		if (v == null) {
+			if(put(key, V()) && (v=get(key)))
+				return *v;
+		}
+		else
+			return *v;
+		throwpe(NotFoundException("key " + (String)Value2String<K>(key)));
+	}
 public:
 	virtual bool put(const K& k,const V& v);
 	virtual V* get(const K& key)const;
@@ -143,7 +170,7 @@ public:
 	virtual bool contain(const K& key)const;
 	virtual unsigned int size() const;
 	virtual String toString()const;
-
+	
 	virtual Iterator<HashEntry>* iterator();
 	virtual void releaseIterator(Iterator<HashEntry>* itor);
 protected:
@@ -178,39 +205,13 @@ public:
 		}
 		virtual ~HashMapIterator(){}
 		virtual bool hasNext(){
-			while(currentIndex+1<m_hashMapRef.m_entryTable.size())
-			{
-				if(currentEntry==nullptr)
-				{
-					currentEntry=m_hashMapRef.m_entryTable[++currentIndex];
-					if (currentEntry!=nullptr)
-					{
-						currentEntry=nullptr;
-						return true;
-					}
-				}
-				else
-				{
-					if(currentEntry->next!=nullptr)
-						return true;
-					else{
-						currentEntry=nullptr;
-					}
-				}
-			}
-			if(currentIndex+1==m_hashMapRef.m_entryTable.size())//最后一组
-				if(currentEntry!=nullptr && currentEntry->next!=nullptr)
-					return true;
-
-			return false;
+			unsigned int index = currentIndex;
+			HashEntry* entry = currentEntry;
+			return findNext(index, entry);
 		}
 		virtual HashEntry next(){
-			if(currentEntry==nullptr && currentIndex>=0)
-				currentEntry=m_hashMapRef.m_entryTable[currentIndex];
-			else if(currentEntry!=nullptr)
-				currentEntry=currentEntry->next;
-			if(currentEntry==nullptr)
-				throwpe(NullPointerException("next is null"));
+			if(!findNext(currentIndex, currentEntry))
+				throwpe(OutOfBoundException("there is no more element in HashMap"));
 
 			return HashEntry(currentEntry->key,currentEntry->value);
 		}
@@ -249,6 +250,38 @@ public:
 				return true;
 			}
 		}
+	protected:
+		bool findNext(unsigned int& index, HashEntry*& entry)
+		{
+			unsigned int size = m_hashMapRef.m_entryTable.size();
+			while(index+1<=size)
+			{
+				//next ele in table
+				if(entry==nullptr)
+				{
+					index++;
+					if(index<size){
+						entry=m_hashMapRef.m_entryTable[index];
+						if(entry!=nullptr){
+							return true;
+						}
+					}
+				}
+				//next ele in entry
+				if(entry!=nullptr)
+				{
+					if(entry->next!=nullptr){
+						entry = entry->next;
+						return true;
+					}
+					else{
+						entry=nullptr;
+					}
+				}
+			}
+
+			return false;
+		}
 	private:
 		unsigned int currentIndex;
 		HashEntry* currentEntry;
@@ -262,7 +295,7 @@ void HashMap<K, V>::resize( unsigned int newCapacity )
 	initListNull(newTable);
 	transfer(newTable);
 	m_entryTable = move(newTable);
-	m_nMaxSize=newCapacity;
+	m_nMaxSize = newCapacity;
 	m_nThreshold = (unsigned int)(m_nMaxSize * m_fLoadFactor);
 }
 
@@ -275,7 +308,7 @@ void HashMap<K, V>::transfer( ArrayList<HashEntry*>& newTable )const
 	for (unsigned int j = 0; j < oldSize; j++) {
 		HashEntry* entry = src[j];
 		if (entry != null) {
-			src[j] = null;
+			//src[j] = null;
 			do {
 				//保存src节点链的下一个节点
 				HashEntry* next = entry->next;
@@ -381,8 +414,11 @@ void HashMap<K, V>::clear()
 	//释放table
 	for(unsigned int i=0;i<m_entryTable.size();i++)
 	{
-		delete m_entryTable[i];
-		m_entryTable[i]=nullptr;
+		if(m_entryTable[i])
+		{
+			delete m_entryTable[i];
+			m_entryTable[i]=nullptr;
+		}
 	}
 	//m_entryTable.clear();
 	m_nSize=0;

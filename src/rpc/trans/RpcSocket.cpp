@@ -10,6 +10,8 @@ RpcSocket::RpcSocket()
 	dataListener=nullptr;
 
 	dataHookHandler=nullptr;
+
+	timeout = 0;
 }
 
 RpcSocket::~RpcSocket()
@@ -24,7 +26,7 @@ void RpcSocket::setReceiveListener( RpcReceiveListener* listener )
 	dataListener=listener;
 }
 
-void RpcSocket::setDataHookHandler( RpcDataHookHandle* hook )
+void RpcSocket::setDataHookHandler( RpcDataHookHandler* hook )
 {
 	dataHookHandler=hook;
 }
@@ -61,7 +63,11 @@ DataPackage RpcSocket::sendSynch(const DataPackage& output)
 	m_recvPacketList.clear();
 
 	this->send(output);
-	m_waitLock.wait();
+	unsigned int timeout = this->timeout * 3;
+	if(timeout == 0)
+		timeout = INFINITE;
+	if(!m_waitLock.wait(timeout))
+		throwpe(TimeoutException(timeout));
 
 	DataPackage result;
 	m_recvPacketList.removeFirstElement(result);
@@ -90,5 +96,49 @@ void RpcSocket::notifyHookSent(cstring name,const DataPackage& data,long time)
 	}
 }
 
+void RpcSocket::notifyHookError(cstring name, cstring error)
+{
+	if (dataHookHandler!=nullptr)
+	{
+		return dataHookHandler->onError(name,error,dataListener);
+	}
+}
+
+
+///////////////////////////////////////////////////////////////////////////
+//class Url
+Url::Url( const String& url/*=""*/ ) : url(url)
+{
+	if(!url.empty())
+		parseUrl();
+}
+
+void Url::parseUrl()
+{
+	String addr;
+	if(url.contain("://")) // http://127.0.0.1:8080
+	{
+		auto list = url.splitWith("://");
+		protocol = list[0];
+		addr = list[1];
+	}
+	else
+		addr = url;
+
+	if(addr.contain("/")){ // 127.0.0.1:8080/index.html
+		auto list = url.splitWith("/");
+		addr = list[0];
+		path = list[1];
+	}
+
+	if(addr.contain(":")){ // 127.0.0.1:8080
+		auto list = url.splitWith(":");
+		ip = list[0];
+		port = list[1];
+	}
+	else{ //127.0.0.1
+		ip = addr;
+	}
+}
 
 }//end of namespace bluemei

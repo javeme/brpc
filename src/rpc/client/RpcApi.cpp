@@ -6,33 +6,33 @@ namespace bluemei{
 
 
 RpcApi::RpcApi(cstring name, RpcApi* parent) 
-	: serviceName(name), rpcContext(null), parent(parent)
+	: serviceName(name), rpcClient(null), parent(parent)
 {
 	(void)init(parent);
 }
 
-RpcApi::RpcApi(cstring name, RpcContext* rpcContext, const ObjectList& loginArgs) 
-	: serviceName(name), rpcContext(rpcContext), parent(null)
+RpcApi::RpcApi(cstring name, RpcClient* rpcClient, const ObjectList& loginArgs) 
+	: serviceName(name), rpcClient(rpcClient), parent(null)
 {
-	(void)init(rpcContext, loginArgs);
+	(void)init(rpcClient, loginArgs);
 }
 
 RpcApi::~RpcApi()
 {
-	this->rpcContext = null;
+	this->rpcClient = null;
 }
 
-void RpcApi::init(RpcContext* rpcContext, const ObjectList& loginArgs)
+void RpcApi::init(RpcClient* rpcClient, const ObjectList& loginArgs)
 {
-	checkNullPtr(rpcContext);
-	this->rpcContext = rpcContext;
-	(void)this->rpcContext->login(loginArgs);
+	checkNullPtr(rpcClient);
+	this->rpcClient = rpcClient;
+	(void)this->rpcClient->login(loginArgs);
 }
 
 void RpcApi::init(RpcApi* parent)
 {
 	if(parent){
-		rpcContext = parent->rpcContext;
+		rpcClient = parent->rpcClient;
 		if(!parent->addSubSevice(this))
 			throw Exception("add service failed");
 	}
@@ -40,8 +40,8 @@ void RpcApi::init(RpcApi* parent)
 
 void RpcApi::logout()
 {
-	checkNullPtr(rpcContext);
-	(void)rpcContext->logout();
+	checkNullPtr(rpcClient);
+	(void)rpcClient->logout();
 }
 
 String RpcApi::ping()
@@ -127,11 +127,9 @@ RpcApi* RpcApi::getSubService(cstring name)
 String RpcApi::object() const
 {
 	if(parent)
-		return String::format("%s.%s", parent->object(), name());
+		return String::format("%s.%s", parent->object().c_str(), name());
 	else
 		return name();
 }
 
 }//end of namespace bluemei
-
-

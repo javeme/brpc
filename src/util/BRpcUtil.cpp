@@ -6,6 +6,9 @@
 
 namespace bluemei{
 
+bool BRpcUtil::s_isBrpcDebug = false;
+
+
 Object* MapObjectConverter::object2map(Object* obj)
 {
 	checkNullPtr(obj);

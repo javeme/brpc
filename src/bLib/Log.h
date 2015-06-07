@@ -7,8 +7,10 @@
 
 namespace bluemei{
 
+class Template;
+
 /*
-* 日志类(待完善; 增加日志级别,互斥锁等功能)
+* 日志类
 * @author 李章梅
 * @create 2014/7/4
 */
@@ -77,14 +79,16 @@ public:
 	
 	void setLevel(const String& val);
 	String getLevelDscr() const;
+
+	void updateFormatter(const String& val);
 public:
 	static String level2String(LogLevel val);
 	static LogLevel string2Level(const String& val);
-
-	static String format(const String& formatter, const LogCtx& ctx);
 protected:
 	void printLine(const String& str);
 	void print(const String& str);
+
+	String format(const LogCtx& ctx);
 protected:
 	String m_name;
 	String m_path;
@@ -93,10 +97,16 @@ protected:
 private:
 	File m_file;
 	CriticalLock m_lock;
+	Template* m_tmpl;
 protected:
 	const static LogCtx s_nullCtx;
 };
 
+/*
+* 日志实例管理器
+* @author 李章梅
+* @create 2014/7/4
+*/
 class BLUEMEILIB_API LogManager : public Object
 {
 public:

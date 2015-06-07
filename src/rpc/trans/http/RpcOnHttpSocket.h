@@ -1,34 +1,24 @@
 #pragma once
 #include "RpcSocket.h"
-#include "ClientSocket.h"
-
+#include "RpcOnTcpSocket.h"
+#include "HttpHeader.h"
+#include "HttpException.h"
 
 namespace bluemei{
 
-
 //http socket 
-class RpcOnHttpSocket : public RpcSocket
+class RpcOnHttpSocket : public RpcOnTcpSocket
 {
 public:
 	RpcOnHttpSocket(void);
 	virtual ~RpcOnHttpSocket(void);
 public:
-	virtual void connect(const HashMap<String,String>& paras) throw(RpcException);
-	virtual void close() throw(RpcException);
-
 	virtual void send(const DataPackage& package) throw(RpcException);
+	virtual void receive() throw(RpcException);
 public:
-	virtual void startReceiveThread();
-	virtual void stopReceiveThread();
-
-	virtual bool isRecving() const;
-	virtual bool isAlive() const;
+	virtual void sendResponse(HttpResponse::Status status, const String& pkgId);
 protected:
-	ClientSocket* m_pSocket;
 	CriticalLock m_sendLock;
-
-	Thread* m_pRecvThread;
-	bool m_bRecving;
 };
 
 }//end of namespace bluemei

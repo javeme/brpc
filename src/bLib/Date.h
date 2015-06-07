@@ -55,7 +55,7 @@ public:
 private:
 	void initDate();
 private:
-	timeb m_time;//用于存放时间
+	_timeb m_time;//用于存放时间
 	//DateInfo m_dateInfo;//用于存放设置
 };
 

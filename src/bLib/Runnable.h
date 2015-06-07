@@ -6,12 +6,11 @@
 
 namespace bluemei{
 
-class ThreadParameter;
 
 class BLUEMEILIB_API Runnable : public Object
 {
 public:
-	virtual void run(ThreadParameter*)=0;
+	virtual void run()=0;
 };
 
 

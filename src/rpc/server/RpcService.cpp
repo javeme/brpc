@@ -84,9 +84,9 @@ Object* RpcService::call(cstring obj, cstring name, const ObjectList& args,
 	}
 
 	if(isNeedContext(fthis, fname)) {
-		const_cast<ObjectList&>(args).add(ctx);
-		Object* result = dispatcher.call(fthis, fname, args);
-		const_cast<ObjectList&>(args).remove(args.size()-1, false);
+		ObjectList argsWithCtx = args;
+		argsWithCtx.add(ctx);
+		Object* result = dispatcher.call(fthis, fname, argsWithCtx);
 		return result;
 	}
 	//this service
@@ -181,13 +181,13 @@ String RpcService::typeOfVar(cstring var)
 bool RpcService::subscribe(cstring event, cstring method, RpcContext* ctx)
 {
 	checkNullPtr(ctx);
-	return ctx->subscribe(event, method);
+	return ctx->getInvoker().subscribe(event, method);
 }
 
 bool RpcService::unsubscribe(cstring event, cstring method, RpcContext* ctx)
 {
 	checkNullPtr(ctx);
-	return ctx->unsubscribe(event, method);
+	return ctx->getInvoker().unsubscribe(event, method);
 }
 
 bool RpcService::isThisService(cstring name) const

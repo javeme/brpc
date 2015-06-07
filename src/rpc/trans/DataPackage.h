@@ -6,11 +6,12 @@
 
 namespace bluemei{
 
+#define KEY_STATUS		 "Status"
 #define KEY_RESPONSE	 "Response"
 
 #define KEY_CONTENT_TYPE "Content-Type"
 #define KEY_CONTENT_LEN  "Content-Length"
-#define KEY_PACKAGE_ID   "Package-Id"
+#define KEY_PACKAGE_ID   "X-Package-Id"
 #define KEY_CHARSET		 "Content-Charset"
 
 /*
@@ -41,6 +42,7 @@ public:
 	static String genId(){
 		unsigned int id = Util::random();
 		return String::format("%u", id);
+		//return String(Util::uuid4());
 	}
 /*private:
 	DataPackage(const DataPackage& other){ *this = other; }

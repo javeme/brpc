@@ -21,7 +21,6 @@ public:
 	#define __super SuperObj
 	DECLARE_DCLASS(Object);
 	#undef __super*/
-	typedef Object Self; 
 	static const Class* thisClass(); 
 	static Object* createObject(); 
 	virtual Object* clone()const; 

@@ -45,7 +45,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -60,7 +60,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -161,13 +161,15 @@
     <ClInclude Include="src\fun\FunctionWrapper.h" />
     <ClInclude Include="src\fun\AnyFunction.h" />
     <ClInclude Include="src\fun\TemplateFunction.h" />
-    <ClInclude Include="src\rpc\amqp\AmqpRpcContext.h" />
-    <ClInclude Include="src\rpc\AbstructRpcContext.h" />
+    <ClInclude Include="src\rpc\amqp\AmqpRpcConnection.h" />
+    <ClInclude Include="src\rpc\client\RpcClient.h" />
+    <ClInclude Include="src\rpc\p2p\P2pRpcConnAcceptor.h" />
+    <ClInclude Include="src\rpc\RpcConnection.h" />
     <ClInclude Include="src\rpc\client\RpcApi.h" />
-    <ClInclude Include="src\rpc\p2p\P2pRpcClient.h" />
-    <ClInclude Include="src\rpc\p2p\P2pRpcContext.h" />
-    <ClInclude Include="src\rpc\p2p\P2pRpcServer.h" />
+    <ClInclude Include="src\rpc\p2p\P2pRpcConnection.h" />
     <ClInclude Include="src\rpc\RpcContext.h" />
+    <ClInclude Include="src\rpc\RpcInvoker.h" />
+    <ClInclude Include="src\rpc\RpcInvokerFacatory.h" />
     <ClInclude Include="src\rpc\RpcMethod.h" />
     <ClInclude Include="src\rpc\server\RpcServer.h" />
     <ClInclude Include="src\rpc\server\RpcService.h" />
@@ -176,10 +178,13 @@
     <ClInclude Include="src\rpc\trans\http\HttpHeader.h" />
     <ClInclude Include="src\rpc\trans\http\HttpParser.h" />
     <ClInclude Include="src\rpc\trans\http\RpcOnHttpSocket.h" />
+    <ClInclude Include="src\rpc\trans\jmtp\JmtpException.h" />
     <ClInclude Include="src\rpc\trans\jmtp\JmtpHeader.h" />
     <ClInclude Include="src\rpc\trans\jmtp\RpcOnJmtpSocket.h" />
+    <ClInclude Include="src\rpc\trans\RpcDataHookHandler.h" />
+    <ClInclude Include="src\rpc\trans\RpcOnTcpSocket.h" />
     <ClInclude Include="src\rpc\trans\RpcSocket.h" />
-    <ClInclude Include="src\rpc\trans\RpcSocketManager.h" />
+    <ClInclude Include="src\rpc\trans\RpcSocketFactory.h" />
     <ClInclude Include="src\serializer\binary\BinaryReader.h" />
     <ClInclude Include="src\serializer\binary\BinarySerializer.h" />
     <ClInclude Include="src\serializer\json\jsoncpp\config.h" />
@@ -216,21 +221,25 @@
     <ClCompile Include="src\blib\MemoryPool.cpp" />
     <ClCompile Include="src\blib\Vector.cpp" />
     <ClCompile Include="src\fun\FuncDispatcher.cpp" />
-    <ClCompile Include="src\rpc\AbstructRpcContext.cpp" />
+    <ClCompile Include="src\rpc\client\RpcClient.cpp" />
+    <ClCompile Include="src\rpc\p2p\P2pRpcConnAcceptor.cpp" />
+    <ClCompile Include="src\rpc\RpcConnection.cpp" />
     <ClCompile Include="src\rpc\client\RpcApi.cpp" />
-    <ClCompile Include="src\rpc\p2p\P2pRpcClient.cpp" />
-    <ClCompile Include="src\rpc\p2p\P2pRpcContext.cpp" />
-    <ClCompile Include="src\rpc\p2p\P2pRpcServer.cpp" />
+    <ClCompile Include="src\rpc\p2p\P2pRpcConnection.cpp" />
+    <ClCompile Include="src\rpc\RpcInvokerFacatory.cpp" />
+    <ClCompile Include="src\rpc\RpcMethod.cpp" />
     <ClCompile Include="src\rpc\server\RpcServer.cpp" />
     <ClCompile Include="src\rpc\server\RpcService.cpp" />
     <ClCompile Include="src\rpc\trans\http\HttpException.cpp" />
     <ClCompile Include="src\rpc\trans\http\HttpHeader.cpp" />
     <ClCompile Include="src\rpc\trans\http\HttpParser.cpp" />
     <ClCompile Include="src\rpc\trans\http\RpcOnHttpSocket.cpp" />
+    <ClCompile Include="src\rpc\trans\jmtp\JmtpException.cpp" />
     <ClCompile Include="src\rpc\trans\jmtp\JmtpHeader.cpp" />
     <ClCompile Include="src\rpc\trans\jmtp\RpcOnJmtpSocket.cpp" />
+    <ClCompile Include="src\rpc\trans\RpcOnTcpSocket.cpp" />
     <ClCompile Include="src\rpc\trans\RpcSocket.cpp" />
-    <ClCompile Include="src\rpc\trans\RpcSocketManager.cpp" />
+    <ClCompile Include="src\rpc\trans\RpcSocketFactory.cpp" />
     <ClCompile Include="src\serializer\binary\BinaryReader.cpp" />
     <ClCompile Include="src\serializer\binary\BinarySerializer.cpp" />
     <ClCompile Include="src\serializer\json\jsoncpp\reader.cpp" />

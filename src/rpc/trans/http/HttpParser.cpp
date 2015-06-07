@@ -13,15 +13,16 @@ HttpParser::~HttpParser()
 {
 }
 
-HttpHeader* HttpParser::parse(const String& text)
+SmartPtr<HttpHeader> HttpParser::parse(const String& text)
 {
-
+	//@Todo: parse from string
+	;
 	return null;
 }
 
-HttpHeader* HttpParser::parse(const LinkedList<String>& lines)
+SmartPtr<HttpHeader> HttpParser::parse(const LinkedList<String>& lines)
 {
-	HttpHeader* header = null;
+	SmartPtr<HttpHeader> header = null;
 
 	String line = lines.get(0);	
 	//Response
@@ -30,7 +31,7 @@ HttpHeader* HttpParser::parse(const LinkedList<String>& lines)
 		auto list = line.splitWith(" ");
 		if(list.size() < 3)
 			throw HttpParseException("Invalid http response: "+line);
-		HttpResponse* response = new HttpResponse();
+		SmartPtr<HttpResponse> response = new HttpResponse();
 		header = response; 
 		response->setVersion(list[0].splitWith("/")[1]);
 		response->setStatus(HttpResponse::str2status(list[1]));
@@ -43,8 +44,8 @@ HttpHeader* HttpParser::parse(const LinkedList<String>& lines)
 		if(list.size() != 3)
 			throw HttpParseException("Invalid http request");
 
-		HttpRequest* request= new HttpRequest();
-		header = request; 
+		SmartPtr<HttpRequest> request= new HttpRequest();
+		header = request;
 		request->setRequestType(HttpRequest::str2requestType(list[0]));
 		request->setUrlWithParas(list[1]);
 		request->setVersion(list[2].splitWith("/")[1]);
@@ -72,10 +73,17 @@ HashMap<String,String> HttpParser::paramSplit(const String& str)
 {
 	HashMap<String,String> paras;
 
-	//base64解码
-	;
 	//解析参数
-	;
+	auto list = str.splitWith("&");
+	for(unsigned int i = 0; i < list.size(); i++)
+	{
+		String pair = list[i];
+		auto kv = pair.splitWith("=");
+		String k = CodeUtil::urlDecodeComponent(kv[0]);
+		String v = kv.size() > 0 ? CodeUtil::urlDecodeComponent(kv[1]) : "";
+		paras.put(k, v);
+	}
+
 	return paras;
 }
 
@@ -96,12 +104,11 @@ HashMap<String,String> HttpParser::parseCookies(const String& str)
 		position2=str.find(";",position1);
 		if(position2 <= position1)
 		{
-			end = true;
-			
+			end = true;			
 		}
 
 		value=str.substring(position1+1,position2-position1-1);
-		value=CodeUtil::urlDecode(value.c_str());
+		value=CodeUtil::urlDecodeComponent(value.c_str());
 
 		cookies.put(key,value);
 		position1=position2=position2+1;
@@ -142,9 +149,7 @@ String HttpParser::parseContentType(const String& type)
 
 String HttpParser::decodeUrl(const String& url)
 {
-	String decodedUrl;
-	;
-	return decodedUrl;
+	return CodeUtil::urlDecode(url);
 }
 
 }//end of namespace bluemei

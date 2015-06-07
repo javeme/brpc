@@ -56,104 +56,89 @@ constraints
 */
 #include "SmartPtrManager.h"
 #include "System.h"
-#include "TypeManager.h"
-
-#include "MultiValueHashMap.h"
 
 
 namespace bluemei{
 
-#define NO_USE_EXTENDS 0
-
-
-template <typename T>
-struct DestructorStruct
-{
-	static void destroy(void* obj) {
-		T* p=static_cast<T*>(obj);
-		delete p;
-	}
-};
-template <typename T>
-struct ArrayDestructorStruct
-{
-	static void destroy(void* obj) { 
-		delete[] static_cast<T*>(obj); 
-	}
-};
-
-
+//////////////////////////////////////////////////////////////////////
+//class SmartPtr
 template<typename T> 
 class SmartPtr : public LinkNode
 {
-protected:
-#ifdef _DEBUG
-	T* targetObj;
-#else
-	int reserved; //reserved
-#endif
-	ObjectWrapper *pWrapper;
 public:
-	SmartPtr<T>& operator=(T* p)
+	SmartPtr(T* pObj=nullptr)
 	{
 		GlobalMutexLock l;
-		ptrTrace("SmartPtr operator=(T* p)\r\n");
 
-		ObjectWrapper *old = pWrapper;
-		pWrapper = WrapperManager::getInstance()->getWrapper(p,&DestructorStruct<T>::destroy);
-		old->disattach();
-#ifdef _DEBUG
-		targetObj = (T*)pWrapper->getTarget();
-#endif
+		SmartPtrManager::getInstance()->add(this);
+		ptrTrace("SmartPtr con (T* pObj) %p\r\n",this);
+		getWrapper(pObj);
 
-		return *this;
+		targetObj =pObj;
+		reserved = 0;
 	}
-	SmartPtr<T>& operator=(const SmartPtr<T> &ptr)
+		
+	virtual ~SmartPtr(void)
 	{
 		GlobalMutexLock l;
-		ptrTrace("SmartPtr operator=(const SmartPtr<T> &ptr)\r\n");
-		if(pWrapper == ptr.pWrapper)//assign to self
-			return *this;
-		pWrapper->disattach();
-		pWrapper = ptr.pWrapper;
-		pWrapper->attach();
-#ifdef _DEBUG
-		targetObj = (T*)pWrapper->getTarget();
-#endif
-		return *this;
+		ptrTrace("SmartPtr decon %p\r\n",this);
+		SmartPtrManager::getInstance()->remove(this);
+		if(System::getInstance().isCollecting())
+			return;
+		wrapper->disattach();
 	}
+
 	SmartPtr(const SmartPtr<T>& ptr)
 	{
 		GlobalMutexLock l;
 		SmartPtrManager::getInstance()->add(this);
 		ptrTrace("SmartPtr con (const SmartPtr<T>& ptr) %p\r\n",this);
-		pWrapper = ptr.pWrapper;
-		pWrapper->attach();
-#ifdef _DEBUG
-		targetObj = (T*)pWrapper->getTarget();
-#endif
-		//type = PTR_UNKNOWN;
+		wrapper = ptr.wrapper;
+		wrapper->attach();
+
+		targetObj = ptr.targetObj;
+		reserved = ptr.reserved;
 	}
-	SmartPtr(T* pObj=NULL)
+	
+	SmartPtr<T>& operator=(const SmartPtr<T> &ptr)
 	{
 		GlobalMutexLock l;
+		ptrTrace("SmartPtr operator=(const SmartPtr<T> &ptr)\r\n");
+		if(wrapper == ptr.wrapper)//assign to self
+			return *this;
+		wrapper->disattach();
+		wrapper = ptr.wrapper;
+		wrapper->attach();
 
-		TypeManager* manager=TypeManager::instance();
-		manager->registerType<T>();
+		targetObj = ptr.targetObj;
+		reserved = ptr.reserved;
 
-		SmartPtrManager::getInstance()->add(this);
-		ptrTrace("SmartPtr con (T* pObj) %p\r\n",this);
-		pWrapper = WrapperManager::getInstance()->getWrapper(pObj,&DestructorStruct<T>::destroy);
-#ifdef _DEBUG
-		targetObj = (T*)pWrapper->getTarget();
-#endif
-		//type = PTR_UNKNOWN;
+		return *this;
+	}
+
+	SmartPtr<T>& operator=(T* pObj)
+	{
+		GlobalMutexLock l;
+		ptrTrace("SmartPtr operator=(T* p)\r\n");
+
+		ObjectWrapper *old = wrapper;
+		getWrapper(pObj);
+		old->disattach();
+
+		targetObj = pObj;
+
+		return *this;
 	}
 public:
-	//int operator==(T* p)
-	//{
-	//	return this->pWrapper->pObj == p;
-	//}
+	/*int operator==(T* p)
+	{
+		return this->pWrapper->pObj == p;
+	}*/
+	int operator==(T* p)const
+	{
+		return this->targetObj == p;
+	}
+
 	operator const T* () const
 	{
 		ptrTrace("SmartPtr operator T* \r\n");
@@ -165,54 +150,23 @@ public:
 		ptrTrace("SmartPtr operator T* \r\n");
 		return getTarget();
 	}
-protected:
-	inline const T* getTarget() const
-	{
-#if NO_USE_EXTENDS
-		return static_cast<T*> (pWrapper->getTarget());
-#else
-		TypeManager* manager=TypeManager::instance();
-		return manager->cast<T>(pWrapper->getTarget());
-#endif
-	}
 
-	inline T* getTarget() 
-	{
-#if NO_USE_EXTENDS
-		return static_cast<T*> (pWrapper->getTarget());
-#else
-		TypeManager* manager=TypeManager::instance();
-		return manager->cast<T>(pWrapper->getTarget());
-#endif
-	}
+	T* operator->() { return getTarget(); }
+	const T* operator->() const { return getTarget(); }
 
 public:
-	T* operator->() {return getTarget();}
-	const T* operator->() const {return getTarget();}
-	~SmartPtr(void)
-	{
-		GlobalMutexLock l;
-		ptrTrace("SmartPtr decon %p\r\n",this);
-		SmartPtrManager::getInstance()->remove(this);
-		if(System::getInstance().isCollecting())
-			return;
-		pWrapper->disattach();
-	}
-
-
-	//template<typename P>
-	//operator P* () 
-	//{
-	//	return static_cast<P*>(getTarget());
-	//}
+	template<typename S>
+	operator S* () { return static_cast<S*>(getTarget()); }
 
 	template<typename S>
 	SmartPtr<S> staticCast(){ return static_cast<S*>(getTarget()); }
+
 	template<typename S>
 	const SmartPtr<S> staticCast() const { return static_cast<S*>(getTarget()); }
-	
+		
 	template<typename S>
 	SmartPtr<S> dynamicCast(){ return dynamic_cast<S*>(getTarget()); }
+
 	template<typename S>
 	const SmartPtr<S> dynamicCast() const { return dynamic_cast<S*>(getTarget()); }
 
@@ -223,19 +177,46 @@ public:
 
 	template<typename S, typename V>
 	friend SmartPtr<S> ptr_dynamic_cast(SmartPtr<V> ptr);*/
+protected:
+	inline const T* getTarget() const
+	{
+		return targetObj;
+	}
+
+	inline T* getTarget() 
+	{
+		return targetObj;
+	}
+
+	inline void* getTargetAddr() 
+	{
+		return wrapper->getTarget();
+	}
+
+	ObjectWrapper* getWrapper(T* pObj)
+	{
+		this->wrapper = WrapperManager::getInstance()->getWrapper(pObj);
+		return this->wrapper;
+	}
+protected:
+	T* targetObj;
+	int reserved; //reserved
+
+	ObjectWrapper *wrapper;
 };
 
+
+//////////////////////////////////////////////////////////////////////
+//class ArrayPtr
 template<typename T> 
 class ArrayPtr : public SmartPtr<T>
 {
-	//up bound of array
-	int upBound;
 public:
 	ArrayPtr<T>& operator=(T* p)
 	{
 		SmartPtr<T>::operator=(p);
-		SmartPtr<T>::pWrapper->setFinalizer(&ArrayDestructorStruct<T>::destroy);
-		upBound = SmartPtr<T>::pWrapper->getSize()/sizeof(T);
+		SmartPtr<T>::wrapper->setFinalizer(&ArrayDestructorStruct<T>::destroy);
+		upBound = SmartPtr<T>::wrapper->getSize()/sizeof(T);
 		return *this;
 	}
 	ArrayPtr<T>& operator=(const ArrayPtr<T> &ptr)
@@ -250,37 +231,34 @@ public:
 	}
 	ArrayPtr(T pObj[]=NULL):SmartPtr<T>(pObj)
 	{
-		SmartPtr<T>::pWrapper->setFinalizer(&ArrayDestructorStruct<T>::destroy);
+		SmartPtr<T>::wrapper->setFinalizer(&ArrayDestructorStruct<T>::destroy);
 		///determine size of an array block
 #ifdef _MSC_VER
 #pragma warning (push)
 #pragma warning (disable:4267)
 #endif
-		upBound = SmartPtr<T>::pWrapper->getSize()/sizeof(T);
+		upBound = SmartPtr<T>::wrapper->getSize()/sizeof(T);
 #ifdef _MSC_VER
 #pragma warning (pop)
 #endif
 	}
-	//operator T* ()
-	//{
-	//	return getTarget();
-	//}
 
-	//inline T* getTarget()
-	//{
-	//	return static_cast<T*> (pWrapper->getTarget());
-	//}
+	virtual ~ArrayPtr(void)
+	{
+		ptrTrace("ArrayPtr decon %p\r\n",this);
+	}
+
+public:
 	T* operator->(){return SmartPtr<T>::getTarget();}
 	T& operator[](int index)
 	{
 		return SmartPtr<T>::getTarget()[index];
 	}
-public:
-	~ArrayPtr(void)
-	{
-		ptrTrace("ArrayPtr decon %p\r\n",this);
-	}
+
 	friend class System;
+protected:
+	//up bound of array
+	int upBound;
 };
 
 template<typename S, typename T>

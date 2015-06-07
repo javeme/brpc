@@ -15,11 +15,11 @@ namespace bluemei{
 class ObjectList : public Vector<Object*>, public TypeVisitable
 {
 public:
-	ObjectList(){}
-	virtual ~ObjectList(){ destroy(); }
-private:
+	ObjectList();
+	virtual ~ObjectList();
+public:
 	ObjectList(const ObjectList& other){ *this = other; }
-	ObjectList& operator=(const ObjectList& other){ return *this; }
+	ObjectList& operator=(const ObjectList& other);
 public:
 	template<typename Type>
 	void addValue(const Type& val){ 
@@ -42,7 +42,7 @@ public:
 	}
 
 	virtual bool remove(unsigned int index, bool del=true);
-	virtual void destroy();
+	virtual void destroy(bool del=true);
 
 	Object* operator[](unsigned int pos) const;
 	virtual String toString() const;
@@ -55,6 +55,8 @@ public:
 	};
 	virtual void accept(TypeVisiter* visitor);
 	virtual void visitElements(TypeVisiter* visitor);
+protected:
+	bool autoDelete;
 };
 
 

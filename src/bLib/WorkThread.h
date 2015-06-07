@@ -20,7 +20,7 @@ private:
 	Task *m_pCurrentTask;
 	volatile bool m_bIsIdle;
 public:
-	virtual void run(ThreadParameter *pThreadParameter);
+	virtual void run();
 public:
 	virtual void stopAndWait();
 	virtual bool isIdle() const;

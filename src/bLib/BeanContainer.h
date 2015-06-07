@@ -34,6 +34,9 @@ public:
 	virtual int size() const{ return m_beanMap.size(); };
 
 	virtual void clear(bool autoRelease=true);
+
+	virtual Object* operator[](const string& key)const;
+	virtual Object*& operator[](const string& key);
 protected:
 	ObjectMap m_beanMap;
 };

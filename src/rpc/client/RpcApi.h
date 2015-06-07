@@ -1,6 +1,6 @@
 #pragma once
 #include "stdafx.h"
-#include "RpcContext.h"
+#include "RpcClient.h"
 #include "RpcService.h"
 
 namespace bluemei{
@@ -10,13 +10,13 @@ class RpcApi : public Object
 {
 public:
 	RpcApi(cstring name, RpcApi* parent=null);
-	RpcApi(cstring name, RpcContext* rpcContext, const ObjectList& loginArgs);
+	RpcApi(cstring name, RpcClient* rpcClient, const ObjectList& loginArgs);
 	virtual ~RpcApi();
 public:
-	virtual void init(RpcContext* rpcContext, const ObjectList& loginArgs);
+	virtual void init(RpcClient* rpcClient, const ObjectList& loginArgs);
 	virtual void init(RpcApi* parent);
 	virtual void logout();
-	RpcContext* context() const { return rpcContext; }
+	RpcInvoker* context() const { return rpcClient; }
 public:
 	virtual String ping();
 	virtual String echo(cstring str);
@@ -42,8 +42,8 @@ public:
 	}
 	template<class T>
 	T call(cstring object, cstring method, const ObjectList& args) {
-		checkNullPtr(rpcContext);
-		SmartPtr<Object> result = rpcContext->call(object, method, args);
+		checkNullPtr(rpcClient);
+		SmartPtr<Object> result = rpcClient->call(object, method, args);
 		return valueOf<T>(result);
 	}
 
@@ -53,8 +53,8 @@ public:
 	}
 	template<class T>
 	T cast(cstring object, cstring method, const ObjectList& args) {
-		checkNullPtr(rpcContext);
-		SmartPtr<Object> result = rpcContext->cast(object, method, args);
+		checkNullPtr(rpcClient);
+		SmartPtr<Object> result = rpcClient->cast(object, method, args);
 		return valueOf<T>(result);
 	}
 public:
@@ -62,7 +62,7 @@ public:
 	virtual String object() const;
 protected:
 	String serviceName;
-	RpcContext* rpcContext;
+	RpcClient* rpcClient;
 	//String objId;
 	RpcApi* parent;
 	HashMap<String, RpcApi*> subServices;

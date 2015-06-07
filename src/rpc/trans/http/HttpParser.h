@@ -1,5 +1,6 @@
 #pragma once
 #include "HttpHeader.h"
+#include "SmartPtr.h"
 
 namespace bluemei{
 
@@ -11,8 +12,8 @@ public:
 	HttpParser();
 	virtual ~HttpParser();
 public:	
-	HttpHeader* parse(const String& text);
-	HttpHeader* parse(const LinkedList<String>& lines);
+	SmartPtr<HttpHeader>  parse(const String& text);
+	SmartPtr<HttpHeader>  parse(const LinkedList<String>& lines);
 public:	
 	static HashMap<String,String> paramSplit(const String& str);
 	static HashMap<String,String> parseCookies(const String& str);

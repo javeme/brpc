@@ -5,12 +5,13 @@
 
 namespace bluemei{
 
-typedef std::function<void (void* pUserParameter)> ThreadFunction;
+typedef std::function<void (void)> ThreadFunction;
+
 class BLUEMEILIB_API LambdaThread : public Thread {
 public:
-	LambdaThread(const ThreadFunction& f,void* pUserParameter);
+	LambdaThread(const ThreadFunction& f,void* pUserParameter=NULL);
 	virtual ~LambdaThread();
-	virtual void run(ThreadParameter *pThreadParameter);
+	virtual void run();
 private:
 	ThreadFunction m_lambdaFun;
 };
@@ -19,7 +20,7 @@ private:
 //test
 void download(string url,const function<void (int error)>& f)//f为下载完成后的回调函数
 {
-	auto func=[url,f](void* pUserParameter){
+	auto func=[url,f](){
 		printf("downloading...\n");
 		Sleep(1000*5);
 		printf("download finished from %s\n",url.c_str());

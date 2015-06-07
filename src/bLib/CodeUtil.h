@@ -1,13 +1,25 @@
-#pragma once
-#include "stdafx.h"
+#ifndef CodeUtil_H_H
+#define CodeUtil_H_H
 #include "Util.h"
+#include "BString.h"
 
 namespace bluemei{
 
 using std::string;
 using std::wstring;
 
-typedef long long bint;
+typedef char		int8 ;
+typedef short		int16;
+typedef int			int32;
+typedef __int64		int64;
+
+typedef unsigned char		uint8 ;
+typedef unsigned short		uint16;
+typedef unsigned int		uint32;
+typedef unsigned __int64	uint64;
+
+typedef uint16		word ;
+typedef uint32		dword;
 
 /*
 * 字符及其编码工具类
@@ -54,6 +66,8 @@ public:
 	static string base64Decode(const char* str);
 public:	
 	static unsigned char char2hexChar(unsigned char x);
+	static bool isAlpha(int c);
+	static bool isNumber(int c);
 	static bool isAlphaOrNumber(int c);
 
 	static string urlEncodeComponent(const char* src);
@@ -70,7 +84,7 @@ Type bluemei::CodeUtil::bytesToBigInt(byte *buf, bool bigEndian)
 {
 	Type value = 0;
 	const int size = sizeof(value);
-	const bint BIG_INT_MASK = 0xff;
+	const int64 BIG_INT_MASK = 0xff;
 	
 	int shift = 0;
 	for(int i=0; i<size; i++)
@@ -123,3 +137,4 @@ struct BLUEMEILIB_API CONVSTR{
 };
 
 }//end of namespace bluemei
+#endif

@@ -8,6 +8,7 @@ namespace bluemei{
 
 // Mon, 19 Nov 2014 21:49:59 GMT
 #define DATE_FORMAT_GMT "%a, %d %b %Y %H:%M:%S GMT"	
+#define CRLF "\r\n"
 
 HttpHeader::HttpHeader(const HashMap<String,String>& headers)
 {
@@ -20,6 +21,9 @@ HttpHeader::HttpHeader(const HashMap<String,String>& headers)
 	}
 
 	this->entities = headers;
+	String tmp;
+	this->entities.remove(KEY_STATUS, tmp);
+	this->entities.remove(KEY_RESPONSE, tmp);
 }
 
 void HttpHeader::init(dword len/*=0*/, cstring type/*=0*/,
@@ -54,7 +58,7 @@ void HttpHeader::writeEntitiesTo(OutputStream& output) throw(Exception)
 		output.writeChar(':');
 		output.writeChar(' ');
 		output.writeBytes((byte*)entry.value.c_str(), entry.value.length());
-		output.writeChar('\n');
+		writeCrlfTo(output);
 	}
 	entities.releaseIterator(itor);
 
@@ -215,6 +219,11 @@ void HttpHeader::setDate( const Date& date )
 	return this->setDate(date.formatDate(DATE_FORMAT_GMT));
 }
 
+void HttpHeader::writeCrlfTo( OutputStream& output )
+{
+	output.writeBytes((byte*)CRLF, strlen(CRLF));
+}
+
 
 
 HttpRequest::HttpRequest( cstring url/*="/"*/ ) 
@@ -316,13 +325,14 @@ void HttpRequest::writeTo( OutputStream& output ) throw(Exception)
 {
 	//such as: "GET /index?paras HTTP/1.1"
 	String url = getUrlWithParas();
-	String line = String::format("%s %s %s/%s\n",
+	String line = String::format("%s %s %s/%s",
 		requestType2Str(requestType), 
 		url.c_str(), 
 		name.c_str(), version.c_str());
 	output.writeBytes((byte*)line.c_str(), line.length());
+	writeCrlfTo(output);
 	writeEntitiesTo(output);
-	output.writeChar('\n');
+	writeCrlfTo(output);
 }
 
 void HttpRequest::readFrom( InputStream& input ) throw(Exception)
@@ -352,7 +362,7 @@ void HttpRequest::writeCookiesTo( OutputStream& output ) throw(Exception)
 
 		output.writeBytes((byte*)cookieTag.c_str(), cookieTag.length());		
 		output.writeBytes((byte*)cookies.toString().c_str(), cookies.length());
-		output.writeChar('\n');
+		writeCrlfTo(output);
 	}
 }
 
@@ -414,6 +424,13 @@ void HttpRequest::setUrlWithParas(const String& url)
 }
 
 
+HttpResponse::HttpResponse(const HashMap<String,String>& headers) 
+	: HttpHeader(headers),status(Ok)
+{
+	String status = headers.getDefault(KEY_STATUS, "200 Ok");
+	this->status = str2status(status);
+}
+
 String HttpResponse::status2str(Status stat)
 {
 	String status;
@@ -453,7 +470,10 @@ String HttpResponse::status2str(Status stat)
 		break;
 	case RequestTimeout:
 		status="408 RequestTimeout";
-		break;		
+		break;	
+	case LengthRequired:
+		status="411 Length Required";
+		break;	
 	case RequestEntityTooLarge:
 		status="413 Request Entity Too Large";
 		break;
@@ -506,11 +526,12 @@ void HttpResponse::setServer( const String& val )
 
 void HttpResponse::writeTo( OutputStream& output ) throw(Exception)
 {
-	String line = String::format("%s/%s %s\n", //HTTP/1.0 200 OK 
+	String line = String::format("%s/%s %s", //HTTP/1.0 200 OK 
 		name.c_str(), version.c_str(), status2str(status).c_str());
 	output.writeBytes((byte*)line.c_str(), line.length());
+	writeCrlfTo(output);
 	writeEntitiesTo(output);
-	output.writeChar('\n');
+	writeCrlfTo(output);
 }
 
 void HttpResponse::readFrom( InputStream& input ) throw(Exception)
@@ -528,7 +549,7 @@ void HttpResponse::writeCookiesTo( OutputStream& output ) throw(Exception)
 		output.writeBytes((byte*)cookieTag.c_str(), cookieTag.length());
 		String cookieString = this->getCookieAsString(entry.key);
 		output.writeBytes((byte*)cookieString.c_str(), cookieString.length());
-		output.writeChar('\n');
+		writeCrlfTo(output);
 	}
 	this->cookies.releaseIterator(itor);
 }

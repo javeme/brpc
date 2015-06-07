@@ -243,8 +243,9 @@
                 var newValue = ele.value || ele.innerText;                        
                 var updateObj = {table: that, rowIndex: BrpcTable.getRowIndex(cell.up()), cellName: col,
                                  oldValue: oldValue, newValue: newValue, event: event
-                                };            
-                if (config.onUpdateData && config.onUpdateData(updateObj) == false) {
+                                };
+				
+                if (config.onUpdateData && (false == config.onUpdateData(updateObj))) {
                     if (ele.value == newValue)
                         ele.value = oldValue;
                     else if (ele.innerText == newValue)
@@ -252,6 +253,9 @@
                 }
                 else
                     data[col] = newValue;
+				
+				//阻止事件冒泡(否则子表格的数据更新出发父表格的td事件,导致其object-value变为修改的单值)
+				event.stopPropagation();
             };
              
             this.onCellClick = config.onCellClick ? config.onCellClick : function(){};

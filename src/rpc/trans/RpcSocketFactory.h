@@ -5,11 +5,11 @@
 namespace bluemei{
 
 /*
-* RPC接收数据监听器
+* RPC socket 工厂
 * @author 李章梅
 * @create 2012/5/28
 */
-class RpcSocketManager : public Object
+class RpcSocketFactory : public Object
 {
 public:
 	static RpcSocket* getRpcSocket(const String& name);

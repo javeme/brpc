@@ -2,7 +2,7 @@
 #include "stdafx.h"
 #include "RpcApi.h"
 #include "ErrorHandler.h"
-#include "P2pRpcClient.h"
+#include "RpcClient.h"
 #include "DefaultAuthChecker.h"
 #include "JsonSerializer.h"
 using namespace bluemei;
@@ -39,7 +39,7 @@ public:
 	MyRpcApi(cstring url, cstring name, cstring password) : 
 		checker("", ""),
 		dispatcher("callback"),
-		client(url, &dispatcher, &checker),
+		client(url, &dispatcher, &checker, "text/json", 1000*10),
 		//RpcApi(&client, loginArgs)
 		//_init1(loginArgs.addValue(name)), 
 		//_init2(loginArgs.addValue(password)),
@@ -97,7 +97,7 @@ public:
 private:
 	CallbackRpcService dispatcher;
 	DefaultAuthChecker checker;
-	P2pRpcClient client;
+	RpcClient client;
 	//ObjectList loginArgs;
 	//unsigned int _init1, _init2;
 

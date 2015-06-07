@@ -4,6 +4,7 @@
 #include "bluemeiLib.h"
 #include "Iterator.h"
 #include "CriticalLock.h"
+#include "RuntimeException.h"
 
 namespace bluemei{
 
@@ -65,16 +66,16 @@ public:
 	}
 	virtual~LinkedListIterator(){}
 	virtual bool hasNext(){
-		bool hasNext=( m_pCurrent!=nullptr && m_pCurrent!=m_pFirst);
+		bool hasMore=( m_pCurrent!=nullptr && m_pCurrent!=m_pFirst);
 		if(m_pFirst==nullptr)
 			m_pFirst=m_pCurrent;
-		return hasNext;
+		return hasMore;
 	}
 	virtual EleType next(){
 		m_pCurrent=m_pCurrent->next;
 		if(m_pCurrent==nullptr)
 		{
-			return EleType();
+			throwpe(OutOfBoundException("there is no more element in LinkedList"));
 		}
 		return m_pCurrent->data;
 	}

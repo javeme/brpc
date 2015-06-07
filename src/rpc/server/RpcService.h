@@ -1,10 +1,10 @@
 #pragma once
 #include "stdafx.h"
 #include "FuncDispatcher.h"
+#include "RpcContext.h"
 
 namespace bluemei{
 
-class RpcContext;
 class RpcEventHandler;
 
 class RpcService : public Object

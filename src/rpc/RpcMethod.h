@@ -7,6 +7,8 @@ namespace bluemei{
 
 const static cstring CURRENT_RPC_METHOD_VERSION = "1.0";
 
+const static unsigned int BRPC_MAX_BODY_LEN = 1024 * 1024 * 4;//4M
+
 /*
 * RPC 方法封装
 * @author 李章梅
@@ -31,130 +33,27 @@ public:
 		STATUS_RESPONSE_DENIED			= 33,	
 	};
 public:
-	RpcMethod()
-	{		
-		this->autoDelArgs = false;
-		reset();
-	}
+	RpcMethod();
 	RpcMethod(cstring name, ObjectList* args, 
-		bool waitResult=true, cstring authToken="")
-	{
-		this->autoDelArgs = false;
-		reset();
-
-		this->status = STATUS_REQUEST;
-		this->authToken = authToken;
-		this->methodName = name;
-		this->args = args;
-		this->waitResult = waitResult;
-	}
+		bool waitResult=true, cstring authToken="");
 	RpcMethod(cstring obj, cstring name, ObjectList* args, 
-		bool waitResult=true, cstring authToken="")
-	{
-		this->autoDelArgs = false;
-		reset();
-
-		this->status = STATUS_REQUEST;
-		this->authToken = authToken;
-		this->owner = obj;
-		this->methodName = name;
-		this->args = args;
-		this->waitResult = waitResult;
-	}
+		bool waitResult=true, cstring authToken="");
 	RpcMethod(Object* returnValue, cstring name, cstring obj="", 
-		int status=STATUS_RESPONSE_OK, cstring authToken="")
-	{
-		this->autoDelArgs = false;
-		reset();
+		int status=STATUS_RESPONSE_OK, cstring authToken="");
+	virtual ~RpcMethod();
 
-		this->status = status;
-		this->authToken = authToken;
-		this->owner = obj;
-		this->methodName = name;
-		this->returnValue = returnValue;
-		this->waitResult = false;
-	}
-	virtual ~RpcMethod()
-	{
-		if (isAutoDelArgs())
-		{
-			delete args;
-			//delete returnValue;
-		}
-	}
+public:
+	virtual void reset();
+	virtual String getFullName() const;
+	virtual String getMethodNameWithVersion() const;
+	virtual cstring currentVersion() const;
 
-	virtual void reset()
-	{
-		this->version = currentVersion();
-		this->status = STATUS_REQUEST;
-		this->authToken = "";
-		this->owner = "";
-		this->methodName = "";	
+	bool isRequest() const;
+	bool isEvent() const;
 
-		if (isAutoDelArgs())
-		{
-			delete args;
-			//delete returnValue;
-		}
-		this->args = null;
-		this->returnValue = null;
-		this->waitResult = false;
-		//this->autoDelArgs = false;
-	}
-	virtual String getFullName() const
-	{
-		String methodName = this->methodName;
-		if(owner.length() > 0)
-			methodName = owner + "." + methodName;
-		return methodName;
-	}
-	virtual String getMethodNameWithVersion() const
-	{
-		String methodName = this->methodName;
-		if(version != currentVersion())
-			methodName = methodName + version;
-		return methodName;
-	}
-
-	virtual cstring currentVersion() const
-	{
-		return CURRENT_RPC_METHOD_VERSION;
-	}
-
-	bool isRequest() const
-	{
-		if (status == RpcMethod::STATUS_REQUEST
-			||status == RpcMethod::STATUS_REQUEST_LOGIN
-			||status == RpcMethod::STATUS_REQUEST_LOGOUT)
-			return true;
-		return false;
-	}
-
-	bool isEvent() const
-	{
-		if (status == RpcMethod::STATUS_RESPONSE_EVENT)
-			return true;
-		return false;
-	}
-
-	virtual String getResultString() const
-	{
-		String* str = dynamic_cast<String*>(returnValue);
-		cstring msg = (str == null) ? "" : str->c_str();
-		return msg;
-	}
-
-	virtual void releaseResult()
-	{
-		delete returnValue;
-		returnValue = null;
-	}
-	virtual String getResultStringAndRelease()
-	{
-		String msg = getResultString();
-		releaseResult();
-		return msg;
-	}
+	virtual String getResultString() const;
+	virtual void releaseResult();
+	virtual String getResultStringAndRelease();
 
 public:
 	String version;//such as "1.0"
@@ -172,7 +71,6 @@ public:
 	bool isAutoDelArgs() const { return autoDelArgs; }
 	void setAutoDelArgs(bool val) { autoDelArgs = val; }
 	
-
 private:
 	bool autoDelArgs;
 };

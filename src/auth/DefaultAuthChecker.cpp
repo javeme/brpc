@@ -32,7 +32,7 @@ String DefaultAuthChecker::login(const ObjectList& args)
 	User* user = userMap.get(name);
 	if (user != null){
 		if (user->password == password) {
-			String authToken = name + Date::getCurrentTime().toString();
+			String authToken = name + Util::uuid4();
 			user->authToken = authToken;
 			bool success = addAuthToken(authToken, name);
 			return authToken;

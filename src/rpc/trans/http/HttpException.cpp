@@ -9,9 +9,9 @@ HttpException::HttpException(cstring msg):Exception(msg)
 	;
 }
 
-String HttpException::toString()const
+String HttpException::name()const
 {
-	return "HttpException:"+m_strLastError;
+	return "HttpException";
 }
 
 
@@ -20,9 +20,20 @@ HttpParseException::HttpParseException(cstring msg):HttpException(msg)
 	;
 }
 
-String HttpParseException::toString()const
+String HttpParseException::name()const
 {
-	return "HttpParseException:"+m_strLastError;
+	return "HttpParseException";
+}
+
+
+HttpBadRequestException::HttpBadRequestException(cstring msg):HttpException(msg)
+{
+	;
+}
+
+String HttpBadRequestException::name() const
+{
+	return "HttpBadRequestException";
 }
 
 }

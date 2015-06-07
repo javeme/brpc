@@ -49,6 +49,8 @@ public:
 	virtual void writeCookiesTo(OutputStream& output) throw(Exception)=0;
 	virtual void readCookiesFrom(InputStream& input) throw(Exception)=0;
 
+	virtual void writeCrlfTo(OutputStream& output);
+
 	virtual HashMap<String,String> getHeaders() const;
 	virtual void update();//update such as contentType
 public:
@@ -172,7 +174,8 @@ public:
 		FoundOther=302,
 		/*400*/
 		BadRequest=400,Forbidden=403,NotFound=404,
-		RequestTimeout=408,RequestEntityTooLarge=413,RequestURITooLong=414,
+		RequestTimeout=408,
+		LengthRequired=411,RequestEntityTooLarge=413,RequestURITooLong=414,
 		/*500*/
 		InternalServerError=500,NotImplemented=501,
 		ServiceUnavailable=503,HTTPVersionNotSupported=505,
@@ -184,7 +187,7 @@ public:
 public:
 	HttpResponse(Status status=Ok):HttpHeader(),status(status){}
 	HttpResponse(dword len, cstring type):HttpHeader(len, type),status(Ok){}
-	HttpResponse(const HashMap<String,String>& headers):HttpHeader(headers),status(Ok){}
+	HttpResponse(const HashMap<String,String>& headers);
 	virtual ~HttpResponse(){}
 public:
 	virtual void writeTo(OutputStream& output) throw(Exception);

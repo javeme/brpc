@@ -8,8 +8,6 @@
 
 namespace bluemei{
 
-#define BUFFER_SIZE 1024
-
 typedef SOCKET socket_t;
 
 class BLUEMEILIB_API ClientSocket : public Object
@@ -24,6 +22,8 @@ protected:
 private:
 	bool m_bClose;
 	int m_nTimeout;
+public:
+	const static int LINE_BUFFER_SIZE;
 protected:
 	void createSocket();
 public:
@@ -49,9 +49,9 @@ public:
 	int readInt();
 	int readShort();
 	unsigned char readByte();
-	//string& readLineByUtf();
-	String readLineByGbk();
-	//string readUtfString(int wantToReadSize);
+	//String& readLineByUtf();
+	String readLine();
+	//String readUtfString(int wantToReadSize);
 	String readUtfString();
 
 	//int writeBytes(byte*& buffer,int length);

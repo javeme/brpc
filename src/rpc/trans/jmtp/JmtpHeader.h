@@ -12,6 +12,13 @@ namespace bluemei{
 class JmtpHeader : public Object
 {
 public:
+	enum Status{
+		JMTP_OK=0,
+		JMTP_ERROR=1,
+		JMTP_BAD_ENTITY=3,
+		JMTP_BODY_TOO_LARGE=4,
+	};
+public:
 	JmtpHeader(){ init(); }
 	JmtpHeader(dword len, word type){ init(len, type); }
 	JmtpHeader(const HashMap<String,String>& headers);
@@ -28,11 +35,15 @@ public:
 	static BrpcContentType str2contentType(cstring type);
 	static cstring contentType2str(BrpcContentType type);
 public:
-	dword getVersion() const { return version; }
-	void setVersion(dword val) { version = val; }
+	word getVersion() const { return version; }
+	void setVersion(word val) { version = val; }
 
-	dword getContentLength() const { return len; }
-	void setContentLength(dword val) { len = val; }
+	word getStatus() const { return status; }
+	void setStatus(word val) { status = val; }
+	String getStatusStr() const;	
+
+	dword getContentLength() const { return length; }
+	void setContentLength(dword val) { length = val; }
 
 	dword getPackageId() const { return packageId; }
 	void setPackageId(dword val) { packageId = val; }
@@ -55,8 +66,9 @@ protected:
 protected:
 	const static unsigned int NAME_LEN = 4;
 	char name[NAME_LEN];
-	dword version;
-	dword len;
+	word version;
+	word status;
+	dword length;
 	dword packageId;
 	word counter;
 	word contentType;

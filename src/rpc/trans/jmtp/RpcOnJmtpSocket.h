@@ -1,33 +1,23 @@
 #pragma once
 #include "RpcSocket.h"
-#include "ClientSocket.h"
-
+#include "RpcOnTcpSocket.h"
+#include "JmtpHeader.h"
+#include "JmtpException.h"
 
 namespace bluemei{
 
-
-class RpcOnJmtpSocket : public RpcSocket
+class RpcOnJmtpSocket : public RpcOnTcpSocket
 {
 public:
 	RpcOnJmtpSocket(void);
 	virtual ~RpcOnJmtpSocket(void);
 public:
-	virtual void connect(const HashMap<String,String>& paras) throw(RpcException);
-	virtual void close() throw(RpcException);
-
 	virtual void send(const DataPackage& package) throw(RpcException);
+	virtual void receive() throw(RpcException);
 public:
-	virtual void startReceiveThread();
-	virtual void stopReceiveThread();
-
-	virtual bool isRecving() const;
-	virtual bool isAlive() const;
+	virtual void sendResponse(JmtpHeader::Status status, const String& pkgId);
 protected:
-	ClientSocket* m_pSocket;
 	CriticalLock m_sendLock;
-
-	Thread* m_pRecvThread;
-	bool m_bRecving;
 };
 
 

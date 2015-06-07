@@ -11,7 +11,7 @@ JmtpHeader::JmtpHeader(const HashMap<String,String>& headers)
 	String contentType = headers.getDefault(KEY_CONTENT_TYPE, "");
 	String packageId = headers.getDefault(KEY_PACKAGE_ID, "");
 	init((dword)len, JmtpHeader::str2contentType(contentType));
-	setPackageId(CodeUtil::str2Int(packageId));
+	setPackageId(CodeUtil::str2Int(packageId));//hashCode<String>(packageId)
 }
 
 void JmtpHeader::init(dword len/*=0*/, word type/*=0*/,
@@ -21,7 +21,8 @@ void JmtpHeader::init(dword len/*=0*/, word type/*=0*/,
 	(void)memcpy(name, JMTP_NAME, NAME_LEN);
 	//this->name[NAME_LEN] = '\0';
 	this->version = version;
-	this->len = len;
+	this->status = JMTP_OK;
+	this->length = len;
 	this->packageId = 0;
 	this->counter = counter;
 	this->contentType = type;
@@ -37,8 +38,9 @@ bool JmtpHeader::checkName() const
 void JmtpHeader::writeTo(ByteBuffer& output) const throw(Exception)
 {
 	output.writeBytes((const byte*)name, NAME_LEN);
-	output.writeInt(version);
-	output.writeInt(len);
+	output.writeShort(version);
+	output.writeShort(status);
+	output.writeInt(length);
 	output.writeInt(packageId);
 	output.writeShort(counter);
 	output.writeShort(contentType);
@@ -51,8 +53,9 @@ void JmtpHeader::readFrom(ByteBuffer& input) throw(Exception)
 	input.readBytes((byte*)name, NAME_LEN);
 	if(!checkName())
 		throw IOException("not matched the jmtp");
-	version = input.readInt();
-	len = input.readInt();
+	version = input.readShort();
+	status = input.readShort();
+	length = input.readInt();
 	packageId = input.readInt();
 	counter = input.readShort();
 	contentType = input.readShort();
@@ -88,6 +91,23 @@ cstring JmtpHeader::getContentTypeStr() const
 String JmtpHeader::getPackageIdStr() const
 {
 	return String::format("%u", packageId);
+}
+
+String JmtpHeader::getStatusStr() const
+{
+	switch(status)
+	{
+	case JMTP_OK:
+		return "Jmtp ok";
+	case JMTP_ERROR:
+		return "Jmtp error";
+	case JMTP_BAD_ENTITY:
+		return "Jmtp bad entity";
+	case JMTP_BODY_TOO_LARGE:
+		return "Jmtp body too large";
+	default:
+		return "Jmtp unknow status";
+	}
 }
 
 }//end of namespace bluemei

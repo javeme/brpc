@@ -46,6 +46,12 @@ hashCode<cstring>::hashCode(const cstring& str)
 	hash=shc.hashCode(str);
 }
 template<> BLUEMEILIB_API
+hashCode<std::string>::hashCode(const std::string& str)
+{
+	static StringHashCoder shc;
+	hash=shc.hashCode(str.c_str());
+}
+template<> BLUEMEILIB_API
 hashCode<String>::hashCode(const String& str)
 {
 	static StringHashCoder shc;

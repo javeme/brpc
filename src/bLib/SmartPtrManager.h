@@ -1,6 +1,8 @@
 #ifndef SmartPtrManager_H
 #define SmartPtrManager_H
 #include "bluemeiLib.h"
+#include "Object.h"
+#include "TypeManager.h"
 
 #include <malloc.h>
 #include <set>
@@ -18,7 +20,23 @@ class System;
 
 
 typedef void (*DESTORY_PROC)(void*);
-//extern bool collecting ;
+
+template <typename T>
+struct DestructorStruct
+{
+	static void destroy(void* obj) {
+		T* p=static_cast<T*>(obj);
+		delete p;
+	}
+};
+
+template <typename T>
+struct ArrayDestructorStruct
+{
+	static void destroy(void* obj) { 
+		delete[] static_cast<T*>(obj); 
+	}
+};
 
 #ifdef _DEBUG
 #define ptrTrace System::debugInfo
@@ -33,17 +51,17 @@ typedef void (*DESTORY_PROC)(void*);
 #define PTR_MANAGED	2
 
 #ifdef WIN32
-class  BLUEMEILIB_API GlobalMutexLock
+class BLUEMEILIB_API GlobalMutexLock : public Object
 {
 public:
-
 	GlobalMutexLock();
 	~GlobalMutexLock();
 };
 #else
 
-class BLUEMEILIB_API GlobalMutexLock
+class BLUEMEILIB_API GlobalMutexLock : public Object
 {
+protected:
 	static pthread_mutex_t mutex;
 public:
 	GlobalMutexLock()
@@ -61,13 +79,12 @@ public:
 	}
 	~GlobalMutexLock()
 	{
-		pthread_mutex_unlock(&mutex);
-		
+		pthread_mutex_unlock(&mutex);		
 	}
 };
 #endif
 
-class BLUEMEILIB_API LinkNode
+class BLUEMEILIB_API LinkNode : public Object
 {
 	LinkNode *pPrev;
 	LinkNode *pNext;
@@ -82,15 +99,16 @@ public:
 };
 
 class WrapperPointer;
-class BLUEMEILIB_API ObjectWrapper 
+class BLUEMEILIB_API ObjectWrapper : public Object
 {
+private:
 	int count;	//reference count
 	void *pTarget;	//the real object allocated by usrer;
 	DESTORY_PROC destory; //a routine to call delete method
 	bool isInUse;
 	size_t size;	//size of pObj. may not equal sizeof(T)
 private:
-	~ObjectWrapper();
+	virtual ~ObjectWrapper();
 	ObjectWrapper(void * p,DESTORY_PROC destory,size_t memSize=0);
 public:
 	void attach();
@@ -111,7 +129,7 @@ class ObjectWrapper;
  * STL set, but the compiler doesn't allow us to define a operator < for a pointer. We must encapsulate the pointer
  * as a struct, then overload the operator < for the struct
  */
-class BLUEMEILIB_API WrapperPointer
+class BLUEMEILIB_API WrapperPointer : public Object
 {
 public:
 	ObjectWrapper* p;
@@ -132,7 +150,7 @@ public:
 /**
 manage all the ObjectWrapper and ArrayWrapper.
 */
-class  BLUEMEILIB_API WrapperManager 
+class BLUEMEILIB_API WrapperManager : public Object
 {
 #ifdef _MSC_VER
 #pragma warning(push)
@@ -143,8 +161,6 @@ class  BLUEMEILIB_API WrapperManager
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
-
-	ObjectWrapper* nullWrapper;
 /**
 	return an element of ObjectWrapper list, where pTarget should 
 	be insert after.
@@ -153,7 +169,67 @@ class  BLUEMEILIB_API WrapperManager
 	*/
 	//ObjectWrapper* positionToInsert(void *pTarget);
 	WrapperManager();
-	~WrapperManager();
+	virtual ~WrapperManager();
+	friend class System;
+public:
+	static WrapperManager* getInstance();
+public:
+	void remove(ObjectWrapper* pWrapper);
+	void collect(ObjectWrapper* pWrapper);
+
+	bool isEmbeddedPtr(void *pSmartPtr);
+	void destroy();
+public:
+	
+	/**
+	if target has already exist in the list, just return the old Wrapper.
+	this allow to cast a derived-type point to a base-type point. 
+	this make multi-inheritance enabled
+	else create a new Wrapper
+	If a new Wrapper is create and returned, the new Wrapper has reference count 1
+	If an exists Wrapper is returned, the reference count is add 1 before return
+	*/
+	template <typename T>
+	ObjectWrapper* getWrapper(T* pTarget, bool canUseSuperSize=true)
+	{		
+		size_t memSize = 0;
+		//memSize=0 meas get the size of pTarget by os-api.
+		//maybe T is not the class(is super class) of pTarget;
+		//set memSize = sizeof(T) if canUseSuperSize has been setted.
+		if (canUseSuperSize){
+			memSize = sizeof(T);
+		}
+		//if canUseSuperSize has not been setted, and at the first time,
+		//make sure that pTarget is itself (rather than super-class obj).
+		else if(!existPtr(pTarget))
+			checkPtrAddr(pTarget);
+
+		if(pTarget == NULL)
+			return nullWrapper;
+		else
+			return attachWrapper(pTarget, &DestructorStruct<T>::destroy, memSize);
+	}
+
+	//check ptr invalid
+	template <typename T>
+	void checkPtrAddr(T* ptr)
+	{
+		/* 指针ptr必须是其本身的地址,不能是其父类地址(偏移地址).
+		* 如: class C : public A, public B {}
+		* 非法: SmartPtr<B> b = new C();
+		* 合法: SmartPtr<B> b = SmartPtr<C>(new C());
+		*/
+		TypeManager* manager=TypeManager::instance();
+		(void)manager->registerType<T>();
+		if(!manager->objectIsItselfAddr(ptr))
+			throwpe(Exception("SmartPtr pointer must be itself"));
+	}
+private:
+	ObjectWrapper* attachWrapper(void* pTarget, DESTORY_PROC destory, size_t memSize=0);
+	bool existPtr(void* pTarget)const;
+private:
+	static ObjectWrapper* nullWrapper;
+
 public:
 	/**
 	size of extra bytes more than requested allocated by new.
@@ -163,53 +239,25 @@ public:
 	size reserved at head of the memory block
 	*/
 	static int arrayHeadSize;
-	void remove(ObjectWrapper* pWrapper);
-	void collect(ObjectWrapper* pWrapper);
-	/**
-	if target has already exist in the list, just return the old Wrapper.
-	this allow to cast a derived-type point to a base-type point. 
-	this make multi-inheritance enabled
-	else create a new Wrapper
-	If a new Wrapper is create and returned, the new Wrapper has reference count 1
-	If an exists Wrapper is returned, the reference count is add 1 before return
-	*/
-	//template <typename T>
-	ObjectWrapper* getWrapper(void* pTarget, DESTORY_PROC destory)
-	{
-		GlobalMutexLock l;
-		if(pTarget == NULL)
-			return nullWrapper;
-
-		// a non zero memSize make the ObjectWrapper use this size instead of calculate size itself
-		// which save the computer resource
-		ObjectWrapper tempWrapper(pTarget, NULL, 1);
-
-		
-		WrapperSet::const_iterator i = wrappers.find(&tempWrapper);
-		if(i == wrappers.end())
-		{
-			ObjectWrapper* pW = new ObjectWrapper(pTarget, destory);
-			wrappers.insert(pW);
-			return pW;
-		}
-		else
-		{
-			(*i).p->attach();
-			return (*i).p;
-		}
-	}
-	bool isEmbeddedPtr(void *pSmartPtr);
-	void destroy();
-	static WrapperManager* getInstance();
-	friend class System;
 };
 
-class BLUEMEILIB_API SmartPtrManager
+class BLUEMEILIB_API SmartPtrManager : public Object
 {
+public:
+	static SmartPtrManager* getInstance();
+
+public:
+	void add(LinkNode* ptr);
+	void remove(LinkNode* ptr);
+	void moveToUserPtr(LinkNode* ptr);
+	void moveToEmbeddedPtr(LinkNode* ptr);
+	void destroy();
+protected:
+	SmartPtrManager();
+	virtual ~SmartPtrManager();
+protected:
 	LinkNode *pHead;
 	LinkNode *pTail;
-	SmartPtrManager();
-	~SmartPtrManager();
 
 	LinkNode *pUserPtrHead;
 	LinkNode *pUserPtrTail;
@@ -217,13 +265,6 @@ class BLUEMEILIB_API SmartPtrManager
 	LinkNode *pEmbeddedPtrHead;
 	LinkNode *pEmbeddedPtrTail;
 
-public:
-	static SmartPtrManager* getInstance();
-	void add(LinkNode* ptr);
-	void remove(LinkNode* ptr);
-	void moveToUserPtr(LinkNode* ptr);
-	void moveToEmbeddedPtr(LinkNode* ptr);
-	void destroy();
 	friend class System;
 };
 

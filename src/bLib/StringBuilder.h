@@ -71,7 +71,7 @@ namespace bluemei{
  * and the StringBuilder is not changed after that (quite common when
  * performing string concatenation).
  *
- * @author bluemei(javaloveme@gmai.com)(ÐÞ¸Ä)
+ * @author bluemei(javaloveme@gmai.com)(update)
  * @author Paul Fisher
  * @author John Keiser
  * @author Tom Tromey
@@ -120,12 +120,7 @@ public:
 	 * @param capacity the initial capacity
 	 * @throws NegativeArraySizeException if capacity is negative
 	 */
-	StringBuilder(unsigned int capacity=DEFAULT_CAPACITY)
-	{
-		buffer = new char_t[capacity];
-		this->capacity=capacity;
-		avail=0;
-	}
+	StringBuilder(unsigned int capacity=DEFAULT_CAPACITY);
 
 	/**
 	 * Create a new <code>StringBuilder</code> with the characters in the
@@ -135,19 +130,18 @@ public:
 	 * @param str the <code>String</code> to convert
 	 * @throws NullPointerException if str is null
 	 */
-	StringBuilder(const String& str)
-	{
-		// Unfortunately, because the size is 16 larger, we cannot share.
-		avail = str.length();
-		buffer = new char_t[avail + DEFAULT_CAPACITY];
-		copyData<char_t>(buffer+avail,str.c_str(),str.length());
-	}
+	StringBuilder(const String& str);
 		
-	virtual ~StringBuilder()
-	{
-		delete[] buffer;
-		avail=0;
-	}
+	virtual ~StringBuilder();
+
+public:
+	StringBuilder(const StringBuilder &src);
+	StringBuilder(StringBuilder&& src);//move
+	
+	StringBuilder& operator = (const StringBuilder &src);
+	StringBuilder& operator = (StringBuilder&& src);//move
+
+	bool operator == (const StringBuilder& other) const;
 
 public:
 	/**
@@ -423,6 +417,12 @@ public:
 	{
 		return deleteSub(index, index + 1);
 	}
+	
+	StringBuilder& pop()
+	{
+		return deleteCharAt(length()-1);
+	}
+	
 
 	/**
 	 * Replace characters between index <code>start</code> (inclusive) and

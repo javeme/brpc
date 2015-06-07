@@ -1,15 +1,15 @@
 #pragma once
 #include "stdafx.h"
 #include "ErrorHandler.h"
-#include "AbstructRpcContext.h"
+#include "RpcConnection.h"
 #include "RpcSerializerFactory.h"
 
 namespace bluemei{
 	
 
-AbstructRpcContext::AbstructRpcContext(RpcService* dispatcher,
+RpcConnection::RpcConnection(RpcService* dispatcher,
 	AuthChecker* authChecker, cstring serializerType)
-	: RpcContext(), 
+	: RpcInvoker(), 
 	dispatcher(dispatcher), 
 	authChecker(authChecker), 
 	serializerType(serializerType)
@@ -21,29 +21,29 @@ AbstructRpcContext::AbstructRpcContext(RpcService* dispatcher,
 	checkNullPtr(this->serializer);
 }
 
-AbstructRpcContext::~AbstructRpcContext()
+RpcConnection::~RpcConnection()
 {
 	;
 }
 
 
-Object* AbstructRpcContext::call(cstring name, const ObjectList& args)
+Object* RpcConnection::call(cstring name, const ObjectList& args)
 {
 	return call("", name, args);
 }
 
-Object* AbstructRpcContext::onCall(cstring name, const ObjectList& args)
+Object* RpcConnection::onCall(cstring name, const ObjectList& args)
 {
 	return onCall("", name, args);	
 }
 
-void AbstructRpcContext::cast(cstring name, const ObjectList& args)
+void RpcConnection::cast(cstring name, const ObjectList& args)
 {
 	return cast("", name, args);
 }
 
 
-Object* AbstructRpcContext::call(cstring obj, cstring name, const ObjectList& args)
+Object* RpcConnection::call(cstring obj, cstring name, const ObjectList& args)
 {
 	RpcMethod req(obj, name, const_cast<ObjectList*>(&args), true, authToken);
 	RpcMethod methodResult;
@@ -56,13 +56,14 @@ Object* AbstructRpcContext::call(cstring obj, cstring name, const ObjectList& ar
 	}
 }
 
-Object* AbstructRpcContext::onCall(cstring obj, cstring name, const ObjectList& args)
+Object* RpcConnection::onCall(cstring obj, cstring name, const ObjectList& args)
 {
 	checkNullPtr(dispatcher);
-	return dispatcher->call(obj, name, args, this);
+	RpcContext ctx(*this);
+	return dispatcher->call(obj, name, args, &ctx);
 }
 
-void AbstructRpcContext::castMethod(const Headers& headers, const RpcMethod& method)
+void RpcConnection::castMethod(const Headers& headers, const RpcMethod& method)
 {
 	checkConnected();
 
@@ -77,7 +78,7 @@ void AbstructRpcContext::castMethod(const Headers& headers, const RpcMethod& met
 	onSend(package);
 }
 
-void AbstructRpcContext::cast(cstring obj, cstring name, const ObjectList& args)
+void RpcConnection::cast(cstring obj, cstring name, const ObjectList& args)
 {
 	checkConnected();
 
@@ -85,11 +86,11 @@ void AbstructRpcContext::cast(cstring obj, cstring name, const ObjectList& args)
 	headers.put(KEY_CONTENT_TYPE, serializerType);
 	headers.put(KEY_CHARSET, "GBK");
 	RpcMethod method(obj, name, const_cast<ObjectList*>(&args),
-		false, this->authToken);
+		false, authToken);
 	castMethod(headers, method);
 }
 
-void AbstructRpcContext::notifyEvent(const Headers& headers, 
+void RpcConnection::sendEvent(const Headers& headers, 
 	cstring method, const ObjectList& args)
 {
 	RpcMethod req(method, const_cast<ObjectList*>(&args), false);
@@ -102,7 +103,7 @@ void AbstructRpcContext::notifyEvent(const Headers& headers,
 }
 
 
-bool AbstructRpcContext::doCallResponse(const Headers& headers, 
+bool RpcConnection::doCallResponse(const Headers& headers, 
 	const RpcMethod& method, Object* result, int status)
 {
 	Headers rp;//reponse headers
@@ -129,7 +130,7 @@ bool AbstructRpcContext::doCallResponse(const Headers& headers,
 	return success;
 }
 
-bool AbstructRpcContext::doCall(const Headers& headers, RpcMethod& method)
+bool RpcConnection::doCall(const Headers& headers, RpcMethod& method)
 {
 	bool success = false;
 	if (!method.waitResult)
@@ -179,7 +180,8 @@ bool AbstructRpcContext::doCall(const Headers& headers, RpcMethod& method)
 	return success;
 }
 
-bool AbstructRpcContext::doEvent(const Headers& headers, RpcMethod& method)
+//received notify-event
+bool RpcConnection::doEvent(const Headers& headers, RpcMethod& method)
 {
 	bool success = false;
 	
@@ -196,7 +198,7 @@ bool AbstructRpcContext::doEvent(const Headers& headers, RpcMethod& method)
 	return success;
 }
 
-bool AbstructRpcContext::inputCall(const Headers& headers, const InputStream& input)
+bool RpcConnection::invoke(const Headers& headers, const InputStream& input)
 {
 	RpcMethod method;
 	try{
@@ -222,7 +224,7 @@ bool AbstructRpcContext::inputCall(const Headers& headers, const InputStream& in
 	return false;
 }
 
-void AbstructRpcContext::sendCall4Result(const RpcMethod& method, RpcMethod& methodResult)
+void RpcConnection::sendCall4Result(const RpcMethod& method, RpcMethod& methodResult)
 {
 	checkConnected();
 
@@ -242,7 +244,7 @@ void AbstructRpcContext::sendCall4Result(const RpcMethod& method, RpcMethod& met
 	(void)inputSerializer->read(methodResult, input);
 }
 
-void AbstructRpcContext::checkAuth(const RpcMethod& method)
+void RpcConnection::checkAuth(const RpcMethod& method)
 {
 	checkNullPtr(authChecker);
 	if(authChecker->checkAuth(method.authToken, method.getFullName())){
@@ -283,7 +285,7 @@ void AbstructRpcContext::checkAuth(const RpcMethod& method)
 	throw AuthException("You do not have permission to access this method");
 }
 
-String AbstructRpcContext::login(const ObjectList& args)
+String RpcConnection::login(const ObjectList& args)
 {
 	RpcMethod req("login", const_cast<ObjectList*>(&args), true);
 	req.status = RpcMethod::STATUS_REQUEST_LOGIN;
@@ -292,7 +294,7 @@ String AbstructRpcContext::login(const ObjectList& args)
 	if (methodResult.status == RpcMethod::STATUS_RESPONSE_OK){
 		this->authToken = methodResult.authToken;
 		methodResult.releaseResult();
-		return this->authToken;
+		return authToken;
 	}
 	else{
 		String msg = methodResult.getResultStringAndRelease();
@@ -300,7 +302,7 @@ String AbstructRpcContext::login(const ObjectList& args)
 	}
 }
 
-String AbstructRpcContext::logout()
+String RpcConnection::logout()
 {
 	RpcMethod req("logout", null, true, authToken);
 	req.status = RpcMethod::STATUS_REQUEST_LOGOUT;
@@ -316,7 +318,7 @@ String AbstructRpcContext::logout()
 	}
 }
 
-RpcSerializeable* AbstructRpcContext::getSerializer(cstring name)
+RpcSerializeable* RpcConnection::getSerializer(cstring name)
 {
 	if(strlen(name) == 0)
 		name = serializerType.c_str();
@@ -329,28 +331,33 @@ RpcSerializeable* AbstructRpcContext::getSerializer(cstring name)
 	return serializer;
 }
 
-void AbstructRpcContext::notifyEvent(cstring event, Object* sender, 
+void RpcConnection::notifyEvent(cstring event, Object* sender, 
 	const ObjectList& args)
 {
-	//@TODO: not use const_cast
-	ObjectList& argsWithEvent = const_cast<ObjectList&>(args);
+	ObjectList argsWithEvent = args;
 	(void)argsWithEvent.insert(0, toObject(event));//event
-	return onNotifyEvent(event, argsWithEvent);
+	onNotifyEvent(event, argsWithEvent);
+	argsWithEvent.remove(0);
 }
 
-void AbstructRpcContext::onNotifyEvent(cstring event, const ObjectList& args)
+void RpcConnection::onNotifyEvent(cstring event, const ObjectList& args)
 {
 	return;
 }
 
-bool AbstructRpcContext::subscribe(cstring event, cstring method)
+bool RpcConnection::subscribe(cstring event, cstring method)
 {
 	return false;
 }
 
-bool AbstructRpcContext::unsubscribe(cstring event, cstring method)
+bool RpcConnection::unsubscribe(cstring event, cstring method)
 {
 	return false;
+}
+
+void RpcConnection::setDataHookHandler(RpcDataHookHandler* handler)
+{
+	return;
 }
 
 

@@ -20,8 +20,8 @@ public:
 	virtual void stop()=0;
 public:
 	virtual bool isRunning()=0;
-	virtual void beforeTask()=0;
-	virtual void taskFinish()=0;
+	virtual void taskStarted()=0;
+	virtual void taskFinished()=0;
 	virtual int getId()=0;
 	virtual void setId(int id)=0;
 };

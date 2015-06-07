@@ -17,7 +17,23 @@ namespace bluemei{
 */
 class BRpcUtil : public CodeUtil
 {
-	;
+public:
+	static int debug(cstring frmt, ...)
+	{
+		if(!isBrpcDebug())
+			return -1;
+
+		va_list arg_ptr;
+		va_start(arg_ptr,frmt);
+
+		return vprintf(frmt, arg_ptr);
+	}
+
+	static void setBrpcDebug(bool val) { s_isBrpcDebug = val; }
+	static bool isBrpcDebug() { return s_isBrpcDebug; }
+
+protected:
+	static bool s_isBrpcDebug;
 };
 
 

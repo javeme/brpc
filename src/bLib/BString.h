@@ -50,6 +50,7 @@ public:
 	virtual int rfind(const String& substr, unsigned int fromIndex=-1) const;
 	virtual bool contain(const String& substr) const;
 	virtual bool startWith(const String& substr) const;
+	virtual bool endWith(const String& substr) const;
 	virtual String trim(int part=TRIM_BOTH) const;
 	virtual String replace(const String& strNeedReplaced, const String& strReplace) const;
 	virtual ArrayList<String> splitWith(const String& separator) const;

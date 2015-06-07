@@ -2,7 +2,7 @@
     var C = {
         NODE_STATE_EXPAND: '[+]',
         NODE_STATE_COLLAPSE: '[-]',
-        NODE_STATE_LEAF: '[#]',
+        NODE_STATE_LEAF: '',
         
         LABEL_NULL: '<unknown>'
     }

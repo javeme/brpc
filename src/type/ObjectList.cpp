@@ -3,6 +3,22 @@
 #include "ObjectList.h"
 
 namespace bluemei{
+	
+ObjectList::ObjectList() :autoDelete(true)
+{
+}
+
+ObjectList::~ObjectList()
+{
+	destroy(autoDelete);
+}
+
+ObjectList& ObjectList::operator=( const ObjectList& other )
+{
+	autoDelete = false;
+	Vector<Object*>::operator=(other);
+	return *this;
+}
 
 bool ObjectList::remove(unsigned int index, bool del)
 {
@@ -15,13 +31,16 @@ bool ObjectList::remove(unsigned int index, bool del)
 	return success;
 }
 
-void ObjectList::destroy()
+void ObjectList::destroy(bool del)
 {
-	for (unsigned int i=0; i<size(); i++)
+	if(del)
 	{
-		Object* obj = (*this)[i];
-		delete obj;
-		//itor = this->erase(itor);
+		for(unsigned int i=0; i<size(); i++)
+		{
+			Object* obj = (*this)[i];
+			delete obj;
+			//itor = this->erase(itor);
+		}
 	}
 	this->clear();
 }

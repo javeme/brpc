@@ -339,38 +339,20 @@
     <ClInclude Include="src\rpc\RpcContext.h">
       <Filter>src\rpc</Filter>
     </ClInclude>
-    <ClInclude Include="src\rpc\p2p\P2pRpcContext.h">
-      <Filter>src\rpc\p2p</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rpc\amqp\AmqpRpcContext.h">
-      <Filter>src\rpc\amqp</Filter>
-    </ClInclude>
     <ClInclude Include="src\util\RpcException.h">
       <Filter>src\util</Filter>
     </ClInclude>
     <ClInclude Include="src\rpc\trans\RpcSocket.h">
       <Filter>src\rpc\trans</Filter>
     </ClInclude>
-    <ClInclude Include="src\rpc\trans\RpcSocketManager.h">
-      <Filter>src\rpc\trans</Filter>
-    </ClInclude>
     <ClInclude Include="src\rpc\trans\http\RpcOnHttpSocket.h">
       <Filter>src\rpc\trans\http</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rpc\p2p\P2pRpcClient.h">
-      <Filter>src\rpc\p2p</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rpc\p2p\P2pRpcServer.h">
-      <Filter>src\rpc\p2p</Filter>
     </ClInclude>
     <ClInclude Include="src\rpc\RpcMethod.h">
       <Filter>src\rpc</Filter>
     </ClInclude>
     <ClInclude Include="src\serializer\RpcSerializeable.h">
       <Filter>src\serializer</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rpc\AbstructRpcContext.h">
-      <Filter>src\rpc</Filter>
     </ClInclude>
     <ClInclude Include="src\serializer\json\jsoncpp\config.h">
       <Filter>src\serializer\json\jsoncpp</Filter>
@@ -398,9 +380,6 @@
     </ClInclude>
     <ClInclude Include="src\auth\DefaultAuthChecker.h">
       <Filter>src\auth</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rpc\server\RpcServer.h">
-      <Filter>src\rpc\server</Filter>
     </ClInclude>
     <ClInclude Include="src\rpc\server\RpcService.h">
       <Filter>src\rpc\server</Filter>
@@ -453,6 +432,42 @@
     <ClInclude Include="src\bLib\ClassField.h">
       <Filter>src\blib</Filter>
     </ClInclude>
+    <ClInclude Include="src\rpc\trans\RpcSocketFactory.h">
+      <Filter>src\rpc\trans</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rpc\RpcConnection.h">
+      <Filter>src\rpc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rpc\p2p\P2pRpcConnection.h">
+      <Filter>src\rpc\p2p</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rpc\amqp\AmqpRpcConnection.h">
+      <Filter>src\rpc\amqp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rpc\RpcInvoker.h">
+      <Filter>src\rpc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rpc\RpcInvokerFacatory.h">
+      <Filter>src\rpc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rpc\client\RpcClient.h">
+      <Filter>src\rpc\client</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rpc\trans\RpcOnTcpSocket.h">
+      <Filter>src\rpc\trans</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rpc\server\RpcServer.h">
+      <Filter>src\rpc\server</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rpc\p2p\P2pRpcConnAcceptor.h">
+      <Filter>src\rpc\p2p</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rpc\trans\RpcDataHookHandler.h">
+      <Filter>src\rpc\trans</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rpc\trans\jmtp\JmtpException.h">
+      <Filter>src\rpc\trans\jmtp</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -482,9 +497,6 @@
     <ClCompile Include="src\type\ObjectList.cpp">
       <Filter>src\type</Filter>
     </ClCompile>
-    <ClCompile Include="src\rpc\p2p\P2pRpcContext.cpp">
-      <Filter>src\rpc\p2p</Filter>
-    </ClCompile>
     <ClCompile Include="src\util\RpcException.cpp">
       <Filter>src\util</Filter>
     </ClCompile>
@@ -494,17 +506,8 @@
     <ClCompile Include="src\rpc\trans\http\RpcOnHttpSocket.cpp">
       <Filter>src\rpc\trans\http</Filter>
     </ClCompile>
-    <ClCompile Include="src\rpc\p2p\P2pRpcClient.cpp">
-      <Filter>src\rpc\p2p</Filter>
-    </ClCompile>
     <ClCompile Include="src\type\ObjectMap.cpp">
       <Filter>src\type</Filter>
-    </ClCompile>
-    <ClCompile Include="src\rpc\p2p\P2pRpcServer.cpp">
-      <Filter>src\rpc\p2p</Filter>
-    </ClCompile>
-    <ClCompile Include="src\rpc\AbstructRpcContext.cpp">
-      <Filter>src\rpc</Filter>
     </ClCompile>
     <ClCompile Include="src\serializer\json\jsoncpp\reader.cpp">
       <Filter>src\serializer\json\jsoncpp</Filter>
@@ -517,12 +520,6 @@
     </ClCompile>
     <ClCompile Include="src\auth\DefaultAuthChecker.cpp">
       <Filter>src\auth</Filter>
-    </ClCompile>
-    <ClCompile Include="src\rpc\trans\RpcSocketManager.cpp">
-      <Filter>src\rpc\trans</Filter>
-    </ClCompile>
-    <ClCompile Include="src\rpc\server\RpcServer.cpp">
-      <Filter>src\rpc\server</Filter>
     </ClCompile>
     <ClCompile Include="src\rpc\server\RpcService.cpp">
       <Filter>src\rpc\server</Filter>
@@ -574,6 +571,36 @@
     </ClCompile>
     <ClCompile Include="src\util\BRpcUtil.cpp">
       <Filter>src\util</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rpc\trans\RpcSocketFactory.cpp">
+      <Filter>src\rpc\trans</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rpc\RpcConnection.cpp">
+      <Filter>src\rpc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rpc\p2p\P2pRpcConnection.cpp">
+      <Filter>src\rpc\p2p</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rpc\RpcInvokerFacatory.cpp">
+      <Filter>src\rpc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rpc\client\RpcClient.cpp">
+      <Filter>src\rpc\client</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rpc\trans\RpcOnTcpSocket.cpp">
+      <Filter>src\rpc\trans</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rpc\server\RpcServer.cpp">
+      <Filter>src\rpc\server</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rpc\p2p\P2pRpcConnAcceptor.cpp">
+      <Filter>src\rpc\p2p</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rpc\RpcMethod.cpp">
+      <Filter>src\rpc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rpc\trans\jmtp\JmtpException.cpp">
+      <Filter>src\rpc\trans\jmtp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

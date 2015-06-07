@@ -34,15 +34,14 @@ public:
 	virtual unsigned int removeLast(unsigned int n);//删除n个元素,返回剩下元素数量
 
 	virtual void clear();
-
-
+	
 	virtual unsigned int size() const;
 	virtual void resize(unsigned int size,float capacityFactor=1.2f);
 	virtual void resetCapacity(unsigned int capacity);
 
 	virtual void copy(const ArrayList<T>& list, unsigned int to, unsigned int num);
 	
-	T& operator[](int pos)const { return get(pos); }
+	const T& operator[](int pos)const { return get(pos); }
 	T& operator[](int pos) { return get(pos); }
 
 	virtual String toString()const;

@@ -152,13 +152,15 @@ Object* FuncDispatcher::call(cstring obj, cstring name, const ObjectList& args)
 	checkNullPtr(name);
 	if(strlen(obj) == 0)
 		return call(name, args);
-	//ObjectList argsWithThis = args;
-	//@TODO: not use const_cast
-	ObjectList& argsWithThis = const_cast<ObjectList&>(args);
+	/*//@TODO: not use const_cast
+	ObjectList& argsWithThis = const_cast<ObjectList&>(args);*/
+	ObjectList argsWithThis = args;
 	ObjectRef* thisObj = new ObjectRef(obj, this);
 	(void)argsWithThis.insert(0, thisObj);//this
-	AnyFunction* func = getFunction(name, args);
-	return AnyFunction::invoke(func, args);
+	AnyFunction* func = getFunction(name, argsWithThis);
+	Object* rs = AnyFunction::invoke(func, argsWithThis);
+	argsWithThis.remove(0);//delete ObjectRef,would not delete obj copy from args
+	return rs;
 }
 
 bool FuncDispatcher::addFunction(AnyFunction* func)

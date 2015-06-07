@@ -23,7 +23,11 @@ private:
 public:
 	template<typename Type>
 	bool putValue(cstring name, const Type& val){ 
-		return this->put(name, toObject(val));
+		Object* obj = toObject(val);
+		bool sucess = this->put(name, obj);
+		if(!sucess)
+			delete obj;
+		return sucess;
 	}
 
 	template<typename Type>
@@ -38,11 +42,15 @@ public:
 	}
 
 	bool putValue(cstring name, cstring val){ 
-		return this->put(name, toObject(val));
+		Object* obj = toObject(val);
+		bool sucess = this->put(name, obj);
+		if(!sucess)
+			delete obj;
+		return sucess;
 	}
 
 	bool putValue(cstring name, const String& val){ 
-		return this->put(name, toObject(val.c_str()));
+		return this->putValue(name, val.c_str());
 	}
 
 	virtual Object* remove(cstring name, bool del=true);
@@ -53,7 +61,11 @@ public:
 	{
 		return this->get(name);
 	}
-
+	Object*& operator[](cstring name)
+	{
+		return BeanContainer::operator [](name);
+	}
+	
 	virtual String toString() const;
 public:
 	typedef BeanContainer::ObjectMap::const_iterator MapIterator;

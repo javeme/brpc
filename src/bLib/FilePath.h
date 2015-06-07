@@ -3,16 +3,20 @@
 
 #include "bluemeiLib.h"
 #include "StringBuilder.h"
- 
+#include "FileUtil.h"
+
 namespace bluemei{
 
-#define PATH_SEPARATOR "/"
-	
 class BLUEMEILIB_API FilePath : public Object
 {
 public:
 	FilePath(const String& path="");
 	virtual ~FilePath();
+public:
+	bool operator == (const FilePath& other) const {
+		return m_path == other.m_path;
+	}
+	operator String() const { return toString(); }
 public:
 	FilePath& append(const String& path);
 
@@ -20,17 +24,18 @@ public:
 	String fileName() const;//file name
 
 	String toString() const;
-	operator String() const { return toString(); }
+public:
+	bool exists() const;
+	bool readable() const;
+	bool writable() const;
+	bool executable() const;
+
+	bool isfile() const;
+	bool isdir() const;
+
+	ArrayList<FilePath> list() const;
 protected:
 	StringBuilder m_path;
-};
-
-class BLUEMEILIB_API FileUtil : public Object
-{
-public:
-	static bool exists(const String& path);
-	static bool mkdir(const String& dir);
-	static bool mkdirs(const String& dir);
 };
 
 }//end of namespace bluemei

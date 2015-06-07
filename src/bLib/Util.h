@@ -1,6 +1,6 @@
-#pragma once
+#ifndef Util_H_H
+#define Util_H_H
 #include "bluemeiLib.h"
-#include "File.h"
 #include "Object.h"
 
 namespace bluemei{
@@ -39,6 +39,10 @@ public:
 	static bool isFloatNumber(const CharType* str,int len);
 public:
 	static int random();
+
+	static string uuid4();
+	static string uuid1();
+	static string guid();
 };
 
 template<class CharType>
@@ -79,3 +83,4 @@ bool Util::isFloatNumber(const CharType* str,int len)
 }
 
 }//end of namespace bluemei
+#endif
