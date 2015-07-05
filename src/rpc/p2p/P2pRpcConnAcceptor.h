@@ -2,6 +2,7 @@
 #include "stdafx.h"
 #include "RpcServer.h"
 #include "RpcSocket.h"
+#include "PollDataThreadPool.h"
 
 namespace bluemei{
 	
@@ -19,6 +20,7 @@ protected:
 private:
 	Url url;
 	volatile bool running;
+	PollDataThreadPool pool;
 };
 
 }//end of namespace bluemei

@@ -24,7 +24,7 @@ bool DefaultAuthChecker::checkAuth(cstring authToken, cstring method)
 String DefaultAuthChecker::login(const ObjectList& args)
 {
 	if (args.size() < 2)
-		throw AuthException("Login failed, need args: username and password");
+		throw AuthException("Failed to login, need args: 'username' and 'password'");
 
 	String name, password;
 	args.getValue(0, name);

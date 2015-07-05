@@ -83,7 +83,7 @@ void RpcOnJmtpSocket::receive() throw(RpcException)
 	//bad request [in server]
 	dword len = header.getContentLength();
 	if(isInServer() && len > BRPC_MAX_BODY_LEN){
-		String err = "Content-Length Too Large";
+		String err = "Content Length Too Large";
 		sendResponse(JmtpHeader::JMTP_BODY_TOO_LARGE, header.getPackageIdStr());
 		throwpe(JmtpException(err));
 	}

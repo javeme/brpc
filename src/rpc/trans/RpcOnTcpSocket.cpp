@@ -47,7 +47,9 @@ void RpcOnTcpSocket::initSocket(const HashMap<String,String>& paras)
 	m_pSocket->setNoDelay(noDelay=="true");
 
 	m_nTimeoutCount = 0;
-	startReceiveThread();
+	
+	if(!isInServer())
+		startReceiveThread();
 }
 
 void RpcOnTcpSocket::acceptWith(Object* server, const HashMap<String,String>& paras) throw(RpcException)
@@ -112,6 +114,52 @@ void RpcOnTcpSocket::close() throw(IOException)
 	stopReceiveThread();*/
 }
 
+void RpcOnTcpSocket::startReceiveLoop()
+{
+	m_bRecving = true;
+	m_nTimeoutCount = 0;
+	while(m_bRecving){
+		try{
+			receive();
+			m_nTimeoutCount = 0;
+			m_bError = false;
+		}catch(TimeoutException& e){
+			notifyException(e);
+			m_nTimeoutCount++;
+			if(m_nTimeoutCount > m_nMaxTimeoutCount){
+				m_bError = true;
+				m_bRecving = false;
+				BRpcUtil::debug("====timeout count > %d, stop reveiver.", m_nMaxTimeoutCount);
+			}
+		}catch(SocketClosedException&){
+			m_bError = false;
+			m_bRecving = false;
+		}catch(Exception& e){
+			//e.printStackTrace();
+			m_bError = true;
+			BRpcUtil::debug("====exception(when receiving): %s\n", e.toString().c_str());
+			//通知异常
+			m_bRecving &= notifyException(e);
+		}
+	}//end while
+	/*try{
+		m_pSocket->close();
+	}catch(Exception& e){			
+		System::debugInfo("%s\n",e.toString().c_str());
+	}*/
+	if(m_bError)
+		notifyHookError(toString(), HOOK_ERR_RECV_STOPED);
+	else
+		notifyHookError(toString(), HOOK_ERR_CLOSED);
+}
+
+void RpcOnTcpSocket::stopReceiveLoop()
+{
+	m_bRecving=false;
+	if(m_pSocket!=null)
+		m_pSocket->setTimeout(1);
+}
+
 //启动接收数据线程
 void RpcOnTcpSocket::startReceiveThread()
 {
@@ -120,41 +168,7 @@ void RpcOnTcpSocket::startReceiveThread()
 
 	m_pRecvThread=new LambdaThread([&](){
 		//BRpcUtil::debug("====thread started for %s\n", toString().c_str());
-		m_bRecving = true;
-		m_nTimeoutCount = 0;
-		while(m_bRecving){
-			try{
-				receive();
-				m_nTimeoutCount = 0;
-				m_bError = false;
-			}catch(TimeoutException& e){
-				notifyException(e);
-				m_nTimeoutCount++;
-				if(m_nTimeoutCount > m_nMaxTimeoutCount){
-					m_bError = true;
-					m_bRecving = false;
-					BRpcUtil::debug("====timeout count > %d, stop reveiver.", m_nMaxTimeoutCount);
-				}
-			}catch(SocketClosedException&){
-				m_bError = false;
-				m_bRecving = false;
-			}catch(Exception& e){
-				//e.printStackTrace();
-				m_bError = true;
-				BRpcUtil::debug("====exception(when receiving): %s\n", e.toString().c_str());
-				//通知异常
-				m_bRecving &= notifyException(e);
-			}
-		}//end while
-		/*try{
-			m_pSocket->close();
-		}catch(Exception& e){			
-			System::debugInfo("%s\n",e.toString().c_str());
-		}*/
-		if(m_bError)
-			notifyHookError(toString(), HOOK_ERR_RECV_STOPED);
-		else
-			notifyHookError(toString(), HOOK_ERR_CLOSED);
+		startReceiveLoop();
 		//end of thread
 	},nullptr);
 	m_pRecvThread->setAutoDestroy(false);
@@ -165,9 +179,7 @@ void RpcOnTcpSocket::stopReceiveThread()
 {
 	if(m_bRecving && m_pRecvThread!=null)
 	{
-		m_bRecving=false;
-		if(m_pSocket!=null)
-			m_pSocket->setTimeout(1);
+		stopReceiveLoop();
 		m_pRecvThread->wait();
 	}
 }

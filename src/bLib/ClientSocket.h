@@ -16,19 +16,6 @@ public:
 	ClientSocket();
 	ClientSocket(socket_t hSocket);
 	~ClientSocket();
-protected:
-	socket_t m_hSocket;
-	sockaddr_in m_peerAddr;
-private:
-	bool m_bClose;
-	int m_nTimeout;
-public:
-	const static int LINE_BUFFER_SIZE;
-protected:
-	void createSocket();
-public:
-	void attach(socket_t s);
-	socket_t detach();
 public:
 	void connect(cstring ip,unsigned short port);
 
@@ -39,7 +26,7 @@ public:
 	int getPeerPort()const;
 
 	void setTimeout(int ms)/*≥¨ ±,∫¡√Î */;
-	void setNoDelay(bool b);
+	void setNoDelay(bool noDelay);
 
 	unsigned long availableBytes();
 	void skip(unsigned long len);
@@ -60,11 +47,26 @@ public:
 	int writeInt(int value);
 	int writeShort(short value);
 	int writeByte(unsigned char value);
-	int writeString(const String& str);
 	int writeUtfString(const String& str);
-	int writeUnicodeString(const String& str);
+	int writeString(const String& str);
 
 	void close();
+
+public:
+	void attach(socket_t s);
+	socket_t detach();
+
+protected:
+	void createSocket();
+
+protected:
+	socket_t m_hSocket;
+	sockaddr_in m_peerAddr;
+private:
+	bool m_bClose;
+	int m_nTimeout;
+public:
+	const static int LINE_BUFFER_SIZE;
 };
 
 

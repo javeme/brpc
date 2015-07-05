@@ -1,0 +1,79 @@
+#!/usr/bin/python2.7
+import sys
+
+from brpc.client import brpc_client
+
+
+def parse_method_args(argc, argv):
+    method = None
+    args = []
+    # such as: echo "hello rpc"
+    if (argc > 2):
+        method = argv[2]
+        for i in range(3, argc):
+            arg = argv[i]
+            t = arg[0]
+            if (t == '"'):
+                args.append(arg[1: len(arg) - 1])
+            elif (t == '\''):
+                args.append(arg[1: len(arg) - 1])
+            elif (t.isdigit()):
+                if '.' in arg:
+                    args.append(float(arg.c_str()))
+                else:
+                    args.append(int(arg.c_str()))
+            elif (t == 't' and arg == "true"):
+                args.append(True)
+            elif (t == 'f' and arg == "false"):
+                args.append(False)
+            else:
+                print("invalid para: %s\n", argv[i])
+
+    return method, args
+
+def main(argv=None):  # IGNORE:C0111
+    '''Command line options.'''
+
+    if argv is None:
+        argv = sys.argv
+    else:
+        sys.argv.extend(argv)
+        argv = sys.argv
+
+    usage = "usage: brpc client [options...]\n"
+
+    argc = len(argv)
+    if (argc > 1):
+        arg1 = argv[1]
+        if(arg1 == "client"):
+            print("client start...")
+
+            url = "http://127.0.0.1:8080"  # http:#192.168.1.131
+            username = 'test'
+            passwd = '123456'
+            client = brpc_client.BRpcClient(url, username, passwd)
+
+            method, args = parse_method_args(argc, argv)
+            # such as: echo "hello rpc"
+            if (method):
+                result = client.call(method, args)
+                result = '<null>' if result is None else result
+                rs = '>>>>> call method %s(%s): \n' \
+                    + '=====\n' \
+                    + '%s\n' \
+                    + '=====\n'
+                rs = rs % (method, args, result)
+                print(rs)
+                client.logout()
+            else:
+                print(usage)
+                print("please input a method name.\n")
+        else:
+            print(usage)
+    else:
+        print(usage)
+
+    return 0
+
+if __name__ == "__main__":
+    sys.exit(main())

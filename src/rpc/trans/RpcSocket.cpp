@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "RpcSocket.h"
 #include "Date.h"
+#include "BRpcUtil.h"
 
 namespace bluemei{
 
@@ -41,9 +42,13 @@ bool RpcSocket::notifyReceive(DataPackage& input)
 			m_waitLock.signal();
 			return true;
 		}
-		else			
+		else
+		{
 			return dataListener->onReceive(input);
+		}
 	}
+	else
+		BRpcUtil::debug("RpcSocket.notifyReceive: dataListener is null\n");
 	return false;
 }
 

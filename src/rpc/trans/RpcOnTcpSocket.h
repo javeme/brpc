@@ -17,6 +17,9 @@ public:
 	virtual void acceptWith(Object* server, const HashMap<String,String>& paras) throw(RpcException);
 	virtual void close() throw(RpcException);
 public:
+	virtual void startReceiveLoop();
+	virtual void stopReceiveLoop();
+
 	virtual void startReceiveThread();
 	virtual void stopReceiveThread();
 

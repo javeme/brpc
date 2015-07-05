@@ -9,7 +9,7 @@
 namespace bluemei{
 
 P2pRpcConnAcceptor::P2pRpcConnAcceptor(RpcServer* server) 
-	: RpcConnAcceptor(server), running(false)
+	: RpcConnAcceptor(server), running(false), pool(20)
 {
 	checkNullPtr(server);
 	url = Url(server->getUrl());
@@ -35,10 +35,12 @@ void P2pRpcConnAcceptor::waitConnection()
 	String proto = url.getProtocol("jmtp");
 	String port = url.getPort(RPC_P2P_PORT);
 
-	ServerSocket serverSocket(CodeUtil::str2Int(port));
 	HashMap<String,String> paras;
 	paras.put("timeout", String::format("%u",server->getTimeout()));
+	paras.put("noDelay", "true");
 
+	ServerSocket serverSocket(CodeUtil::str2Int(port));
+	
 	this->running = true;
 	while(this->running)
 	{
@@ -70,6 +72,8 @@ void P2pRpcConnAcceptor::addConnection(RpcSocket* rpcSocket)
 		server->getTimeout(),
 		rpcSocket);
 	server->addConnection(conn);
+	//add to thread pool and poll data
+	pool.addSocket(rpcSocket);
 }
 
 void P2pRpcConnAcceptor::stop()

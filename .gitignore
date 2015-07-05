@@ -57,3 +57,4 @@ Debug/brpc.exe.embed.manifest.res
 Release/brpc.lastbuildstate
 Release/brpc.exe.intermediate.manifest
 Release/brpc.vcxprojResolveAssemblyReference.cache
+*.pyc

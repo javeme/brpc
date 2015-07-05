@@ -37,6 +37,11 @@ protected:
 };
 
 
+static bool streq(cstring str1, cstring str2)
+{
+	return strcmp(str1, str2) == 0;
+}
+
 /*
 * 类型不匹配异常类
 * @author 李章梅

@@ -468,6 +468,9 @@
     <ClInclude Include="src\rpc\trans\jmtp\JmtpException.h">
       <Filter>src\rpc\trans\jmtp</Filter>
     </ClInclude>
+    <ClInclude Include="src\rpc\trans\PollDataThreadPool.h">
+      <Filter>src\rpc\trans</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -601,6 +604,9 @@
     </ClCompile>
     <ClCompile Include="src\rpc\trans\jmtp\JmtpException.cpp">
       <Filter>src\rpc\trans\jmtp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rpc\trans\PollDataThreadPool.cpp">
+      <Filter>src\rpc\trans</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

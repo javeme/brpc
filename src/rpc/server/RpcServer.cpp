@@ -28,6 +28,7 @@ void RpcServer::addConnection(RpcConnection* conn)
 {
 	if (conn == null)
 		return;
+	BRpcUtil::debug("RpcServer.addConnection: %s\n", conn->toString().c_str());
 	connList.addToLast(conn);
 	conn->setDataHookHandler(this);
 }
@@ -36,6 +37,7 @@ void RpcServer::removeConnection(RpcConnection* conn)
 {
 	if (conn == null)
 		return;
+	BRpcUtil::debug("RpcServer.removeConnection: %s\n", conn->toString().c_str());
 	if(connList.remove(conn) >= 0)
 		delete conn;
 }
@@ -90,13 +92,15 @@ void RpcServer::onEvent(cstring event, Object* sender, const ObjectList& args)
 	{
 		RpcConnection* conn = itor->next();
 		if(conn->checkConnected()) {
-			//printf("======RpcConnection======%s\n",conn->toString().c_str());
+			BRpcUtil::debug("RpcConnection.onEvent: %s(to: %s)\n",
+							event, conn->toString().c_str());
 			conn->notifyEvent(event, sender, args);
 		}
 	}
 	connList.releaseIterator(itor);
 }
 
+//hook the data and log it
 void RpcServer::onReceived(cstring name,const DataPackage& data,long time)
 {
 	String content((cstring)data.body.array(), data.body.size());
@@ -127,8 +131,8 @@ void RpcServer::onError(cstring name,cstring err,RpcReceiveListener* listener)
 	BRpcUtil::debug("====%s\n", msg.c_str());
 	Log::getLogger()->debug(msg);
 	
-	if(String(HOOK_ERR_RECV_STOPED) == err ||
-		String(HOOK_ERR_CLOSED) == err)
+	if(streq(HOOK_ERR_RECV_STOPED, err) ||
+	   streq(HOOK_ERR_CLOSED, err))
 	{
 		removeConnection(dynamic_cast<RpcConnection*>(listener));
 	}

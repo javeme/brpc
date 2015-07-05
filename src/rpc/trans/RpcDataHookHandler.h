@@ -19,7 +19,7 @@ public:
 	virtual void onError(cstring name,cstring err,RpcReceiveListener* listener)=0;
 };
 
-#define HOOK_ERR_RECV_STOPED "receive-stoped"
+#define HOOK_ERR_RECV_STOPED "stoped-receiving"
 #define HOOK_ERR_CLOSED "closed"
 
 }//end of namespace bluemei

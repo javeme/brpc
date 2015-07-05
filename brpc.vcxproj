@@ -181,6 +181,7 @@
     <ClInclude Include="src\rpc\trans\jmtp\JmtpException.h" />
     <ClInclude Include="src\rpc\trans\jmtp\JmtpHeader.h" />
     <ClInclude Include="src\rpc\trans\jmtp\RpcOnJmtpSocket.h" />
+    <ClInclude Include="src\rpc\trans\PollDataThreadPool.h" />
     <ClInclude Include="src\rpc\trans\RpcDataHookHandler.h" />
     <ClInclude Include="src\rpc\trans\RpcOnTcpSocket.h" />
     <ClInclude Include="src\rpc\trans\RpcSocket.h" />
@@ -237,6 +238,7 @@
     <ClCompile Include="src\rpc\trans\jmtp\JmtpException.cpp" />
     <ClCompile Include="src\rpc\trans\jmtp\JmtpHeader.cpp" />
     <ClCompile Include="src\rpc\trans\jmtp\RpcOnJmtpSocket.cpp" />
+    <ClCompile Include="src\rpc\trans\PollDataThreadPool.cpp" />
     <ClCompile Include="src\rpc\trans\RpcOnTcpSocket.cpp" />
     <ClCompile Include="src\rpc\trans\RpcSocket.cpp" />
     <ClCompile Include="src\rpc\trans\RpcSocketFactory.cpp" />

@@ -93,12 +93,12 @@ void RpcOnHttpSocket::receive() throw(RpcException)
 	len = header->getContentLength();
 	if(isRequest){
 		if(len == 0){
-			String err = "Content-Length Required";
+			String err = "'Content-Length' Required";
 			sendResponse(HttpResponse::LengthRequired, packageId);
 			throwpe(HttpBadRequestException(err));
 		}
 		else if(len > BRPC_MAX_BODY_LEN){
-			String err = "Content-Length Too Large";
+			String err = "'Content-Length' Too Large";
 			sendResponse(HttpResponse::RequestEntityTooLarge, packageId);
 			throwpe(HttpBadRequestException(err));
 		}
