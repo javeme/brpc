@@ -1,11 +1,10 @@
 #pragma once
 #include "stdafx.h"
-#include "Object.h"
-#include "ByteBuffer.h"
 #include "RpcConnection.h"
 #include "RpcSocket.h"
 
-namespace bluemei{
+
+namespace brpc{
 
 const static cstring RPC_P2P_PORT = "8080";//8912
 

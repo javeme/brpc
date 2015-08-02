@@ -3,7 +3,7 @@
 #include "AuthChecker.h"
 #include "RpcService.h"
 
-namespace bluemei{
+namespace brpc{
 
 class RpcServer;
 class RpcConnAcceptor;

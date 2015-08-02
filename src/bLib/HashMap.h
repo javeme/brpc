@@ -99,6 +99,7 @@ public:
 	{ 
 		if(this != &other)
 		{
+			this->clear();
 			/*this->m_nSize = other.m_nSize;
 			this->m_fLoadFactor = other.m_fLoadFactor;
 			this->m_nThreshold = other.m_nThreshold;
@@ -175,8 +176,8 @@ public:
 	virtual void releaseIterator(Iterator<HashEntry>* itor);
 protected:
 	void addEntry(const K& k,const V& v,unsigned int h, unsigned int index) {
-		auto a=m_entryTable[index];
-		m_entryTable[index]=new HashEntry(k,v,h,m_entryTable[index]);
+		HashEntry* next=m_entryTable[index];
+		m_entryTable[index]=new HashEntry(k,v,h,next);
 		m_nSize++;
 		if (m_nSize >= m_nThreshold)
 			resize(2*m_nMaxSize);//Î´¿¼ÂÇÒç³ö

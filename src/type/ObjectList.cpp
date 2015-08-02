@@ -2,7 +2,7 @@
 #include "stdafx.h"
 #include "ObjectList.h"
 
-namespace bluemei{
+namespace brpc{
 	
 ObjectList::ObjectList() :autoDelete(true)
 {

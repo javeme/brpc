@@ -1,10 +1,9 @@
 #pragma once
-#include "stdafx.h"
-#include "BString.h"
+#include "blib.h"
 #include "TypeVisitor.h"
 
 
-namespace bluemei{
+namespace brpc{
 
 class TString : public String, public TypeVisitable
 {

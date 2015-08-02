@@ -1,8 +1,8 @@
 #pragma once
 #include "HttpHeader.h"
-#include "SmartPtr.h"
 
-namespace bluemei{
+
+namespace brpc{
 
 #define HTTP_LINE_END "\n"
 

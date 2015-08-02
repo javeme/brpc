@@ -3,7 +3,7 @@
 #include "src\rpc\server\RpcService.h"
 #include <shellapi.h>
 #include "LambdaThread.h"
-using namespace bluemei;
+using namespace brpc;
 
 class TestObject : public Object
 {
@@ -273,16 +273,16 @@ private:
 
 		CloseHandle(hWrite);
 
-		const int BUF_SIZE = 1024;
-		char buffer[BUF_SIZE];
-		::memset(buffer,0,BUF_SIZE);
+		const static int READ_BUF_SIZE = 1024;
+		char buffer[READ_BUF_SIZE];
+		::memset(buffer,0,READ_BUF_SIZE);
 
 		string strOut = cmd;
 		strOut.append("\n");
 		DWORD bytesRead = 0;
 		while (true)
 		{
-			if (ReadFile(hRead,buffer,BUF_SIZE,&bytesRead,NULL))
+			if (ReadFile(hRead,buffer,READ_BUF_SIZE,&bytesRead,NULL))
 				strOut.append(buffer,bytesRead);
 			else{
 				DWORD result = WaitForSingleObject(pi.hProcess,0);//INFINITE

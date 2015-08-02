@@ -1,8 +1,8 @@
 #pragma once
-#include "Object.h"
 #include "RpcSocket.h"
 
-namespace bluemei{
+
+namespace brpc{
 
 /*
 * RPC socket ¹¤³§

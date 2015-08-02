@@ -1,13 +1,9 @@
 #pragma once
-#include "Object.h"
-#include "RpcException.h"
-#include "ResourceLock.h"
-#include "LinkedList.cpp"
-#include "System.h"
 #include "DataPackage.h"
+#include "RpcException.h"
 #include "RpcDataHookHandler.h"
 
-namespace bluemei{
+namespace brpc{
 
 typedef unsigned short word;
 typedef unsigned int dword;

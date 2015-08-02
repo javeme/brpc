@@ -1,10 +1,8 @@
 #pragma once
-#include "Object.h"
-#include "BString.h"
-#include "HashMap.h"
-#include "ByteBuffer.h"
+#include "blib.h"
 
-namespace bluemei{
+
+namespace brpc{
 
 #define KEY_STATUS		 "Status"
 #define KEY_RESPONSE	 "Response"

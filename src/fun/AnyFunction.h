@@ -1,9 +1,9 @@
 #pragma once
 #include "stdafx.h"
-#include "Object.h"
 #include "ObjectList.h"
 
-namespace bluemei{
+
+namespace brpc{
 
 /*
 * 函数对象类

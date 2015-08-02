@@ -1,9 +1,10 @@
 #pragma once
 #include "stdafx.h"
-#include "FuncDispatcher.h"
 #include <algorithm>
+#include "FuncDispatcher.h"
+#include "RpcException.h"
 
-namespace bluemei{
+namespace brpc{
 
 template<class T>
 static bool listHas(const List<T>& lst, const T& ele)
@@ -55,7 +56,7 @@ AnyFunction* FuncDispatcher::matchedFunction(cstring name, const ObjectList& arg
 {
 	checkNullPtr(name);
 	FuncList matchedList;
-	FuncList allList= findSelfFunction(name);
+	FuncList allList= findFunction(name);
 	float max = 1;//-1
 	//find all matched  functions
 	for (unsigned int i = 0; i < allList.size(); i++) {
@@ -96,7 +97,8 @@ AnyFunction* FuncDispatcher::matchedFunction(cstring name, const ObjectList& arg
 }
 
 
-AnyFunction* FuncDispatcher::matchedExtendFunction(cstring name, 
+//matched all Function include Extend
+AnyFunction* FuncDispatcher::matchedAllFunction(cstring name, 
 	const ObjectList& args)
 {
 	AnyFunction* fun = matchedFunction(name, args);
@@ -108,7 +110,7 @@ AnyFunction* FuncDispatcher::matchedExtendFunction(cstring name,
 		DispatcherList& ed = const_cast<DispatcherList&>(extendDispatchers);
 		auto i = ed.iterator();
 		while(i->hasNext()) {
-			fun = i->next()->matchedExtendFunction(name, args);
+			fun = i->next()->matchedAllFunction(name, args);
 			if (fun != null)
 				break;
 		}
@@ -118,9 +120,9 @@ AnyFunction* FuncDispatcher::matchedExtendFunction(cstring name,
 	}
 }
 
-AnyFunction* FuncDispatcher::getFunction(cstring name, const ObjectList& args)
+AnyFunction* FuncDispatcher::getFunctionFromAll(cstring name, const ObjectList& args)
 {
-	AnyFunction* func = this->matchedExtendFunction(name, args);
+	AnyFunction* func = this->matchedAllFunction(name, args);
 	if (func == null){
 		String strArgs = args.toString();
 		strArgs = strArgs.substring(1, strArgs.length()-2);
@@ -134,14 +136,14 @@ Object* FuncDispatcher::call(cstring name, const ObjectList& args)
 {
 	checkNullPtr(name);
 	String fname = name;
-	if (fname.contain(".") && !hasSelfFunction(name)) {
+	if (fname.contain(".") && !hasFunction(name)) {
 		int pos = fname.rfind(".");
 		String fthis = fname.substring(0, pos);
 		fname = fname.substring(pos+1);
 		return call(fthis, fname, args);
 	}
 	else {
-		AnyFunction* func = getFunction(name, args);		
+		AnyFunction* func = getFunctionFromAll(name, args);		
 		return AnyFunction::invoke(func, args);
 	}
 }
@@ -155,11 +157,10 @@ Object* FuncDispatcher::call(cstring obj, cstring name, const ObjectList& args)
 	/*//@TODO: not use const_cast
 	ObjectList& argsWithThis = const_cast<ObjectList&>(args);*/
 	ObjectList argsWithThis = args;
-	ObjectRef* thisObj = new ObjectRef(obj, this);
+	ScopePointer<ObjectRef> thisObj = new ObjectRef(obj, this);
 	(void)argsWithThis.insert(0, thisObj);//this
-	AnyFunction* func = getFunction(name, argsWithThis);
+	AnyFunction* func = getFunctionFromAll(name, argsWithThis);
 	Object* rs = AnyFunction::invoke(func, argsWithThis);
-	argsWithThis.remove(0);//delete ObjectRef,would not delete obj copy from args
 	return rs;
 }
 
@@ -176,35 +177,19 @@ bool FuncDispatcher::addFunction(AnyFunction* func)
 	return true;
 }
 
-List<String> FuncDispatcher::allSelfFunctions() const
+List<String> FuncDispatcher::listFunctions() const
 {
 	List<String> funcs;
-	for (auto itor = m_funcMap.begin(); itor != m_funcMap.end(); ++itor) {	
-		/*const FuncList& funcList = itor->second;	
-
-		for(auto itor2 = funcList.begin(); itor2 != funcList.end(); ++itor2) {
-			auto& func = *itor2;
-			if (func) {
-				funcs.push_back(func->toString());//func->name()
-			}
-		}*/
+	for (auto itor = m_funcMap.begin(); itor != m_funcMap.end(); ++itor) {
 		String name = itor->first;
 		if(!listHas(funcs, name))
 			funcs.push_back(name);
 	}
-	/*
-	DispatcherList& ed = const_cast<DispatcherList&>(extendDispatchers);
-	auto i = ed.iterator();
-	while(i->hasNext()) {
-		auto extFuncs = i->next()->allSelfFunctions();
-		funcs.insert(funcs.end(), extFuncs.begin(), extFuncs.end());
-	}
-	ed.releaseIterator(i);*/
 
 	return funcs;
 }
 
-bool FuncDispatcher::hasSelfFunction(cstring name) const
+bool FuncDispatcher::hasFunction(cstring name) const
 {
 	auto itor = m_funcMap.find(name);
 	if (itor != m_funcMap.end())
@@ -212,7 +197,7 @@ bool FuncDispatcher::hasSelfFunction(cstring name) const
 	return false;
 }
 
-FuncDispatcher::FuncList FuncDispatcher::findSelfFunction(cstring name) const
+FuncDispatcher::FuncList FuncDispatcher::findFunction(cstring name) const
 {
 	auto itor = m_funcMap.find(name);
 	if (itor == m_funcMap.end()) {
@@ -222,7 +207,7 @@ FuncDispatcher::FuncList FuncDispatcher::findSelfFunction(cstring name) const
 	return itor->second;
 }
 
-bool FuncDispatcher::registerVar(cstring name,Object* var)
+bool FuncDispatcher::registerVar(cstring name, Object* var)
 {
 	return m_objMap.insert(std::make_pair(name, var)).second;
 }
@@ -232,12 +217,7 @@ bool FuncDispatcher::unregisterVar(cstring name)
 	return m_objMap.erase(name) > 0;
 }
 
-bool FuncDispatcher::existVar(cstring name) const
-{
-	return getVar(name) != null;
-}
-
-Object* FuncDispatcher::getSelfVar(cstring name) const
+Object* FuncDispatcher::getVar(cstring name) const
 {
 	auto itor = m_objMap.find(name);
 	if (itor == m_objMap.end()) {
@@ -247,7 +227,17 @@ Object* FuncDispatcher::getSelfVar(cstring name) const
 	return itor->second;
 }
 
-Object* FuncDispatcher::getVar(cstring name) const
+List<String> FuncDispatcher::listVars() const
+{
+	List<String> vars;
+	for(auto itor = m_objMap.begin(); itor != m_objMap.end(); ++itor) {	
+		vars.push_back(itor->first);
+	}
+
+	return vars;
+}
+
+Object* FuncDispatcher::getVarFromAll(cstring name) const
 {
 	auto itor = m_objMap.find(name);
 	if(itor == m_objMap.end()) {
@@ -256,7 +246,7 @@ Object* FuncDispatcher::getVar(cstring name) const
 		DispatcherList& ed = const_cast<DispatcherList&>(extendDispatchers);
 		auto i = ed.iterator();
 		while(i->hasNext()) {
-			var = i->next()->getVar(name);
+			var = i->next()->getVarFromAll(name);
 			if (var != null)
 				break;
 		}
@@ -265,24 +255,6 @@ Object* FuncDispatcher::getVar(cstring name) const
 		return var;
 	}
 	return itor->second;
-}
-
-List<String> FuncDispatcher::allVars() const
-{
-	List<String> vars;
-	for(auto itor = m_objMap.begin(); itor != m_objMap.end(); ++itor) {	
-		vars.push_back(itor->first);
-	}
-
-	DispatcherList& ed = const_cast<DispatcherList&>(extendDispatchers);
-	auto i = ed.iterator();
-	while(i->hasNext()) {
-		auto extVars = i->next()->allVars();
-		vars.insert(vars.end(), extVars.begin(), extVars.end());
-	}
-	ed.releaseIterator(i);
-
-	return vars;
 }
 
 void FuncDispatcher::clearAllVar()
@@ -315,16 +287,6 @@ String FuncDispatcher::functionsAsString() const
 		}
 	}
 
-	DispatcherList& ed = const_cast<DispatcherList&>(extendDispatchers);
-	auto i = ed.iterator();
-	while(i->hasNext()) {
-		auto extDispatcher = i->next();
-		sb.append(extDispatcher->name());
-		sb.append(":\n");
-		sb.append(extDispatcher->functionsAsString());
-	}
-	ed.releaseIterator(i);
-
 	return sb.toString();
 }
 
@@ -336,19 +298,12 @@ String FuncDispatcher::varsAsString() const
 		sb.append("\n");
 	}
 	
-	DispatcherList& ed = const_cast<DispatcherList&>(extendDispatchers);
-	auto i = ed.iterator();
-	while(i->hasNext()) {
-		sb.append(i->next()->varsAsString());
-	}
-	ed.releaseIterator(i);
-
 	return sb.toString();
 }
 
 String FuncDispatcher::toString() const
 {
-	return varsAsString() + functionsAsString();
+	return this->name();
 }
 
 bool FuncDispatcher::extend(FuncDispatcher* dispatcher)

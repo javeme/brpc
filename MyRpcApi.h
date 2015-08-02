@@ -5,7 +5,7 @@
 #include "RpcClient.h"
 #include "DefaultAuthChecker.h"
 #include "JsonSerializer.h"
-using namespace bluemei;
+using namespace brpc;
 
 class MySubRpcApi : public RpcApi
 {

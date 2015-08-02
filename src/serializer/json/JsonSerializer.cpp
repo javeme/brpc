@@ -10,7 +10,7 @@
 #include <iosfwd>
 #include <iomanip>
 
-namespace bluemei{
+namespace brpc{
 
 
 const cstring TAG_STR_BEGIN = "\"";

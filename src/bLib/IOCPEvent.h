@@ -2,8 +2,8 @@
 #include "Object.h"
 #include "IOCompletionPortImpl.h"
 
-namespace bluemei{
 
+namespace bluemei{
 
 class BLUEMEILIB_API IOCPEventHandle : public Object
 {

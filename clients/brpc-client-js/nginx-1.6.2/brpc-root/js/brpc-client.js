@@ -172,6 +172,9 @@
         listVars: function(options){
             this.call('listVars', [], options);
         },
+        listEextendServices: function(options){
+            this.call('listEextendServices', [], options);
+        },
         signatureOf: function(methodName, options){
             this.call('signatureOf', [methodName], options);
         },

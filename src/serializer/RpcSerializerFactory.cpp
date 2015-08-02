@@ -2,7 +2,7 @@
 #include "stdafx.h"
 #include "RpcSerializerFactory.h"
 
-namespace bluemei{
+namespace brpc{
 
 
 RpcSerializerFactory::RpcSerializerFactory()

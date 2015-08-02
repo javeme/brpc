@@ -3,7 +3,8 @@
 #include "FuncDispatcher.h"
 #include "RpcContext.h"
 
-namespace bluemei{
+
+namespace brpc{
 
 class RpcEventHandler;
 
@@ -13,6 +14,8 @@ public:
 	RpcService(cstring name = "");
 	virtual ~RpcService();
 public:
+	virtual String toString() const;
+public:
 	virtual String ping();
 	virtual String echo(cstring str);
 	virtual String help();
@@ -20,6 +23,7 @@ public:
 	virtual std::vector<String> listMethods();
 	virtual std::vector<String> listVars();
 	virtual std::vector<String> listServices();
+	virtual std::vector<String> listEextendServices();
 
 	virtual String signatureOf(cstring method);
 	virtual String typeOfVar(cstring var);
@@ -28,8 +32,8 @@ public:
 	virtual bool unsubscribe(cstring event, cstring method, RpcContext* ctx);
 public:
 	//call service method
-	virtual Object* call(cstring obj, cstring name, const ObjectList& args, 
-		RpcContext* ctx);
+	virtual Object* call(RpcContext* ctx,
+		cstring obj, cstring name, const ObjectList& args);
 
 	//merge other service to this service
 	virtual bool extendService(RpcService* service);
@@ -58,9 +62,6 @@ public:
 	void setEventHandler(RpcEventHandler* val) { eventHandler = val; }
 
 public:
-	virtual String toString() const { return "RpcService: " + serviceName; }
-
-public:
 	template <typename Func>
 	bool regFunction(cstring funcName, Func func) {
 		return dispatcher.registerFunction(funcName, func);
@@ -82,12 +83,10 @@ public:
 	#define asnf(name,fun) regFunctionWithException(name, fun)
 	#define as(fun) regFunctionWithException(_CODE2STRING(fun), &fun)
 
-	bool regObject(cstring name, Object* obj){ 
-		return dispatcher.registerVar(name, obj); 
-	}
-	bool unregObject(cstring name){ 
-		return dispatcher.unregisterVar(name); 
-	}
+	bool regObject(cstring name, Object* obj);
+	bool unregObject(cstring name);
+
+	bool setNeedContext(cstring name);
 protected:
 	String serviceName;
 	FuncDispatcher dispatcher;
@@ -99,10 +98,28 @@ protected:
 	RpcEventHandler* eventHandler;
 };
 
+
 class RpcEventHandler : public Object
 {
 public:
 	virtual void onEvent(cstring event, Object* sender, const ObjectList& args)=0;
+};
+
+
+template<>
+struct TypeObjectHelper<RpcContext*, true>
+{
+	static bool deletePtr(RpcContext*& ptr)
+	{
+		ptr = null;
+		return false;
+	}
+	static RpcContext* setNull(RpcContext*& ptr)
+	{
+		RpcContext* val = ptr;
+		ptr = null;
+		return val;
+	}
 };
 
 }//end of namespace bluemei

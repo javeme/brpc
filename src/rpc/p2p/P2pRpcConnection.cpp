@@ -5,7 +5,7 @@
 #include "ErrorHandler.h"
 #include "RpcSocketFactory.h"
 
-namespace bluemei{
+namespace brpc{
 
 P2pRpcConnection::P2pRpcConnection(cstring url, RpcService* dispatcher, 
 	AuthChecker* authChecker, cstring serializerType,

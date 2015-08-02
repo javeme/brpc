@@ -85,9 +85,9 @@ var NODE_METHOD = 1;
 function createNode(type, value, api, parent){
     var label = value;
     if (type == NODE_SERVICE)
-        label = 'service ' + value;
+        label = ' service ' + value;
     else if (type == NODE_METHOD)
-        label = 'function ' + value + '()';
+        label = ' function ' + value + '()';
     var node = {
         type: type,
         label: label,
@@ -252,43 +252,46 @@ function showMethodInvokerView(method, api) {
 }
 
 function loadSubNodes(node, onSuccess, onFailure, onException) {
-    var api = node.api;    
+    var api = node.api;
+	
+	function onServices(result){
+		result = result.responseJSON;
+		//alert('Result:\n' +result.returnValue);
+		services = result.returnValue;
+		for (var i=0; i<services.length; i++)
+			api.addSubService(services[i]);
+		
+		var nodes = createServiceNodes(services, node);
+		node.children = nodes;
+		
+		/*var subService = services[0];
+		subService = subService.split('.').pop();
+		api.addSubService(subService);
+		api = api.getSubService(subService);*/
+		
+		//request methods
+		api.listMethods({
+			onSuccess: function(result){
+				result = result.responseJSON;
+				//alert('Result:\n' +result.returnValue);
+				methods = result.returnValue;
+				nodes.extend(createMethodNodes(methods, node));
+				onSuccess(nodes);
+			},
+			onFailure: onFailure,
+			onException: onException
+		});
+	}
+	
     //request sub services
     api.listServices({
-        onSuccess: function(result){
-            result = result.responseJSON;
-            //alert('Result:\n' +result.returnValue);
-            services = result.returnValue;
-            for (var i=0; i<services.length; i++)
-                api.addSubService(services[i]);
-            
-            var nodes = createServiceNodes(services, node);
-            node.children = nodes;
-            
-            /*var subService = services[0];
-            subService = subService.split('.').pop();
-            api.addSubService(subService);
-            api = api.getSubService(subService);*/
-            
-            //request methods
-            api.listMethods({
-                onSuccess: function(result){
-                    result = result.responseJSON;
-                    //alert('Result:\n' +result.returnValue);
-                    methods = result.returnValue;
-                    nodes.extend(createMethodNodes(methods, node));
-                    onSuccess(nodes);
-                },
-                onFailure: onFailure,
-                onException: onException
-            });
-        },
+        onSuccess: onServices,
         onFailure: onFailure,
         onException: onException
-    });
+    });	
 }
 
-function loadServices(data, tree, parentNode){
+function showNodes(data, tree, parentNode){
     function getLabel(item){
         return item.label;
     }
@@ -323,7 +326,7 @@ function loadServices(data, tree, parentNode){
                 loadSubNodes(node,
                     function(nodes){
                         loadView.close();
-                        loadServices(nodes, tree, ele.up());
+                        showNodes(nodes, tree, ele.up());
                     },
                     function(transport){
                         loadView.close();
@@ -342,7 +345,7 @@ function loadServices(data, tree, parentNode){
         tree.updateChildren(parentNode, data);
     }
     else {
-        tree = showTree(data, $('dTree'), getLabel, getChildren, onClick, onDblClick);
+        tree = showTree(data, tree, getLabel, getChildren, onClick, onDblClick);
     }
     return tree;
 }
@@ -440,7 +443,8 @@ function showMethodResponse(responseDiv, data) {
 function showLoadView(title, content) {
     if (Object.isUndefined(content))
         content = 'loading...'
-    var loadView = new Alert('load_box', {
+	var id = randomString(8);
+    var loadView = new Alert(id, {
         title : title,
         content : '<div id="loadContent" class="contentStyle">' + content + '</div>',
         width : '250',
@@ -471,7 +475,7 @@ function showTable(div4Table, header, data, onUpdateData, onCellClick) {
 }
         
 //生成并显示树。divJSON：显示JSON格式的数据；divTree：树所在的DIV。
-function showTree(data, divTree, getLabel, getChildren, onClick, onDblClick) {        
+function showTree(data, divTree, getLabel, getChildren, onClick, onDblClick) {
 	divTree.update('');
 	//var data = randomData(3);
 	//$('dJSON').update(Object.toJSON(data));
@@ -484,7 +488,7 @@ function showTree(data, divTree, getLabel, getChildren, onClick, onDblClick) {
                         selectedStyle: 'selectedTreeNode',
                         normalStype: 'normalTreeNode'
                         });
-	tree.load(data);
+	tree.load(data);	
 	return tree;
 }
 
@@ -510,7 +514,7 @@ function statusText(transport) {
 
 function handleFailure(transport) {
     var status = statusText(transport);
-    alert(status );
+    alert(status);
 }
 
 function handleException(request, e) {
@@ -520,45 +524,51 @@ function handleException(request, e) {
 
 Event.observe(window, 'load', function() {
     var serviceName = 'nova';
-    var api = new RpcApi(serviceName, 'test', '123456', {
-        onSuccess: function(transport){
-            var root = createServiceNode(serviceName, api);
-            loadSubNodes(root, 
-                function(nodes){
-                    loadServices(root, null);
-                },
-                handleFailure,
-                handleException
-            );
-        },
-        onFailure: handleFailure,
-        onException: handleException
-    });
-    
-    /*
-    var functionsTree = null;
-	$('btnTree').observe('click', function() { 
-		var root = createServiceNode('nova');
-        var services = ['service1', 'service2', 'service2.subServiceA'];
-        var methods = ['fun1()', 'fun2()', 'fun3()'];
-        var nodes = createServiceNodes(services, root);
-        nodes.extend(createMethodNodes(methods, root));
-        root.children = nodes;
-        
-        functionsTree = loadServices(root);
-	});
-    
-	$('btnShow').observe('click', function(e) {
-		var next = e.element().next();
-		var content = functionsTree.selectedNode ? functionsTree.selectedNode.innerHTML : ''; 
-		next.update(content);
-	});*/         
-    
+	var divTrees = $('dTree');
+	
+	function loadService(serviceName) {
+		var content = 'loading service "' + serviceName + '"...';
+		var loadView = showLoadView('brpc', content);
+		var api = new RpcApi(serviceName, 'test', '123456', {
+			onSuccess: function(transport){
+				var root = createServiceNode(serviceName, api);
+				
+				//request methods and sub-services
+				loadSubNodes(root,
+					function(nodes){
+						var divTree = new Element('div');
+						showNodes(root, divTree);
+						divTrees.appendChild(divTree);
+						
+						//request extend services
+						api.listEextendServices({
+							onSuccess: function(result){
+								result = result.responseJSON;
+								services = result.returnValue;
+								for (var i = 0; i < services.length; ++i) {
+									loadService(services[i]);
+								}
+							},
+							onFailure: handleFailure,
+							onException: handleException
+						});
+						loadView.destroy();
+					},
+					handleFailure,
+					handleException
+				);				
+			},
+			onFailure: handleFailure,
+			onException: handleException
+		});
+		return api;
+	}
+    loadService(serviceName);
 });  
 </script>
 </head>
 <body>
     <div id="dJSON" class="normal"></div>
-    <div id="dTree" class="treeStyle">loading...</div>                    
+    <div id="dTree" class="treeStyle"></div>                    
 </body>
 </html>

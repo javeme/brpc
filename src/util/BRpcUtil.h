@@ -1,14 +1,12 @@
 #pragma once
 #include "stdafx.h"
-#include "CodeUtil.h"
-#include "SmartPtr.h"
-#include "Exceptions.h"
-#include "StringBuilder.h"
-#include "Number.h"
-#include "TString.h"
+#include "blib.h"
 #include "ObjectRef.h"
+#include "TypeConverter.h"
+#include "RpcException.h"
 
-namespace bluemei{
+
+namespace brpc{
 	
 /*
 * 字符及其编码工具类
@@ -42,88 +40,12 @@ static bool streq(cstring str1, cstring str2)
 	return strcmp(str1, str2) == 0;
 }
 
-/*
-* 类型不匹配异常类
-* @author 李章梅
-* @create 2014/7/4
-*/
-class TypeNotMatchedException : public BadCastException
-{
-public:
-	TypeNotMatchedException(cstring msg) : BadCastException(msg)
-	{
-		;
-	}
-
-	TypeNotMatchedException(cstring val, cstring from, cstring to) 
-		: BadCastException(String::format("%s(%s)", from, val), to)
-	{
-		;
-	}
-
-	virtual ~TypeNotMatchedException(void)
-	{
-	}
-
-	String name()const
-	{
-		return "TypeNotMatchedException";
-	}
-};
-
-/*
-* 参数不匹配异常类
-* @author 李章梅
-* @create 2014/7/4
-*/
-class ArgNotMatchedException : public RuntimeException
-{
-public:
-	ArgNotMatchedException(cstring msg) : RuntimeException(msg)
-	{
-		;
-	}
-
-	virtual ~ArgNotMatchedException(void)
-	{
-	}
-
-	String name()const
-	{
-		return "ArgNotMatchedException";
-	}
-};
-
-class AmbiguityFunctionException : public ArgNotMatchedException
-{
-public:
-	AmbiguityFunctionException(cstring msg) 
-		: ArgNotMatchedException(msg)
-	{
-		;
-	}
-
-	virtual ~AmbiguityFunctionException(void)
-	{
-	}
-
-	String name() const
-	{
-		return "AmbiguityFunctionException";
-	}
-};
-
-class NotMapException : public RuntimeException
-{
-public:
-	NotMapException(Object* obj);
-	virtual String name()const;
-};
 
 //Object <==> ObjectMap相互转换
 struct MapObjectConverter
 {
 	static Object* object2map(Object* obj);
+	static Object* map2object(Object* map, const Class* cls);
 	static Object* map2object(Object* map, Object* obj);
 };
 
@@ -151,8 +73,8 @@ struct MapObjectHelper<Type, true>
 	{
 		typedef Ptr2Type<Type>::Type Cls;
 		//cstring cls = Cls::thisClass()->getName();
-		Object* obj = Cls::thisClass()->createObject();
-		return dynamic_cast<Type>(MapObjectConverter::map2object(map, obj));
+		const Class* cls = Cls::thisClass();
+		return dynamic_cast<Type>(MapObjectConverter::map2object(map, cls));
 	}
 };
 
@@ -169,6 +91,109 @@ struct MapObjectHelper<Type, false>
 	}
 };
 
+
+template<typename Type, typename bool>
+struct TypeObjectHelper;
+
+template<typename Type>
+struct TypeObjectHelper<Type, true>
+{
+	static bool deletePtr(Type& ptr)
+	{
+		delete ptr;
+		ptr = null;
+		return true;
+	}
+	static Type setNull(Type& ptr)
+	{
+		Type val = ptr;
+		ptr = null;
+		return val;
+	}
+};
+
+template<typename Type>
+struct TypeObjectHelper<SmartPtr<Type>, true>
+{
+	static bool deletePtr(SmartPtr<Type>& ptr)
+	{
+		ptr = null;
+		return false;
+	}
+	static SmartPtr<Type> setNull(SmartPtr<Type>& ptr)
+	{
+		SmartPtr<Type> val = ptr;
+		ptr = null;
+		return val;
+	}
+};
+
+template<typename Type>
+struct TypeObjectHelper<Type, false>
+{
+	static bool deletePtr(Type& ptr)
+	{
+		return false;
+	}
+	static Type setNull(Type& ptr)
+	{
+		return ptr;
+	}
+};
+
+template <typename Type>
+class TypeObject : public Object
+{
+public:
+	TypeObject(const Type& val=Type(), bool dontDelete=false)
+		: m_val(val), m_dontDelete(dontDelete) {
+	}
+
+	~TypeObject() {
+		if(!this->m_dontDelete)
+			deletePtr();
+	}
+
+	TypeObject(TypeObject&& other) {
+		*this = std::move(other);
+	}
+
+	TypeObject& operator=(TypeObject&& other) { 
+		this->m_val = other.detach();
+		this->m_dontDelete = other.m_dontDelete;
+		return *this; 
+	}
+
+public:
+	operator Type () const {
+		return m_val;
+	}
+
+	operator Type& () {
+		return m_val;
+	}
+
+	Type detach() {
+		const bool IS_PTR = bluemei::is_convertible<Type, void*>::value;
+		return TypeObjectHelper<Type, IS_PTR>::setNull(m_val);
+	}
+
+protected:
+	void deletePtr() {
+		const bool IS_PTR = bluemei::is_convertible<Type, void*>::value;
+		(void)TypeObjectHelper<Type, IS_PTR>::deletePtr(m_val);
+	}
+
+private:
+	TypeObject(const TypeObject& other);
+	TypeObject& operator = (const TypeObject& other) const;
+
+protected:
+	Type m_val;
+	bool m_dontDelete;
+};
+
+
 /*
 * Object对象转换为指定类型(无法转换时抛出异常)
 * @author 李章梅
@@ -178,23 +203,18 @@ template <typename Type>
 inline Type valueOf(Object* obj)
 {
 	checkNullPtr(obj);
-	ObjectRef* ref = dynamic_cast<ObjectRef*>(obj);
-	if (ref != null)
-	{
-		Object* originalObj = ref->getObject();
-		return valueOf<Type>(originalObj);
-	}
 
 	try{
-		return Converter<Type>::valueOf(obj);
+		return brpc::Converter<Type>::valueOf(obj);
 	}catch(BadCastException&){
-		//Type is a sub-Object
-		const bool isSubObject = is_convertible<Type, Object*>::value;
+		//Type is a sub-Object pointer?
+		const bool isSubObjectPtr = bluemei::is_convertible<Type, Object*>::value;
 		bool needMap2Object = false;
-		if (isSubObject) {
+		if (isSubObjectPtr) {
+			needMap2Object = true;
 			try{
-				needMap2Object = true;
-				return MapObjectHelper<Type, isSubObject>::map2object(obj);
+				//parse a map to a object
+				return MapObjectHelper<Type, isSubObjectPtr>::map2object(obj);
 			}catch(NotMapException&){
 				needMap2Object = false;
 			}
@@ -214,7 +234,7 @@ inline Type valueOf(Object* obj)
 template <typename Type>
 inline Object* toObject(const Type& val)
 {
-	return Converter<Type>::toObject(val);
+	return brpc::Converter<Type>::toObject(val);
 }
 
 template <typename Type>
@@ -225,259 +245,31 @@ inline Object* objectToMap(Type obj)
 	return MapObjectHelper<Type, isSubObject>::object2map(obj);
 }
 
-//转换到指定类型并检查是否成功
 template <typename Type>
-inline Type castAndCheck(Object* obj, cstring toCastType)
+inline Type mapToObject(Object* map)
+{
+	//Type is a sub-Object
+	const bool isSubObject = is_convertible<Type, Object*>::value;
+	return MapObjectHelper<Type, isSubObject>::map2object(map);
+}
+
+
+template <typename Type>
+inline TypeObject<Type> methodArg(Object* obj)
 {
 	checkNullPtr(obj);
-	Type valObj = dynamic_cast<Type>(obj);
-	if (valObj == null)
+	ObjectRef* ref = dynamic_cast<ObjectRef*>(obj);
+	if (ref)
 	{
-		cstring type = obj->getThisClass()->getName();
-		throwpe(TypeNotMatchedException(obj->toString(), type, toCastType))
+		Object* originalObj = ref->getObject();
+		//this should return originalObj;
+		return TypeObject<Type>(valueOf<Type>(originalObj), true);
 	}
-	return valObj;
+	else
+	{
+		return valueOf<Type>(obj);
+	}
 }
-
-inline Number* cast2noAndCheck(Object* obj, cstring toCastType, int pred)
-{
-	Number* number = castAndCheck<Number*>(obj, toCastType);
-	if (number == null || number->precedence() > pred)
-	{
-		cstring type = obj->getThisClass()->getName();
-		throwpe(TypeNotMatchedException(obj->toString(), type, toCastType));
-	}
-	return number;
-}
-
-
-//类型转换器(Object* <==> void)
-template <>
-struct Converter<void>
-{
-	static inline void valueOf(Object* obj)
-	{		
-		return;
-	}
-	static inline Object* toObject(void)
-	{		
-		return null;
-	}
-};
-
-//类型转换器(Object* <==> bool)
-template <>
-struct Converter<bool>
-{
-	static inline bool valueOf(Object* obj)
-	{		
-		Boolean* b = castAndCheck<Boolean*>(obj, "boolean");
-		return *b;
-	}
-	static inline Object* toObject(const bool& val)
-	{		
-		return new Boolean(val);
-	}
-};
-
-//类型转换器(Object* <==> char)
-template <>
-struct Converter<char>
-{
-	static inline char valueOf(Object* obj)
-	{		
-		Char* ch = castAndCheck<Char*>(obj, "char");
-		return *ch;
-	}
-	static inline Object* toObject(const char& val)
-	{		
-		return new Char(val);
-	}
-};
-
-//类型转换器(Object* <==> short)
-template <>
-struct Converter<short>
-{
-	static inline short valueOf(Object* obj)
-	{		
-		Number* number = cast2noAndCheck(obj, "short", PRED_SHORT);
-		return (short)number->toInt();
-	}
-	static inline Object* toObject(const short& val)
-	{		
-		return new Short(val);
-	}
-};
-
-//类型转换器(Object* <==> int)
-template <>
-struct Converter<int>
-{
-	static inline int valueOf(Object* obj)
-	{
-		Number* number = cast2noAndCheck(obj, "int", PRED_INT);
-		return number->toInt();
-	}
-	static inline Object* toObject(const int& val)
-	{		
-		return new Integer(val);
-	}
-};
-
-//类型转换器(Object* <==> lint)
-template <>
-struct Converter<lint>
-{
-	static inline lint valueOf(Object* obj)
-	{
-		Number* number = cast2noAndCheck(obj, "long", PRED_INT64);
-		return number->toLong();
-	}
-	static inline Object* toObject(const lint& val)
-	{		
-		return new Long(val);
-	}
-};
-
-//类型转换器(Object* <==> float)
-template <>
-struct Converter<float>
-{
-	static inline float valueOf(Object* obj)
-	{
-		Number* number = cast2noAndCheck(obj, "float", PRED_FLOAT);
-		return number->toFloat();
-	}
-	static inline Object* toObject(const float& val)
-	{		
-		return new Float(val);
-	}
-};
-
-//类型转换器(Object* <==> double)
-template <>
-struct Converter<double>
-{
-	static inline double valueOf(Object* obj)
-	{
-		Number* number = cast2noAndCheck(obj, "double", PRED_DOUBLE);
-		return number->toDouble();
-	}
-	static inline Object* toObject(const double& val)
-	{		
-		return new Double(val);
-	}
-};
-
-template <>
-struct Converter<Double>
-{
-	static inline Double valueOf(Object* obj)
-	{
-		Number* number = cast2noAndCheck(obj, "double", PRED_DOUBLE);
-		return number->toDouble();
-	}
-	static inline Object* toObject(const Double& val)
-	{		
-		return new Double(val);
-	}
-};
-
-//类型转换器(Object* <==> cstring)
-template <>
-struct Converter<cstring>
-{
-	static inline cstring valueOf(Object* obj)
-	{
-		String* str = castAndCheck<String*>(obj, "string");
-		return str->c_str();
-	}
-	static inline Object* toObject(const cstring& val)
-	{		
-		return new TString(val);
-	}
-};
-
-//类型转换器(Object* <==> char*)
-typedef char* chars;
-template <>
-struct Converter<chars>
-{
-	static inline chars valueOf(Object* obj)
-	{
-		return (chars)Converter<cstring>::valueOf(obj);
-	}
-	static inline Object* toObject(const chars& val)
-	{		
-		cstring str = val;
-		return Converter<cstring>::toObject(str);
-	}
-};
-
-//类型转换器(Object* <==> std::string)
-template <>
-struct Converter<std::string>
-{
-	static inline std::string valueOf(Object* obj)
-	{
-		return Converter<cstring>::valueOf(obj);
-	}
-	static inline Object* toObject(const std::string& val)
-	{		
-		return Converter<cstring>::toObject(val.c_str());
-	}
-};
-
-//类型转换器(Object* <==> String)
-template <>
-struct Converter<String>
-{
-	static inline String valueOf(Object* obj)
-	{
-		return Converter<cstring>::valueOf(obj);
-	}
-	static inline Object* toObject(const String& val)
-	{		
-		return Converter<cstring>::toObject(val.c_str());
-	}
-};
-
-
-/*
-template <>
-struct Converter<Object>
-{
-	static inline Object* toObject(const Object& val)
-	{
-		return val.clone();
-	}
-};
-
-template <>
-struct Converter<Object*>
-{
-	static inline Object* toObject(const Object*& val)
-	{
-		return val->clone();
-	}
-};*/
-
-template <typename T>
-struct Converter<SmartPtr<T>>
-{
-	static inline SmartPtr<T> valueOf(Object* obj)
-	{	
-		return obj;
-	}
-
-	static inline Object* toObject(const SmartPtr<T>& val)
-	{
-		return val;
-	}
-};
-
-//...
 
 
 enum MatchLevel{ LEVEL_NOT_MATCHED, LEVEL_CAN_CONVERT, LEVEL_MATCHED };
@@ -485,12 +277,12 @@ template <typename Type>
 inline MatchLevel matchLevel(Object* obj)
 {
 	try{
-		Type val = valueOf<Type>(obj);
+		TypeObject<Type> val = methodArg<Type>(obj);
 		
 		Number* number = dynamic_cast<Number*>(obj);
 		if (number != null)
 		{
-			SmartPtr<Object> objBack = toObject(val);
+			SmartPtr<Object> objBack = toObject<Type>(val);
 			Number* numberBack = dynamic_cast<Number*>((Object*)objBack);
 			if (numberBack != null && numberBack->isSameType(*number)){
 				return LEVEL_MATCHED;
@@ -505,5 +297,20 @@ inline MatchLevel matchLevel(Object* obj)
 	}
 }
 
+
+template <typename T>
+struct Converter<SmartPtr<T>>
+{
+	static inline SmartPtr<T> valueOf(Object* obj)
+	{
+		return brpc::valueOf<T*>(obj);
+	}
+
+	static inline Object* toObject(SmartPtr<T> val)
+	{
+		T* ptr = (T*)val;
+		return brpc::toObject(ptr);
+	}
+};
 
 }//end of namespace bluemei

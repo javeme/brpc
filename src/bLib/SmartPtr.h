@@ -83,7 +83,7 @@ public:
 		GlobalMutexLock l;
 		ptrTrace("SmartPtr decon %p\r\n",this);
 		SmartPtrManager::getInstance()->remove(this);
-		if(System::getInstance().isCollecting())
+		if(System::instance().isCollecting())
 			return;
 		wrapper->disattach();
 	}
@@ -134,29 +134,21 @@ public:
 	{
 		return this->pWrapper->pObj == p;
 	}*/
-	int operator==(T* p)const
-	{
+	int operator==(T* p) const {
 		return this->targetObj == p;
 	}
 
-	operator const T* () const
-	{
-		ptrTrace("SmartPtr operator T* \r\n");
+	operator T* () const {
 		return getTarget();
 	}
 
-	operator T* () 
-	{
-		ptrTrace("SmartPtr operator T* \r\n");
+	T* operator->() const {
 		return getTarget();
 	}
-
-	T* operator->() { return getTarget(); }
-	const T* operator->() const { return getTarget(); }
 
 public:
 	template<typename S>
-	operator S* () { return static_cast<S*>(getTarget()); }
+	S* asType() const { return static_cast<S*>(getTarget()); }
 
 	template<typename S>
 	SmartPtr<S> staticCast(){ return static_cast<S*>(getTarget()); }
@@ -178,23 +170,15 @@ public:
 	template<typename S, typename V>
 	friend SmartPtr<S> ptr_dynamic_cast(SmartPtr<V> ptr);*/
 protected:
-	inline const T* getTarget() const
-	{
+	inline T* getTarget() const {
 		return targetObj;
 	}
 
-	inline T* getTarget() 
-	{
-		return targetObj;
-	}
-
-	inline void* getTargetAddr() 
-	{
+	inline void* getTargetAddr() {
 		return wrapper->getTarget();
 	}
 
-	ObjectWrapper* getWrapper(T* pObj)
-	{
+	ObjectWrapper* getWrapper(T* pObj) {
 		this->wrapper = WrapperManager::getInstance()->getWrapper(pObj);
 		return this->wrapper;
 	}

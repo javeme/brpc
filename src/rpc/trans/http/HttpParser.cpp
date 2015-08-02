@@ -3,7 +3,7 @@
 #include "HttpParser.h"
 #include "HttpException.h"
 
-namespace bluemei{
+namespace brpc{
 
 HttpParser::HttpParser()
 {

@@ -4,7 +4,7 @@
 #include "HttpHeader.h"
 #include "HttpException.h"
 
-namespace bluemei{
+namespace brpc{
 
 //http socket 
 class RpcOnHttpSocket : public RpcOnTcpSocket

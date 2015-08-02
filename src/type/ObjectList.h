@@ -1,11 +1,10 @@
 #pragma once
 #include "stdafx.h"
-#include "StringBuilder.h"
-#include "Vector.cpp"
 #include "BRpcUtil.h"
 #include "TypeVisitor.h"
 
-namespace bluemei{
+
+namespace brpc{
 
 /*
 * Object对象列表
@@ -23,7 +22,7 @@ public:
 public:
 	template<typename Type>
 	void addValue(const Type& val){ 
-		this->add(toObject(val));
+		this->add(brpc::toObject(val));
 	}
 
 	template<typename Type>
@@ -31,7 +30,7 @@ public:
 		Object* obj = null;
 		if (this->get(index, obj))
 		{
-			val = valueOf<Type>(obj);
+			val = brpc::valueOf<Type>(obj);
 			return true;
 		}
 		return false;
@@ -92,7 +91,7 @@ struct Converter<std::vector<T>>
 		ObjectList& list = *pList;
 		for (unsigned int i=0; i<list.size(); i++)
 		{
-			vec.push_back(bluemei::valueOf<T>(list[i]));
+			vec.push_back(brpc::valueOf<T>(list[i]));
 		}
 		return vec;
 	}

@@ -1,9 +1,9 @@
 #pragma once
 #include "RpcSerializeable.h"
 #include "TypeVisitor.h"
-#include "StringBuilder.h"
 
-namespace bluemei{
+
+namespace brpc{
 
 
 class Type2JsonSerializer : public TypeVisiter

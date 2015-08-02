@@ -1,10 +1,9 @@
 #pragma once
-#include "Object.h"
-#include "ByteBuffer.h"
 #include "RpcSocket.h"
 #include "RpcSerializerFactory.h"
 
-namespace bluemei{
+
+namespace brpc{
 
 #define JMTP_NAME "JMTP"
 #define JMTP_VERSION 1

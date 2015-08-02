@@ -4,7 +4,7 @@
 #include "RpcOnJmtpSocket.h"
 #include "RpcOnHttpSocket.h"
 
-namespace bluemei{
+namespace brpc{
 
 
 RpcSocket* RpcSocketFactory::getRpcSocket(const String& name)

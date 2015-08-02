@@ -2,7 +2,7 @@
 #include "stdafx.h"
 #include "ObjectMap.h"
 
-namespace bluemei{
+namespace brpc{
 
 
 Object* ObjectMap::remove(cstring name, bool del)

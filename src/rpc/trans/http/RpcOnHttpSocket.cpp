@@ -8,7 +8,7 @@
 #include "HttpParser.h"
 #include "Log.h"
 
-namespace bluemei{
+namespace brpc{
 	
 #define PATH_RPC_SERVICE "/rpcservice"
 
@@ -47,7 +47,7 @@ void RpcOnHttpSocket::send(const DataPackage& package) throw(IOException)
 		SmartPtr<HttpRequest> request = new HttpRequest(package.headers);
 		request->setRequestType(HttpRequest::HTTP_POST);
 		request->setRequestUrl(PATH_RPC_SERVICE);
-		header = request; 
+		header = request;
 	}
 
 	if(!package.headers.contain(KEY_CONTENT_LEN))
@@ -124,7 +124,7 @@ void RpcOnHttpSocket::receive() throw(RpcException)
 	ByteBuffer& input = package.body;
 	const int LEN = 4096;
 	byte buf[LEN];
-	int total = 0;
+	dword total = 0;
 	while(total < len){
 		int wantRead = len - total;
 		if(wantRead > LEN)

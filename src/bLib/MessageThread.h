@@ -1,6 +1,7 @@
 #pragma once
 #include "Thread.h"
 #include "Date.h"
+#include "PriorityQueue.h"
 #include <functional>
 #include <queue>
 #include <map>
@@ -71,87 +72,6 @@ protected:
 	unsigned long long m_timestamp;
 };
 
-template<class EleType,class KeyGetter>
-class PriorityQueue : public Object
-{
-	typedef int Key;
-	typedef std::queue<EleType> SPQueue;//same Priority Queue	
-public:
-	PriorityQueue(){};
-	virtual ~PriorityQueue(){};
-public:	
-	bool empty() const
-	{	// test if queue is empty
-		return (size()==0);
-	}
-
-	unsigned int size() const
-	{	// return length of queue
-		unsigned int count=0;
-		for(auto i=m_priorityMap.begin();i!=m_priorityMap.end();++i)
-			count += i->second.size();
-		return count;
-	}
-
-	const EleType& top() const
-	{	// return highest-priority element
-		//assert(!(m_inerQueue.empty() && !m_priorityMap.empty()));
-		Key priority=(m_inerQueue.top());
-		SPQueue* spq=getPriorityQueue(priority);
-		//assert(spq!=nullptr);
-		return spq->front();
-	}
-
-	EleType& top()
-	{	// return mutable highest-priority element (retained)
-		//assert(!(m_inerQueue.empty() && !m_priorityMap.empty()));
-		Key priority=(m_inerQueue.top());
-		SPQueue* spq=getPriorityQueue(priority);
-		//assert(spq!=nullptr);
-		return spq->front();
-	}
-
-	void push(const EleType& val)
-	{	// insert value in priority order
-		Key priority=keyGetter(val);
-		SPQueue* spq=getPriorityQueue(priority);
-		if(spq!=nullptr){
-			if(spq->empty())
-				m_inerQueue.push(priority);
-			spq->push(val);
-		}
-		else{
-			m_inerQueue.push(priority);
-
-			SPQueue q;
-			q.push(val);
-			m_priorityMap.emplace(make_pair(priority,q));
-		}
-	}
-
-	void pop()
-	{	// erase highest-priority element
-		//assert(!(m_inerQueue.empty() && !m_priorityMap.empty()));
-		Key priority=(m_inerQueue.top());
-		SPQueue* spq=getPriorityQueue(priority);
-		//assert(spq!=nullptr);
-		spq->pop();
-		if(spq->empty())
-			m_inerQueue.pop();
-	}
-	
-protected:
-	SPQueue* getPriorityQueue(Key priority){
-		if(m_priorityMap.count(priority)==1)
-			return &m_priorityMap[priority];
-		else
-			return nullptr;
-	}
-protected:
-	std::priority_queue<Key> m_inerQueue;
-	std::map<Key,SPQueue> m_priorityMap;
-	KeyGetter keyGetter;
-};
 
 typedef std::function<void (Message* msg)> MessageFunction;
 
@@ -175,7 +95,7 @@ public:
 	virtual void doMessageLoop();
 	virtual void finish();
 protected:
-	virtual void run(ThreadParameter *pThreadParameter);
+	virtual void run();
 protected:
 	virtual void onMessage(Message* msg);
 protected:

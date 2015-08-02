@@ -3,7 +3,7 @@
 #include "ObjectList.h"
 #include "RpcSerializeable.h"
 
-namespace bluemei{
+namespace brpc{
 	
 const byte TAG_INT_BEGIN = 'i';
 const byte TAG_FLT_BEGIN = 'f';

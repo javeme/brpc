@@ -69,6 +69,9 @@ class BRpcApi(object):
     def listServices(self):
         return self.call('listServices', [])
 
+    def listEextendServices(self):
+        return self.call('listEextendServices', [])
+
     def listVars(self):
         return self.call('listVars', [])
 

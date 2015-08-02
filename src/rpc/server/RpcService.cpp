@@ -3,7 +3,7 @@
 #include "RpcService.h"
 #include "RpcContext.h"
 
-namespace bluemei{
+namespace brpc{
 
 const static cstring SYSTEM_OBJ = "system";
 const static cstring SYSTEM_CLS = "RpcService";
@@ -19,6 +19,7 @@ RpcService::RpcService(cstring name) :
 	as(RpcService::listMethods);
 	as(RpcService::listVars);
 	as(RpcService::listServices);
+	as(RpcService::listEextendServices);
 	
 	as(RpcService::signatureOf);
 	as(RpcService::typeOfVar);
@@ -29,8 +30,8 @@ RpcService::RpcService(cstring name) :
 	if(serviceName.length() > 0)
 		(void)regObject(name, this);
 
-	needCtxFuncMap.put("subscribe", true);
-	needCtxFuncMap.put("unsubscribe", true);
+	setNeedContext("subscribe");
+	setNeedContext("unsubscribe");
 }
 
 RpcService::~RpcService()
@@ -40,8 +41,47 @@ RpcService::~RpcService()
 	(void)unregObject(SYSTEM_OBJ);
 }
 
-Object* RpcService::call(cstring obj, cstring name, const ObjectList& args,
-						 RpcContext* ctx)
+cstring RpcService::version()
+{
+	return "1.0";
+}
+
+String RpcService::toString() const
+{
+	return "RpcService: " + serviceName;
+}
+
+bool RpcService::regObject(cstring name, Object* obj)
+{
+	return dispatcher.registerVar(name, obj);
+}
+
+bool RpcService::unregObject(cstring name)
+{
+	return dispatcher.unregisterVar(name);
+}
+
+bool RpcService::setNeedContext(cstring name)
+{
+	return needCtxFuncMap.put(name, true);
+}
+
+bool RpcService::isNeedContext(cstring obj, cstring name) const
+{
+	if(needCtxFuncMap.contain(name) && isThisService(obj)){
+		return needCtxFuncMap.getDefault(name, false);
+	}
+	return false;
+}
+
+bool RpcService::isThisService(cstring name) const
+{
+	String fthis(name);
+	return fthis == serviceName ||  fthis == SYSTEM_OBJ;
+}
+
+Object* RpcService::call(RpcContext* ctx,
+	cstring obj, cstring name, const ObjectList& args)
 {
 	String fthis = obj;
 	String fname = name;
@@ -76,7 +116,7 @@ Object* RpcService::call(cstring obj, cstring name, const ObjectList& args,
 		if(hasSubService(fsub) && isThisService(fthis)){
 			RpcService* subService = getSubService(fsub);
 			checkNullPtr(subService);
-			return subService->call(subService->name(), fname, args, ctx);
+			return subService->call(ctx, subService->name(), fname, args);
 		}
 		//sub-object
 		else
@@ -116,7 +156,7 @@ String RpcService::help()
 		sb.append(i->c_str());
 		sb.append("\n");
 	}
-	
+
 	sb.append("method:\n");
 	sb.append(thisList);
 	return sb.toString();
@@ -124,12 +164,12 @@ String RpcService::help()
 
 std::vector<String> RpcService::listMethods()
 {
-	return dispatcher.allSelfFunctions();
+	return dispatcher.listFunctions();
 }
 
 std::vector<String> RpcService::listVars()
 {
-	return dispatcher.allVars();
+	return dispatcher.listVars();
 }
 
 std::vector<String> RpcService::listServices()
@@ -145,19 +185,26 @@ std::vector<String> RpcService::listServices()
 	}
 	subServices.releaseIterator(i);
 
-	/*i = extendServices.iterator();
+	return services;
+}
+
+std::vector<String> RpcService::listEextendServices()
+{
+	std::vector<String> services;
+
+	auto i = extendServices.iterator();
 	while(i->hasNext()) {
 		//extend-service name
 		services.push_back(i->next().key);
 	}
-	subServices.releaseIterator(i);*/
+	extendServices.releaseIterator(i);
 
 	return services;
 }
 
 String RpcService::signatureOf(cstring method)
 {
-	auto funcList = dispatcher.findSelfFunction(method);
+	auto funcList = dispatcher.findFunction(method);
 	StringBuilder sb(funcList.size() * 20);
 
 	for(auto itor = funcList.begin(); itor != funcList.end(); ++itor) {
@@ -188,17 +235,6 @@ bool RpcService::unsubscribe(cstring event, cstring method, RpcContext* ctx)
 {
 	checkNullPtr(ctx);
 	return ctx->getInvoker().unsubscribe(event, method);
-}
-
-bool RpcService::isThisService(cstring name) const
-{
-	String fthis(name);
-	return fthis == serviceName ||  fthis == SYSTEM_OBJ;
-}
-
-cstring RpcService::version()
-{
-	return "1.0";
 }
 
 bool RpcService::extendService(RpcService* service)
@@ -264,14 +300,6 @@ bool RpcService::hasSubService(cstring name)
 {
 	//return subServices.contain(name);	
 	return (getSubService(name) != null);
-}
-
-bool RpcService::isNeedContext(cstring obj, cstring name) const
-{
-	if(needCtxFuncMap.contain(name) && isThisService(obj)){
-		return needCtxFuncMap.getDefault(name, false);
-	}
-	return false;
 }
 
 void RpcService::publishEvent(cstring name, const ObjectList& args)

@@ -1,11 +1,10 @@
 #pragma once
-#include "Object.h"
-#include "ByteBuffer.h"
+#include "blib.h"
 #include "RpcMethod.h"
 #include "RpcException.h"
 
 
-namespace bluemei{
+namespace brpc{
 
 //typedef std::ostream OutputStream;
 //typedef std::istream InputStream;

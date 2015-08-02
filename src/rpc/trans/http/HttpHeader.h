@@ -1,11 +1,9 @@
 #pragma once
-#include "Object.h"
-#include "ByteBuffer.h"
 #include "RpcSocket.h"
 #include "RpcSerializerFactory.h"
-#include "Date.h"
 
-namespace bluemei{
+
+namespace brpc{
 
 #define HTTP_NAME		"HTTP"
 #define HTTP_VERSION	"1.1"

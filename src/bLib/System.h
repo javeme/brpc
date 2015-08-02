@@ -5,8 +5,8 @@
 #include "Thread.h"
 #include "SmartPtrManager.h"
 
-namespace bluemei{
 
+namespace bluemei{
 
 #ifndef WIN32
 #include <fcntl.h>
@@ -49,15 +49,15 @@ protected:
 public:
 	static void debugInfo(const char* str , ...);
 public:
-	static System& getInstance();
+	static System& instance();
 	static WrapperManager* getWrapperManager();
 	static SmartPtrManager* getSmartPtrManager();
 	static bool isSystemIdle();
 	static size_t blockSize(void *p);
 protected:
-	static CriticalLock g_instanceLock;
-	static WrapperManager* g_instanceWrapperManager;
-	static SmartPtrManager* g_instanceSmartPtrManager;
+	static CriticalLock s_instanceLock;
+	static WrapperManager* s_instanceWrapperManager;
+	static SmartPtrManager* s_instanceSmartPtrManager;
 public:
 	virtual void init();
 	virtual void destroy();

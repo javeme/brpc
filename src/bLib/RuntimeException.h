@@ -82,6 +82,24 @@ public:
 };
 
 
+class BLUEMEILIB_API ExistException : public RuntimeException
+{
+public:
+	ExistException(cstring msg);
+	virtual ~ExistException(void);
+	virtual String name()const;
+};
+
+
+class BLUEMEILIB_API KeyExistException : public ExistException
+{
+public:
+	KeyExistException(cstring msg);
+	virtual ~KeyExistException(void);
+	virtual String name()const;
+};
+
+
 class BLUEMEILIB_API OutOfBoundException : public RuntimeException
 {
 public:

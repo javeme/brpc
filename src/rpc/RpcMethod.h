@@ -1,9 +1,10 @@
 #pragma once
 #include "stdafx.h"
-#include "Object.h"
+#include "blib.h"
 #include "ObjectList.h"
 
-namespace bluemei{
+
+namespace brpc{
 
 const static cstring CURRENT_RPC_METHOD_VERSION = "1.0";
 

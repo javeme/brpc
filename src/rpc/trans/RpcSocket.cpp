@@ -3,7 +3,7 @@
 #include "Date.h"
 #include "BRpcUtil.h"
 
-namespace bluemei{
+namespace brpc{
 
 RpcSocket::RpcSocket()
 {

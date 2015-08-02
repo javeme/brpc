@@ -8,15 +8,13 @@ namespace bluemei{
 class Object;
 class ClassField;
 class RuntimeException;
-template <typename T>
-class ArrayList;
-template<class K, class V> 
-class HashMap;
+template <typename T> class ArrayList;
+typedef Map<std::string, FieldInfo*> FieldMap;
 
 //创建对象函数声明
 typedef Object* CreateFun(void);
 
-//类描述类定义
+//Object Metadata
 class BLUEMEILIB_API Class
 {
 public:
@@ -47,14 +45,17 @@ public:
 	const FieldInfo* getField(cstring fldName) const;
 	bool hasField(cstring fldName) const;
 public:
-	static const Class* undefined(){ static Class cls; return &cls; };
+	static const Class* undefined();
+	static void registerClass(Class* cls);
+	static Class* registerClass(cstring name,CreateFun* pFun,const Class* superClass=nullptr);
+	static Class* registerClassIfNotExist(cstring name,CreateFun* pFun,const Class* superClass=nullptr);
 	static void throwRuntimeException(cstring msg) throw(RuntimeException);
 protected:
 	std::string m_name;
 	CreateFun* m_pCreateFun;
 	const Class* m_superClassRef;
 	Object* m_pInitPara;
-	HashMap<std::string, FieldInfo*>& m_fields;
+	FieldMap m_fields;
 };
 
 //获取反射类
@@ -67,9 +68,10 @@ protected:
 //可动态创建类声明宏
 #define DECLARE_DCLASS(className) \
 	typedef className Self;																	   \
-	static const Class* thisClass(){														   \
-		static Class theClass(_T2STR(className),Self::createObject,__super::thisClass());	   \
-		return &theClass;																	   \
+	static Class* thisClass(){																   \
+		static Class* cls = Class::registerClass(_T2STR(className),							   \
+												 Self::createObject,__super::thisClass());	   \
+		return cls;																			   \
 	}																						   \
 	static Object* createObject(){ return new Self();}										   \
 	virtual Object* clone()const{ return new Self(*this);}									   \

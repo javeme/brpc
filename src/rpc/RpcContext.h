@@ -1,10 +1,10 @@
 #pragma once
 #include "stdafx.h"
-#include "Object.h"
 #include "ObjectList.h"
 #include "RpcInvoker.h"
 
-namespace bluemei{
+
+namespace brpc{
 
 /*
 * RPC远程调用环境

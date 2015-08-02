@@ -1,7 +1,7 @@
 #pragma once
 
 #include "bluemeiLib.h"
-#include "NullPointerException.h"
+#include "Exceptions.h"
 #include <queue>
 #include <map>
 

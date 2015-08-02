@@ -1,10 +1,10 @@
 #pragma once
 #include "stdafx.h"
-#include "ErrorHandler.h"
 #include "RpcConnection.h"
 #include "RpcSerializerFactory.h"
 
-namespace bluemei{
+
+namespace brpc{
 	
 
 RpcConnection::RpcConnection(RpcService* dispatcher,
@@ -60,7 +60,7 @@ Object* RpcConnection::onCall(cstring obj, cstring name, const ObjectList& args)
 {
 	checkNullPtr(dispatcher);
 	RpcContext ctx(*this);
-	return dispatcher->call(obj, name, args, &ctx);
+	return dispatcher->call(&ctx, obj, name, args);
 }
 
 void RpcConnection::castMethod(const Headers& headers, const RpcMethod& method)
@@ -335,9 +335,9 @@ void RpcConnection::notifyEvent(cstring event, Object* sender,
 	const ObjectList& args)
 {
 	ObjectList argsWithEvent = args;
-	(void)argsWithEvent.insert(0, toObject(event));//event
+	ScopePointer<Object> eventObject = toObject(event);
+	(void)argsWithEvent.insert(0, eventObject);//event
 	onNotifyEvent(event, argsWithEvent);
-	argsWithEvent.remove(0);
 }
 
 void RpcConnection::onNotifyEvent(cstring event, const ObjectList& args)

@@ -1,7 +1,7 @@
 #pragma once
 #include "RpcSerializeable.h"
 
-namespace bluemei{
+namespace brpc{
 	
 /*
 * XmlΩ‚Œˆ“Ï≥£¿‡

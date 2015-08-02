@@ -6,7 +6,7 @@
 #include "RpcConnection.h"
 #include "RpcInvokerFacatory.h"
 
-namespace bluemei{
+namespace brpc{
 
 RpcServer::RpcServer(cstring url, AuthChecker* authChecker, 
 	cstring serializerType, unsigned int timeout) 

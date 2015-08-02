@@ -1,9 +1,9 @@
 #pragma once
 #include "stdafx.h"
 #include "RpcSocket.h"
-#include "ThreadPool.h"
 
-namespace bluemei{
+
+namespace brpc{
 
 class PollDataThreadPool : public Object
 {
@@ -11,7 +11,8 @@ public:
 	PollDataThreadPool(int poolSize=10);
 	virtual ~PollDataThreadPool();
 public:
-	void addSocket(RpcSocket* socket);
+	virtual void addSocket(RpcSocket* socket);
+	virtual void stopAndWait();
 protected:
 	ThreadPool pool;
 };

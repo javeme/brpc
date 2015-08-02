@@ -7,7 +7,8 @@
 #include "RpcService.h"
 #include "RpcDataHookHandler.h"
 
-namespace bluemei{
+
+namespace brpc{
 
 class RpcConnection;
 class RpcConnAcceptor;
@@ -62,6 +63,8 @@ class RpcConnAcceptor : public Thread
 public:
 	RpcConnAcceptor(RpcServer* server) : server(server){}
 	virtual ~RpcConnAcceptor(){}
+
+	virtual void wait(){ Thread::wait(); }
 protected:
 	RpcServer* server;
 };

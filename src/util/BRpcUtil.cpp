@@ -1,13 +1,37 @@
 #pragma once
 #include "stdafx.h"
 #include "BRpcUtil.h"
-#include "ObjectFactory.h"
 #include "ObjectMap.h"
+#include "RpcException.h"
 
-namespace bluemei{
+
+namespace brpc{
 
 bool BRpcUtil::s_isBrpcDebug = false;
 
+static Object* map2object(ObjectMap* objMap, Object* obj, const Class* cls=null)
+{
+	checkNullPtr(objMap);
+	checkNullPtr(obj);
+
+	if(cls == null)
+		cls = obj->getThisClass();
+
+	for(auto itor = objMap->begin(); itor != objMap->end(); ++itor)
+	{
+		cstring fldName = itor->first.c_str();
+		if(cls->hasField(fldName))
+		{
+			try {
+				obj->setAttribute(fldName, itor->second);
+			} catch (...) {
+				delete obj;
+				throw;
+			}
+		}
+	}
+	return obj;
+}
 
 Object* MapObjectConverter::object2map(Object* obj)
 {
@@ -24,36 +48,27 @@ Object* MapObjectConverter::object2map(Object* obj)
 }
 
 //Object* MapObjectConverter::map2object(cstring cls, Object* map)
+Object* MapObjectConverter::map2object(Object* map, const Class* cls)
+{
+	checkNullPtr(map);
+	checkNullPtr(cls);
+	ObjectMap* objMap = dynamic_cast<ObjectMap*>(map);
+	if(!objMap)
+		throw NotMapException(map);
+
+	//Object* obj = ObjectFactory::instance().createObject(cls);
+	Object* obj = cls->createObject();
+	return brpc::map2object(objMap, obj, cls);
+}
+
 Object* MapObjectConverter::map2object(Object* map, Object* obj)
 {
 	checkNullPtr(map);
 	ObjectMap* objMap = dynamic_cast<ObjectMap*>(map);
 	if(!objMap)
 		throw NotMapException(map);
-	//Object* obj = ObjectFactory::instance().createObject(cls);
-	checkNullPtr(obj);
-	for(auto itor = objMap->begin(); itor != objMap->end(); ++itor)
-	{
-		cstring fldName = itor->first.c_str();
-		if(obj->getThisClass()->hasField(fldName))
-		{
-			obj->setAttribute(fldName, itor->second);
-		}
-	}
-	return obj;
+
+	return brpc::map2object(objMap, obj);
 }
 
-
-NotMapException::NotMapException(Object* obj)
-{
-	checkNullPtr(obj);
-	this->setExceptionMsg(String::format("Object '%s' is not a map",
-		obj->toString().c_str()));
 }
-
-String NotMapException::name() const
-{
-	return "NotMapException";
-}
-
-};

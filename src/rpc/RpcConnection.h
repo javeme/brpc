@@ -8,7 +8,8 @@
 #include "DataPackage.h"
 #include "RpcDataHookHandler.h"
 
-namespace bluemei{
+
+namespace brpc{
 
 /*
 * RPC远程调用环境

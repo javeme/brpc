@@ -1,8 +1,8 @@
 #pragma once
-#include "Object.h"
+#include "blib.h"
 #include "DataPackage.h"
 
-namespace bluemei{
+namespace brpc{
 
 class RpcReceiveListener;
 

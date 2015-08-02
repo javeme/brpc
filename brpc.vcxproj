@@ -88,6 +88,7 @@
     <ClInclude Include="src\blib\Application.h" />
     <ClInclude Include="src\blib\ArrayList.h" />
     <ClInclude Include="src\blib\BeanContainer.h" />
+    <ClInclude Include="src\bLib\blib.h" />
     <ClInclude Include="src\blib\bluemeiLib.h" />
     <ClInclude Include="src\blib\BString.h" />
     <ClInclude Include="src\blib\ByteBuffer.h" />
@@ -205,6 +206,7 @@
     <ClInclude Include="src\type\ObjectMap.h" />
     <ClInclude Include="src\type\ObjectRef.h" />
     <ClInclude Include="src\type\TString.h" />
+    <ClInclude Include="src\type\TypeConverter.h" />
     <ClInclude Include="src\type\TypeVisitor.h" />
     <ClInclude Include="src\util\BRpcUtil.h" />
     <ClInclude Include="src\util\RpcException.h" />

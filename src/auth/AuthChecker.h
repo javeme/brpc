@@ -2,7 +2,8 @@
 #include "AuthException.h"
 #include "ObjectList.h"
 
-namespace bluemei{
+
+namespace brpc{
 
 class AuthChecker : public Object
 {

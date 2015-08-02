@@ -1,8 +1,8 @@
 #pragma once
-#include "Object.h"
-#include "BString.h"
+#include "blib.h"
 
-namespace bluemei{
+
+namespace brpc{
 
 class VarContext : public Object
 {
@@ -10,9 +10,9 @@ public:
 	VarContext(){}
 	virtual ~VarContext(void){}	
 public:
-	virtual bool registerVar(cstring name,Object* var) = 0;
+	virtual bool registerVar(cstring name, Object* var) = 0;
 	virtual bool unregisterVar(cstring name) = 0;
-	virtual Object* getVar(cstring name) const = 0;
+	virtual Object* getVarFromAll(cstring name) const = 0;
 };
 
 class ObjectRef : public Object
@@ -49,7 +49,7 @@ public:
 	{
 		if (m_context != null)
 		{
-			return m_context->getVar(m_objId);
+			return m_context->getVarFromAll(m_objId);
 		}
 		return null;
 	}

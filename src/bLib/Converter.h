@@ -27,6 +27,26 @@ static To throwConversionException(){
 }
 
 template <typename Type, typename bool>
+struct static_caster;
+
+template <typename Type>
+struct static_caster<Type, true>
+{
+	static Object* toObject(Type val){
+		return static_cast<Object*>(val);
+	}
+};
+
+template <typename Type>
+struct static_caster<Type, false>
+{
+	static Object* toObject(Type val){
+		return throwConversionException<Type, Object*>();
+	}
+};
+
+
+template <typename Type, typename bool>
 struct dynamic_caster;
 
 template <typename Type>
@@ -122,7 +142,7 @@ struct BLUEMEILIB_TEMPLATE Converter
 	}
 
 	static inline Object* toObject(const Type& val)
-	{		
+	{
 		const bool convertible = is_convertible<Type, Object*>::value;
 		return dynamic_caster<Type, convertible>::toObject(val);
 		//return null;

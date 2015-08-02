@@ -1,15 +1,15 @@
 #pragma once
-#include "Object.h"
-#include "Exceptions.h"
+#include "blib.h"
 
-namespace bluemei{
+
+namespace brpc{
 	
 class Number;
 class ObjectList;
 class ObjectMap;
 class TypeIterator;
 
-class TypeVisiter : public Object
+class TypeVisiter : public bluemei::Object
 {
 public:
 	TypeVisiter(){

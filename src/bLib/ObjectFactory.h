@@ -7,9 +7,9 @@
 
 namespace bluemei{
 
-typedef Map<String,const Class*> ClassMap;
+typedef Map<String, Class*> ClassMap;
 
-//工厂
+//Object Factory (there saved class info)
 class BLUEMEILIB_API ObjectFactory : public Object
 {
 public:
@@ -18,16 +18,18 @@ private:
 	ObjectFactory(void);
 	ObjectFactory(const ObjectFactory&);
 	ObjectFactory& operator=(const ObjectFactory&);
-private:
-	static ObjectFactory sFactory;
 public:
 	static ObjectFactory& instance();
+	static void destroy();
 public:
-	Object* createObject(const char* className)throw (ClassNotFoundException);
-	void registerClass(const Class* pClass);
+	Object* createObject(cstring className) throw(ClassNotFoundException);
+	void registerClass(Class* pClass);
+	Class* exist(cstring className);
 	void clear();
 private:
 	ClassMap m_classMap;
+private:
+	static ObjectFactory* s_objectFactory;
 };
 
 
@@ -42,20 +44,22 @@ private:
 		ObjectFactory::instance().registerClass(pClass);\
 		_isRegister=true;\
 	}\
-}*/
+}
 #else
 //静态初始化类
 typedef struct StaticRegisterClass
 {
-	StaticRegisterClass(const Class *pClass)
+	StaticRegisterClass(Class *pClass)
 	{
 		ObjectFactory::instance().registerClass(pClass);
 	}
 }static_reg_class_t;
+
 #define REGISTER_CLASS(className) StaticRegisterClass register##className(className::thisClass())
 #endif
+
 //创建实例
-#define NewInstanceOf(name) ObjectFactory::instance().createObject(name)
+#define newInstanceOf(name) ObjectFactory::instance().createObject(name)
 
 }//end of namespace bluemei
 

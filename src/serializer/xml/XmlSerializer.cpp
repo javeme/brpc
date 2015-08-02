@@ -8,7 +8,7 @@
 #include "parser/XmlReader.h"
 
 
-namespace bluemei{
+namespace brpc{
 
 
 const cstring TAG_INT_BEGIN = "<int>";

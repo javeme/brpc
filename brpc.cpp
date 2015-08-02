@@ -5,7 +5,6 @@
 #include "CheckMemLeaks.h"
 CHECK_MEMORY_LEAKS
 
-#include "SocketTools.h"
 #include "RpcServer.h"
 #include "RpcClient.h"
 #include "DefaultAuthChecker.h"
@@ -13,12 +12,10 @@ CHECK_MEMORY_LEAKS
 #include "MyRpcService.h"
 #include "ObjectMap.h"
 #include "ObjectFactory.h"
-#include "Log.h"
-#include "ErrorHandler.h"
 
-using namespace bluemei;
+using namespace brpc;
 
-class LogErrorHandler : public IErrorHandler
+class LogErrorHandler : public bluemei::IErrorHandler
 {
 public:
 	virtual bool handle(Exception& e)
@@ -154,12 +151,13 @@ int run(int argc, char* argv[])
 	return 0;
 }
 
-
 int main(int argc, char* argv[])
 {
+	//_CrtSetBreakAlloc(9373);
+
 	BRpcUtil::setBrpcDebug(true);
 	//main2(argc, argv);
-
+	
 	String name = "brpc";
 	if (argc > 1){
 		name += "-";
@@ -195,6 +193,8 @@ int main(int argc, char* argv[])
 	SocketTools::cleanUpSocketContext();
 
 	log->info("brpc end");
+	System::instance().destroy();
+
 	system("pause");
 	return 0;
 }

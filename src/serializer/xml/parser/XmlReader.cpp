@@ -5,7 +5,7 @@
 
 namespace Xml{
 
-using namespace bluemei;
+using namespace brpc;
 
 const cstring TAG_BOOL= "bool";
 const cstring TAG_INT = "int";

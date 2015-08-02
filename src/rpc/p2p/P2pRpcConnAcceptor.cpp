@@ -6,7 +6,8 @@
 #include "ServerSocket.h"
 #include "RpcSocketFactory.h"
 
-namespace bluemei{
+
+namespace brpc{
 
 P2pRpcConnAcceptor::P2pRpcConnAcceptor(RpcServer* server) 
 	: RpcConnAcceptor(server), running(false), pool(20)
@@ -44,6 +45,7 @@ void P2pRpcConnAcceptor::waitConnection()
 	this->running = true;
 	while(this->running)
 	{
+		//static int count=0; count++; if(count>10) break;
 		RpcSocket* rpcSocket = RpcSocketFactory::getRpcSocket(proto);
 		try{
 			logger->debug("wait for connection @" + url.toString());
@@ -54,8 +56,8 @@ void P2pRpcConnAcceptor::waitConnection()
 			this->addConnection(rpcSocket);
 		}catch (Exception& e)
 		{
-			delete rpcSocket;
 			logger->warn("connection error: " + e.toString());
+			delete rpcSocket;
 		}
 	}
 }
@@ -71,15 +73,21 @@ void P2pRpcConnAcceptor::addConnection(RpcSocket* rpcSocket)
 		server->getSerializerType(),
 		server->getTimeout(),
 		rpcSocket);
-	server->addConnection(conn);
+	this->server->addConnection(conn);
 	//add to thread pool and poll data
-	pool.addSocket(rpcSocket);
+	this->pool.addSocket(rpcSocket);
 }
 
 void P2pRpcConnAcceptor::stop()
 {
 	this->running = false;
 	this->wait();
+}
+
+void P2pRpcConnAcceptor::wait()
+{ 
+	RpcConnAcceptor::wait();
+	this->pool.stopAndWait();
 }
 
 }//end of namespace bluemei

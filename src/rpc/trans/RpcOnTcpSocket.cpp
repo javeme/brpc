@@ -8,7 +8,7 @@
 #include "HttpParser.h"
 #include "Log.h"
 
-namespace bluemei{
+namespace brpc{
 	
 #define PATH_RPC_SERVICE "/rpcservice"
 

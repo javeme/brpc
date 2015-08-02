@@ -3,8 +3,8 @@
 #include "SocketTools.h"
 #include "ClientSocket.h"
 
-namespace bluemei{
 
+namespace bluemei{
 
 class BLUEMEILIB_API IOCPException : public SocketException
 {

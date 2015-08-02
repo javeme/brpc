@@ -3,8 +3,8 @@
 #include "RpcClient.h"
 #include "RpcService.h"
 
-namespace bluemei{
 
+namespace brpc{
 
 class RpcApi : public Object
 {
@@ -16,7 +16,7 @@ public:
 	virtual void init(RpcClient* rpcClient, const ObjectList& loginArgs);
 	virtual void init(RpcApi* parent);
 	virtual void logout();
-	RpcInvoker* context() const { return rpcClient; }
+	RpcInvoker* invoker() const { return rpcClient; }
 public:
 	virtual String ping();
 	virtual String echo(cstring str);
@@ -25,6 +25,7 @@ public:
 	virtual std::vector<String> listMethods();
 	virtual std::vector<String> listVars();
 	virtual std::vector<String> listServices();
+	virtual std::vector<String> listEextendServices();
 
 	virtual String signatureOf(cstring method);	
 	virtual String typeOfVar(cstring var);

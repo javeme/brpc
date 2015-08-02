@@ -66,7 +66,7 @@ public:
 	{
 		changed = false;
 	}
-	virtual boolean hasChanged()
+	virtual bool hasChanged()
 	{
 		return changed;
 	}
@@ -77,7 +77,7 @@ public:
 	}
 protected:
 	LinkedList<Observer<MessageType>*> obs;
-	boolean changed;
+	bool changed;
 };
 
 }//end of namespace bluemei

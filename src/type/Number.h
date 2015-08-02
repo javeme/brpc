@@ -1,9 +1,9 @@
 #pragma once
-#include "Object.h"
+#include "blib.h"
 #include "TypeVisitor.h"
-#include "Class.h"
 
-namespace bluemei{
+
+namespace brpc{
 	
 typedef __int64 lint;
 
@@ -25,7 +25,7 @@ class Long;
 class Float;
 class Double;
 
-class NumberVisiter : public Object
+class NumberVisiter : public bluemei::Object
 {
 public:
 	NumberVisiter(){
@@ -50,7 +50,7 @@ public:
 };
 
 
-class Number : public Object, public TypeVisitable
+class Number : public bluemei::Object, public TypeVisitable
 {
 public:
 	Number(){}

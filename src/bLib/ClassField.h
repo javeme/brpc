@@ -79,7 +79,7 @@ public:
 public:
 	static bool registerField(const FieldType& fld)
 	{
-		return const_cast<Class*>(Cls::thisClass())->putField(fld);
+		return Cls::thisClass()->putField(fld);
 	}
 private:
     std::string m_name;
@@ -93,8 +93,8 @@ template <typename T/*, T deftVal=T()*/>
 class BLUEMEILIB_TEMPLATE Field : public Object
 { 
 public:
-	Field() : /*m_value(deftVal),*/ m_setted(false), m_modified(true) {}
-    Field(const T& val) : m_value(val), m_setted(true), m_modified(true) {}
+	Field() : /*m_value(deftVal),*/ m_setted(false), m_modified(false) {}
+    Field(const T& val) : m_value(val), m_setted(true), m_modified(false) {}
 	virtual ~Field() {}
 public:
 	const Field& operator=(const T& val) {
@@ -114,16 +114,10 @@ public:
 	bool setted() const { return m_setted; }
 	void setSetted(bool state) { m_setted = state; }
 
-    bool operator==(const T& v) const 
-	{
-        return m_value == v;
-    }
+    bool operator==(const T& v) const { return m_value == v; }
 	bool operator!=(const T& v) const { return !(*this == v); }
 
-	bool operator==(const Field& v) const 
-	{
-		return m_value == v.m_value;
-	}
+	bool operator==(const Field& v) const { return m_value == v.m_value; }
 	bool operator!=(const Field& v) const { return !(*this == v); }
 
 private:
@@ -168,7 +162,7 @@ private:
 
 //decltype => FieldType<Type>::Var(FieldType<Type>::Cls::*)
 #define REG_CLS_FIELD(cls, fld) \
-	static FieldRegister<decltype(&cls::fld)> ANONYMOUS(__s_regFor##cls_##fld)(_T2STR(fld), &cls::fld);
+	static FieldRegister<decltype(&cls::fld)> ANONYMOUS(__s_regFor_##cls##_##fld)(_T2STR(fld), &cls::fld);
 
 BLUEMEILIB_API void registerFieldCheck(bool success, cstring name);
 
@@ -200,9 +194,13 @@ static FieldType<Type> regFieldWithoutNs(cstring name, Type fieldType)
 	{																	\
 	public:																\
 		InerClassForRegField_##name(){									\
-			regField(#name, &Self::name);								\
+		    static bool notReged = true;								\
+			if(notReged) {												\
+				regField(#name, &Self::name);							\
+				notReged = false;										\
+			}															\
 		}																\
-	}_instanceInerClassForRegField_##name;								\
+	}_instanceOfInerClassForRegField_##name;							\
 /*end of define a field*/
 
 /*

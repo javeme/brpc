@@ -2,7 +2,7 @@
 #include "stdafx.h"
 #include "RpcApi.h"
 
-namespace bluemei{
+namespace brpc{
 
 
 RpcApi::RpcApi(cstring name, RpcApi* parent) 
@@ -74,6 +74,11 @@ std::vector<String> RpcApi::listVars()
 std::vector<String> RpcApi::listServices()
 {
 	return call<std::vector<String>>("listServices", nullArgs);
+}
+
+std::vector<String> RpcApi::listEextendServices()
+{
+	return call<std::vector<String>>("listEextendServices", nullArgs);
 }
 
 String RpcApi::signatureOf(cstring method)

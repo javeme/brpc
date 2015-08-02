@@ -3,17 +3,20 @@
 #include "AuthChecker.h"
 #include "HashMap.h"
 
-namespace bluemei{
+namespace brpc{
 
 class User : public Object
 {
 public:
-	User(){}
-	User(cstring name, cstring password)
+	User(cstring name="", cstring password="")
 	{
 		this->username = name;
 		this->password = password;
 	}
+	virtual ~User()
+	{
+	}
+public:
 	String username;
 	String password;
 	String authToken;

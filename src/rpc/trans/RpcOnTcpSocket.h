@@ -3,7 +3,7 @@
 #include "ClientSocket.h"
 
 
-namespace bluemei{
+namespace brpc{
 
 
 //tcp socket 

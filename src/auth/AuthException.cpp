@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "AuthException.h"
 
-namespace bluemei{
+namespace brpc{
 
 
 /*****************************************************************/

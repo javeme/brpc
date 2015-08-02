@@ -122,7 +122,7 @@ Reader::Reader( const Features &features )
 
 bool
 Reader::parse( const std::string &document, 
-               bluemei::ObjectMap* &root,
+               brpc::ObjectMap* &root,
                bool collectComments )
 {
    document_ = document;
@@ -134,7 +134,7 @@ Reader::parse( const std::string &document,
 
 bool
 Reader::parse( std::istream& sin,
-               bluemei::ObjectMap* &root,
+               brpc::ObjectMap* &root,
                bool collectComments )
 {
    //std::istream_iterator<char> begin(sin);
@@ -151,7 +151,7 @@ Reader::parse( std::istream& sin,
 
 bool 
 Reader::parse( const char *beginDoc, const char *endDoc, 
-               bluemei::ObjectMap* &root,
+               brpc::ObjectMap* &root,
                bool collectComments )
 {
    if ( !features_.allowComments_ )
@@ -177,8 +177,8 @@ Reader::parse( const char *beginDoc, const char *endDoc,
    nodes_.pop();
 
    root = null;
-   if(dynamic_cast<bluemei::ObjectMap*>(result))
-	   root = dynamic_cast<bluemei::ObjectMap*>(result);
+   if(dynamic_cast<brpc::ObjectMap*>(result))
+	   root = dynamic_cast<brpc::ObjectMap*>(result);
 
    Token token;
    skipCommentTokens( token );
@@ -188,8 +188,8 @@ Reader::parse( const char *beginDoc, const char *endDoc,
    if ( features_.strictRoot_ )
    {
 
-      if ( !dynamic_cast<bluemei::ObjectList*>(result)  
-		  &&  !dynamic_cast<bluemei::ObjectMap*>(result) )
+      if ( !dynamic_cast<brpc::ObjectList*>(result)  
+		  &&  !dynamic_cast<brpc::ObjectMap*>(result) )
       {
          // Set error location to start of doc, ideally should be first token found in doc
          token.type_ = tokenError;
@@ -502,7 +502,7 @@ Reader::readObject( Token &tokenStart )
 {
    Token tokenName;
    std::string name;
-   bluemei::ObjectMap* obj = new bluemei::ObjectMap();
+   brpc::ObjectMap* obj = new brpc::ObjectMap();
    currentValue(obj);
    while ( readToken( tokenName ) )
    {
@@ -562,7 +562,7 @@ Reader::readObject( Token &tokenStart )
 bool 
 Reader::readArray( Token &tokenStart )
 {
-   bluemei::ObjectList* list = new bluemei::ObjectList();
+   brpc::ObjectList* list = new brpc::ObjectList();
    currentValue(list);
    skipSpaces();
    if ( *current_ == ']' ) // empty array
@@ -901,7 +901,7 @@ Reader::getFormatedErrorMessages() const
 }
 
 
-std::istream& operator>>( std::istream &sin, bluemei::ObjectMap* &root )
+std::istream& operator>>( std::istream &sin, brpc::ObjectMap* &root )
 {
     Json::Reader reader;
     bool ok = reader.parse(sin, root, true);

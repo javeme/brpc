@@ -3,7 +3,7 @@
 #include "BinaryReader.h"
 #include "CodeUtil.h"
 
-namespace bluemei{
+namespace brpc{
 
 const cstring MAP_CLASS_METHOD = "Method";	
 

@@ -7,7 +7,7 @@
 #include "BinaryReader.h"
 
 
-namespace bluemei{
+namespace brpc{
 	
 REG_SERIALIZER("application/brpc.bin", RpcMethodBinarySerializer)
 

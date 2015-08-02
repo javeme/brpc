@@ -1,10 +1,10 @@
 #pragma once
 #include "stdafx.h"
-#include "Object.h"
 #include "ObjectList.h"
 #include "RpcSerializeable.h"
 
-namespace bluemei{
+
+namespace brpc{
 
 /*
 * RPCÔ¶³Ìµ÷ÓÃÆ÷

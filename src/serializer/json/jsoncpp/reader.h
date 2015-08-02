@@ -43,7 +43,7 @@ namespace Json {
        * \return \c true if the document was successfully parsed, \c false if an error occurred.
        */
       bool parse( const std::string &document, 
-                  bluemei::ObjectMap* &root,
+                  brpc::ObjectMap* &root,
                   bool collectComments = true );
 
       /** \brief Read a Value from a <a HREF="http://www.json.org">JSON</a> document.
@@ -57,13 +57,13 @@ namespace Json {
        * \return \c true if the document was successfully parsed, \c false if an error occurred.
        */
       bool parse( const char *beginDoc, const char *endDoc, 
-                  bluemei::ObjectMap* &root,
+                  brpc::ObjectMap* &root,
                   bool collectComments = true );
 
       /// \brief Parse from input stream.
       /// \see Json::operator>>(std::istream&, Json::Value&).
       bool parse( std::istream &is,
-                  bluemei::ObjectMap* &root,
+                  brpc::ObjectMap* &root,
                   bool collectComments = true );
 
       /** \brief Returns a user friendly string that list errors in the parsed document.
@@ -147,12 +147,12 @@ namespace Json {
 	  bluemei::Object &currentValue();
 	  template<typename Type>
 	  void currentValue(const Type& val){ 
-		  nodes_.push(bluemei::toObject(val));
+		  nodes_.push(brpc::toObject(val));
 	  }
-	  void currentValue(bluemei::ObjectMap* val){ 
+	  void currentValue(brpc::ObjectMap* val){ 
 		  nodes_.push(val);
 	  }
-	  void currentValue(bluemei::ObjectList* val){ 
+	  void currentValue(brpc::ObjectList* val){ 
 		  nodes_.push(val);
 	  }
 
@@ -204,7 +204,7 @@ namespace Json {
     \throw std::exception on parse error.
     \see Json::operator<<()
    */
-   std::istream& operator>>( std::istream&, bluemei::ObjectMap*& );
+   std::istream& operator>>( std::istream&, brpc::ObjectMap*& );
 
 } // namespace Json
 

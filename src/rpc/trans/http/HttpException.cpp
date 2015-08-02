@@ -2,7 +2,7 @@
 #include "stdafx.h"
 #include "HttpException.h"
 
-namespace bluemei{
+namespace brpc{
 
 HttpException::HttpException(cstring msg):Exception(msg)
 {

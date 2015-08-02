@@ -1,8 +1,12 @@
+#ifndef _ServerSocket_h_ 
+#define _ServerSocket_h_ 
+
 #include <winsock2.h>
 #include <string>  
 
 #include "bluemeiLib.h"
 #include "ClientSocket.h"
+
 
 namespace bluemei{
 
@@ -30,3 +34,4 @@ protected:
 };
 
 }//end of namespace bluemei
+#endif

@@ -3,7 +3,8 @@
 #include "AnyFunction.h"
 #include "FunctionWrapper.h"
 
-namespace bluemei{
+
+namespace brpc{
 
 //#define toObject(val) std::is_same<void, decltype(val)>::value
 template<bool T>
@@ -22,7 +23,7 @@ template<>
 struct returner<false>{
 	template<typename T>
 	inline static Object* invoke(T& f,const ObjectList& args){ 
-		return bluemei::toObject(f(args)); 
+		return brpc::toObject(f(args)); 
 	}
 };
 

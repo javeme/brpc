@@ -5,7 +5,7 @@
 #include "p2p/P2pRpcConnection.h"
 #include "p2p/P2pRpcConnAcceptor.h"
 
-namespace bluemei{
+namespace brpc{
 	
 
 RpcInvoker* RpcInvokerFacatory::loadRpcInvoker(cstring url, RpcService* dispatcher, 

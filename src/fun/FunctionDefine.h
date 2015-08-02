@@ -3,7 +3,8 @@
 #include "FunctionWrapper.h"
 #include "mfor.h"
 
-namespace bluemei{
+
+namespace brpc{
 
 //º¯Êý¶¨Òå
 

@@ -1,6 +1,6 @@
 #include "RpcMethod.h"
 
-namespace bluemei{
+namespace brpc{
 
 RpcMethod::RpcMethod()
 {

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "XmlParseException.h"
 
-namespace bluemei{
+namespace brpc{
 
 XmlParseException::~XmlParseException(void)
 {

@@ -2,7 +2,7 @@
 #include "RpcSerializeable.h"
 #include "TypeVisitor.h"
 
-namespace bluemei{
+namespace brpc{
 
 
 class Type2BinarySerializer : public TypeVisiter

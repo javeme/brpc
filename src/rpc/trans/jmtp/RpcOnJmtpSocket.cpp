@@ -7,7 +7,7 @@
 #include "JmtpHeader.h"
 #include "Log.h"
 
-namespace bluemei{
+namespace brpc{
 
 #define BYTE_ORDER(s) htons(s)
 #define JMTP_TAIL 0x00
@@ -103,7 +103,7 @@ void RpcOnJmtpSocket::receive() throw(RpcException)
 	ByteBuffer& input = package.body;
 	const int LEN = 4096;
 	byte buf[LEN];
-	int total = 0;
+	dword total = 0;
 	while(total < len){
 		int wantRead = len - total;
 		if(wantRead > LEN)

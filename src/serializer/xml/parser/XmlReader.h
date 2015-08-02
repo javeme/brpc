@@ -2,11 +2,12 @@
 #include "Markup.h"
 #include "ObjectMap.h"
 #include "ObjectList.h"
-#include "StringBuilder.h"
+
 
 namespace Xml{
 
-using namespace bluemei;
+using namespace brpc;
+
 typedef CMarkup XmlParser;
 
 class Reader : public Object

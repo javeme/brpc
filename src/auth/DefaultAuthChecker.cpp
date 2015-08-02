@@ -3,7 +3,7 @@
 #include "DefaultAuthChecker.h"
 #include "Date.h"
 
-namespace bluemei{
+namespace brpc{
 
 
 DefaultAuthChecker::DefaultAuthChecker(cstring name, cstring password)

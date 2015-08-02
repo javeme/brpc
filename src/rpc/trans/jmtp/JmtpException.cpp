@@ -2,7 +2,7 @@
 #include "stdafx.h"
 #include "JmtpException.h"
 
-namespace bluemei{
+namespace brpc{
 
 JmtpException::JmtpException(cstring msg) : Exception(msg)
 {

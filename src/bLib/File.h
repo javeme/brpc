@@ -8,7 +8,7 @@
 namespace bluemei{
 
 #define BUFFER_SIZE 1024
-#define CRLF "\n"
+#define EOL "\n"
 #define PATH_NULL ""
 
 class BLUEMEILIB_API File : public Object

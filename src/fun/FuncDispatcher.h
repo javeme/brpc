@@ -1,13 +1,12 @@
 #pragma once
 #include "stdafx.h"
-#include "Object.h"
-#include "Exceptions.h"
 #include "BRpcUtil.h"
 #include "AnyFunction.h"
 #include "TemplateFunction.h"
 #include "FunctionDefine.h"
 
-namespace bluemei{
+
+namespace brpc{
 
 /*
 * 函数管理类
@@ -68,20 +67,18 @@ public:
 	virtual void unregisterFunction(cstring funcName);
 	virtual void clearAllFunction();
 
-	virtual AnyFunction* getFunction(cstring name, const ObjectList& args);
+	virtual AnyFunction* getFunctionFromAll(cstring name, const ObjectList& args);
 	
-	virtual List<String> allSelfFunctions() const;
-	virtual FuncList findSelfFunction(cstring name) const;
+	virtual List<String> listFunctions() const;
+	virtual FuncList findFunction(cstring name) const;
 public:
 	virtual bool registerVar(cstring name,Object* var);
 	#define regVar(var) registerVar(_CODE2STRING(var), var)
 	virtual bool unregisterVar(cstring name);
-	virtual bool existVar(cstring name) const;
-	virtual Object* getSelfVar(cstring name) const;
-	virtual List<String> allVars() const;
-	virtual void clearAllVar();
-
 	virtual Object* getVar(cstring name) const;
+	virtual List<String> listVars() const;
+	virtual void clearAllVar();
+	virtual Object* getVarFromAll(cstring name) const;
 public:
 	String name() const { return m_name; }
 	void setName(cstring val) { m_name = val; }
@@ -97,10 +94,10 @@ public:
 	virtual bool exclude(FuncDispatcher* dispatcher);
 protected:
 	virtual bool addFunction(AnyFunction* func);
-	virtual bool hasSelfFunction(cstring name) const;
+	virtual bool hasFunction(cstring name) const;
 
 	virtual AnyFunction* matchedFunction(cstring name, const ObjectList& args);
-	virtual AnyFunction* matchedExtendFunction(cstring name, const ObjectList& args);
+	virtual AnyFunction* matchedAllFunction(cstring name, const ObjectList& args);
 private:
 	FuncMap m_funcMap;
 	ObjMap m_objMap;

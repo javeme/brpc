@@ -1,15 +1,15 @@
 #include "stdafx.h"
 #include "RpcException.h"
 
-namespace bluemei{
+namespace brpc{
 
 
 /*****************************************************************/
-RpcException::RpcException(void):Exception("RPC Exception")
+RpcException::RpcException(void) : bluemei::Exception("RPC Exception")
 {
 }
 
-RpcException::RpcException(cstring str):Exception(str)
+RpcException::RpcException(cstring str) : bluemei::Exception(str)
 {
 }
 

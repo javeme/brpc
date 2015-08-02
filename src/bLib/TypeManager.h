@@ -4,6 +4,8 @@
 #include "MultiValueHashMap.h"
 #include "CriticalLock.h"
 #include "RuntimeException.h"
+#include "Converter.h"
+
 
 namespace bluemei{
 
@@ -12,20 +14,27 @@ class BLUEMEILIB_API Conver : public Object
 public:
 	virtual Object* cast(void*)=0;
 	virtual bool isItselfAddr(Object*)=0;
+public:
+	static inline void* ptrOfType(void* v){
+		return v;
+	}
+	static inline void* ptrOfType(const void* v){
+		return const_cast<void*>(v);
+	}
 };
 
-template<typename Self>
+template<typename SelfType>
 class BLUEMEILIB_TEMPLATE ConvObject : public Conver
 {
 public:
-	ConvObject():typeInfo(typeid(Self)){}
+	ConvObject():typeInfo(typeid(SelfType)){}
 public:
 	/*template<typename T>
 	Self* operator()(T* v){
 		return static_cast<Self*>(v);
 	}*/
-	Self* operator()(void* v){
-		return static_cast<Self*>(v);
+	SelfType* operator()(void* v){
+		return static_cast<SelfType*>(v);
 	}
 
 	/*
@@ -41,13 +50,15 @@ public:
 	}
 
 	Object* cast(void* p){
-		return static_cast<Object*>(this->operator()(p));
+		const bool isSubObject = is_convertible<SelfType*, Object*>::value;
+		return static_caster<SelfType*, isSubObject>::toObject(this->operator()(p));
 	}
 
 	bool isItselfAddr(Object* obj){
-		void* self = dynamic_cast<Self*>(obj);
+		void* self = ptrOfType(dynamic_cast<SelfType*>(obj));
 		return self == (void*)obj;
 	}
+
 private:
 	const type_info& typeInfo;
 };

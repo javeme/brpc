@@ -4,11 +4,12 @@
 #include "stdafx.h"
 #include "FuncDispatcher.h"
 #include "ObjectMap.h"
-using namespace bluemei;
-
-#include "CheckMemLeaks.h"
 #include "JsonSerializer.h"
-CHECK_MEMORY_LEAKS
+
+
+using namespace bluemei;
+using namespace brpc;
+
 
 double add(int a, double b)
 {
@@ -51,7 +52,7 @@ cstring echo(cstring str)
 	return str;
 }
 
-lint testSix(bool a1, char a2, short a3, cstring a4, lint a5, unsigned int a6)
+lint testSix(bool a1, char a2, short a3, cstring a4, double a5, int a6)
 {
 	return a1 + a2 + a3 + strlen(a4) + a5 + a6;
 }
@@ -119,15 +120,34 @@ std::string testMap2String(std::map<std::string, double> map)
 	return sb.toString().c_str();
 }
 
+static int g_userCount = 0;
+
 class User
 {
 public:
 	std::string name;
 	int age;
+
+	User()
+	{
+		g_userCount++;
+		printf("User count=%d\n", g_userCount);
+	}
+	User(const User& other)
+	{
+		g_userCount++;
+		printf("User& count=%d\n", g_userCount);
+		*this = other;
+	}
+	virtual ~User()
+	{
+		g_userCount--;
+		printf("~User count=%d\n", g_userCount);
+	}
 };
 
 template <>
-struct Converter<User*>
+struct bluemei::Converter<User*>
 {
 	static inline User* valueOf(Object* obj)
 	{
@@ -141,7 +161,7 @@ struct Converter<User*>
 		return user;
 	}
 
-	static inline Object* toObject(const User* user)
+	static inline Object* toObject(User* user)
 	{
 		checkNullPtr(user);
 		ObjectMap* objMap = new ObjectMap();
@@ -152,7 +172,32 @@ struct Converter<User*>
 	}
 };
 
-User* testReturnUser(cstring name, int age)
+
+template <>
+struct bluemei::Converter<User>
+{
+	static inline User valueOf(Object* obj)
+	{
+		checkNullPtr(obj);
+		ObjectMap* objMap = castAndCheck<ObjectMap*>(obj, "map");
+
+		User user;
+		//user->name = objMap["name"]->toString().c_str();
+		objMap->getValue("name", user.name);
+		objMap->getValue("age", user.age);
+		return user;
+	}
+
+	static inline Object* toObject(const User& user)
+	{
+		ObjectMap* objMap = new ObjectMap();
+		objMap->putValue("name", user.name);
+		objMap->putValue("age", user.age);
+		return objMap;
+	}
+};
+
+User* testReturnUserPtr(cstring name, int age)
 {
 	User *user = new User();//ÈçºÎÊÍ·Å?????????
 	user->name = name;
@@ -160,9 +205,36 @@ User* testReturnUser(cstring name, int age)
 	return user;
 }
 
-std::string testGetUserName(User *user)
+SmartPtr<User> testReturnUserSmartPtr(cstring name, int age)
+{
+	SmartPtr<User> user = new User();
+	user->name = name;
+	user->age = age;
+	return user;
+}
+
+User testReturnUser(cstring name, int age)
+{
+	User user;
+	user.name = name;
+	user.age = age;
+	return user;
+}
+
+std::string testGetUserPtrName(User *user)
 {
 	return user->name;
+}
+
+std::string testGetUserSmartPtrName(SmartPtr<User> user)
+{
+	//SmartPtr<const User> cup;
+	return user->name;
+}
+
+std::string testGetUserName(User user)
+{
+	return user.name;
 }
 
 namespace testns{
@@ -197,7 +269,7 @@ protected:
 };
 
 template <>
-struct Converter<TestClass*>
+struct brpc::Converter<TestClass*>
 {
 	static inline TestClass* valueOf(Object* obj)
 	{
@@ -365,14 +437,26 @@ void testMapType(FuncDispatcher& dispatcher)
 void testObjectType(FuncDispatcher& dispatcher)
 {
 	dispatcher.regFunc(testReturnUser);
-	dispatcher.regFunc(testGetUserName);	
+	dispatcher.regFunc(testReturnUserPtr);
+	dispatcher.regFunc(testReturnUserSmartPtr);
+
+	dispatcher.regFunc(testGetUserName);
+	dispatcher.regFunc(testGetUserPtrName);
+	dispatcher.regFunc(testGetUserSmartPtrName);
 
 	try{
 		ObjectList args;
 		args.addValue("hj");
 		args.addValue(27);
 		Object* result = dispatcher.call("testReturnUser", args);
-		delete result;		
+		delete result;
+
+		result = dispatcher.call("testReturnUserSmartPtr", args);
+		delete result;
+
+		//this will lead to memory leaks
+		//result = dispatcher.call("testReturnUserPtr", args);
+		//delete result;	
 	}catch (Exception& e){
 		e.printStackTrace();
 	}
@@ -383,7 +467,13 @@ void testObjectType(FuncDispatcher& dispatcher)
 		arg1->putValue("name","blue");
 		arg1->putValue("age",25);
 		args.add(arg1);
-		Object* result = dispatcher.call("testGetUserName", args);
+		Object* result = dispatcher.call("testGetUserPtrName", args);
+		delete result;
+
+		result = dispatcher.call("testGetUserName", args);
+		delete result;
+
+		result = dispatcher.call("testGetUserSmartPtrName", args);
 		delete result;
 	}catch (Exception& e){
 		e.printStackTrace();
@@ -470,37 +560,39 @@ void testDispatcher()
 void testJson()
 {
 	printf("testJson=====================\n");
-	ObjectList args;
+	ObjectList* args = new ObjectList();
 
 	ObjectMap *arg1 = new ObjectMap();
 	arg1->putValue("name","blue");
 	arg1->putValue("age",25);
-	args.add(arg1);
 
-	ObjectList arg2;
-	arg2.add(arg1);
-	arg2.add(arg1);
-	args.add(&arg2);
+	ObjectMap *arg2 = new ObjectMap();
+	arg2->putValue("name","green");
+	arg2->putValue("age",18);
 
-	args.addValue(3.14);
+	args->add(arg1);
+	args->add(arg2);
+	args->addValue(3.14);
 	
-	ObjectMap *struc = new ObjectMap();
-	struc->put("list1",&args);
-	struc->put("list2",&args);
+	ObjectMap struc;
+	struc.put("list1",args);
+	//struc.put("list2",&args);
 
 	Type2JsonSerializer v;
-	String json = v.toJson(struc);
-	printf("%s\n", json.c_str());
+	String json = v.toJson(&struc);
+	printf("toJson: %s\n", json.c_str());
 }
 
 int main2(int argc, char* argv[])
 {
-	//_CrtSetBreakAlloc(1779);
+	//_CrtSetBreakAlloc(637);
 	cstring ssssss=CODE2STRING(CLS_PF_OF_ARGS(0));
 
 	testDispatcher();
 	testJson();
-	
+
+	System::instance().destroy();
+
 	system("pause");
 	return 0;
 }

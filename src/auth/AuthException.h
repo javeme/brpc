@@ -1,7 +1,7 @@
 #pragma once
-#include "Exception.h"
+#include "blib.h"
 
-namespace bluemei{
+namespace brpc{
 
 class AuthException : public Exception
 {

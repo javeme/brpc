@@ -1,11 +1,10 @@
 #pragma once
 #include "stdafx.h"
-#include "StringBuilder.h"
-#include "BeanContainer.h"
-#include "TypeVisitor.h"
 #include "BRpcUtil.h"
+#include "TypeVisitor.h"
 
-namespace bluemei{
+
+namespace brpc{
 
 /*
 * Object∂‘œÛMap
@@ -23,7 +22,7 @@ private:
 public:
 	template<typename Type>
 	bool putValue(cstring name, const Type& val){ 
-		Object* obj = toObject(val);
+		Object* obj = brpc::toObject(val);
 		bool sucess = this->put(name, obj);
 		if(!sucess)
 			delete obj;
@@ -35,14 +34,14 @@ public:
 		Object* obj = this->get(name);
 		if (obj)
 		{
-			val = valueOf<Type>(obj);
+			val = brpc::valueOf<Type>(obj);
 			return true;
 		}
 		return false;
 	}
 
 	bool putValue(cstring name, cstring val){ 
-		Object* obj = toObject(val);
+		Object* obj = brpc::toObject(val);
 		bool sucess = this->put(name, obj);
 		if(!sucess)
 			delete obj;
@@ -117,7 +116,7 @@ struct Converter<std::map<std::string,T>>
 		ObjectMap& objMap = *pMap;
 		for (auto itor = objMap.begin(); itor != objMap.end(); ++itor)
 		{	
-			map.insert(make_pair(itor->first, bluemei::valueOf<T>(itor->second)));
+			map.insert(make_pair(itor->first, brpc::valueOf<T>(itor->second)));
 		}
 		return map;
 	}

@@ -471,6 +471,12 @@
     <ClInclude Include="src\rpc\trans\PollDataThreadPool.h">
       <Filter>src\rpc\trans</Filter>
     </ClInclude>
+    <ClInclude Include="src\bLib\blib.h">
+      <Filter>src\blib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\type\TypeConverter.h">
+      <Filter>src\type</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

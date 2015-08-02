@@ -2,7 +2,7 @@
 #include "stdafx.h"
 #include "JmtpHeader.h"
 
-namespace bluemei{
+namespace brpc{
 	
 
 JmtpHeader::JmtpHeader(const HashMap<String,String>& headers)

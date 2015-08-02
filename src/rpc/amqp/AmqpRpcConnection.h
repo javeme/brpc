@@ -2,8 +2,8 @@
 #include "stdafx.h"
 #include "RpcConnection.h"
 
-namespace bluemei{
 
+namespace brpc{
 
 /*
 * 基于AMQP协议RPC远程调用环境

@@ -1,9 +1,9 @@
 #pragma once
 #include "stdafx.h"
-#include "Object.h"
 #include "BRpcUtil.h"
 
-namespace bluemei{
+
+namespace brpc{
 
 /*
 * 函数包装类
@@ -184,7 +184,7 @@ private:
 template<> struct argsType<ArgsCounter::T>{ typedef T Type; }
 
 #define VALUE_OF_ARG(T) \
-valueOf<T>(args[ArgsCounter::T])
+methodArg<T>(args[ArgsCounter::T])
 
 
 //函数指针包装类 宏
@@ -338,7 +338,7 @@ public:																						 \
 		}																					 \
 																							 \
 		const static int CLS_INDEX = ArgsCounter::C;										 \
-		C* _this = valueOf<argsType<CLS_INDEX>::Type>(args[CLS_INDEX]);						 \
+		C* _this = methodArg<argsType<CLS_INDEX>::Type>(args[CLS_INDEX]);					 \
 		checkNullPtr(_this);																 \
 		return (_this->*m_fun)(VALUE_OF_ARGS);												 \
 	}																						 \

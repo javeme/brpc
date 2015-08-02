@@ -1,15 +1,15 @@
 #pragma once
-#include "Exception.h"
+#include "blib.h"
 
-namespace bluemei{
 
+namespace brpc{
 
 /*
 * Rpc异常
 * @author 李章梅
 * @create 2013/5/28
 */
-class RpcException : public Exception
+class RpcException : public bluemei::Exception
 {
 public:
 	RpcException(void);
@@ -30,5 +30,59 @@ private:
 	int err;
 };
 
+
+/*
+* 参数不匹配异常类
+* @author 李章梅
+* @create 2014/7/4
+*/
+class ArgNotMatchedException : public RuntimeException
+{
+public:
+	ArgNotMatchedException(cstring msg) : RuntimeException(msg)
+	{
+		;
+	}
+
+	virtual ~ArgNotMatchedException(void)
+	{
+	}
+
+	String name()const
+	{
+		return "ArgNotMatchedException";
+	}
+};
+
+
+class AmbiguityFunctionException : public ArgNotMatchedException
+{
+public:
+	AmbiguityFunctionException(cstring msg) 
+		: ArgNotMatchedException(msg) {}
+
+	virtual ~AmbiguityFunctionException(void) {}
+
+	String name() const
+	{
+		return "AmbiguityFunctionException";
+	}
+};
+
+class NotMapException : public RuntimeException
+{
+public:
+	NotMapException(Object* obj)
+	{
+		checkNullPtr(obj);
+		this->setExceptionMsg(String::format("Object '%s' is not a map",
+			obj->toString().c_str()));
+	}
+
+	virtual String name() const
+	{
+		return "NotMapException";
+	}
+};
 
 }//end of namespace bluemei

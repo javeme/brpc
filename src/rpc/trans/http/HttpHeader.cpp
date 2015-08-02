@@ -4,7 +4,7 @@
 #include "CodeUtil.h"
 #include "HttpException.h"
 
-namespace bluemei{
+namespace brpc{
 
 // Mon, 19 Nov 2014 21:49:59 GMT
 #define DATE_FORMAT_GMT "%a, %d %b %Y %H:%M:%S GMT"	
@@ -15,15 +15,12 @@ HttpHeader::HttpHeader(const HashMap<String,String>& headers)
 	int len = CodeUtil::str2Int(headers.getDefault(KEY_CONTENT_LEN, "0"));
 	String contentType = headers.getDefault(KEY_CONTENT_TYPE, "text/json");
 	
+	this->entities = headers;
+
 	init((dword)len, contentType);
 	if (headers.contain(KEY_CHARSET)) {
 		setCharset(headers.getDefault(KEY_CHARSET, "UTF-8"));
 	}
-
-	this->entities = headers;
-	String tmp;
-	this->entities.remove(KEY_STATUS, tmp);
-	this->entities.remove(KEY_RESPONSE, tmp);
 }
 
 void HttpHeader::init(dword len/*=0*/, cstring type/*=0*/,
@@ -429,6 +426,10 @@ HttpResponse::HttpResponse(const HashMap<String,String>& headers)
 {
 	String status = headers.getDefault(KEY_STATUS, "200 Ok");
 	this->status = str2status(status);
+
+	String tmp;
+	this->entities.remove(KEY_STATUS, tmp);
+	this->entities.remove(KEY_RESPONSE, tmp);
 }
 
 String HttpResponse::status2str(Status stat)

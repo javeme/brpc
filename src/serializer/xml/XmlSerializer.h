@@ -1,10 +1,9 @@
 #pragma once
 #include "RpcSerializeable.h"
 #include "TypeVisitor.h"
-#include "StringBuilder.h"
 
-namespace bluemei{
 
+namespace brpc{
 
 class Type2XmlSerializer : public TypeVisiter
 {
@@ -43,6 +42,5 @@ public:
 	virtual int read(RpcMethod& method, const InputStream& input,
 		const String& encoding="");
 };
-
 
 }//end of namespace bluemei

@@ -111,6 +111,7 @@ class BLUEMEILIB_API LogManager : public Object
 {
 public:
 	static LogManager& instance();
+	static void destroy();
 private:
 	LogManager();
 	virtual ~LogManager();
@@ -118,12 +119,15 @@ public:
 	Log* getLogger(const String& name="");
 	Log* initLogger(const String& name, const String& path,
 		Log::LogLevel level=Log::LOG_INFO);
+	void destroyLoggers();
 
 	String getDefault() const { return m_default; }
 	void setDefault(const String& val) { m_default = val; }
 protected:
 	HashMap<String, Log*> m_loggers;
 	String m_default;
+private:
+	static LogManager* s_manager;
 };
 
 }//end of namespace bluemei

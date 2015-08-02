@@ -4,7 +4,8 @@
 #include "JmtpHeader.h"
 #include "JmtpException.h"
 
-namespace bluemei{
+
+namespace brpc{
 
 class RpcOnJmtpSocket : public RpcOnTcpSocket
 {

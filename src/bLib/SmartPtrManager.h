@@ -191,7 +191,8 @@ public:
 	*/
 	template <typename T>
 	ObjectWrapper* getWrapper(T* pTarget, bool canUseSuperSize=true)
-	{		
+	{
+		void* ptr = Conver::ptrOfType(pTarget);
 		size_t memSize = 0;
 		//memSize=0 meas get the size of pTarget by os-api.
 		//maybe T is not the class(is super class) of pTarget;
@@ -201,18 +202,18 @@ public:
 		}
 		//if canUseSuperSize has not been setted, and at the first time,
 		//make sure that pTarget is itself (rather than super-class obj).
-		else if(!existPtr(pTarget))
-			checkPtrAddr(pTarget);
+		else if(!existPtr(ptr))
+			checkPtrAddr<T>(ptr);
 
 		if(pTarget == NULL)
 			return nullWrapper;
 		else
-			return attachWrapper(pTarget, &DestructorStruct<T>::destroy, memSize);
+			return attachWrapper(ptr, &DestructorStruct<T>::destroy, memSize);
 	}
 
 	//check ptr invalid
 	template <typename T>
-	void checkPtrAddr(T* ptr)
+	void checkPtrAddr(void* ptr)
 	{
 		/* 指针ptr必须是其本身的地址,不能是其父类地址(偏移地址).
 		* 如: class C : public A, public B {}

@@ -3,8 +3,8 @@
 #include "PollDataThreadPool.h"
 #include "RpcOnTcpSocket.h"
 
-namespace bluemei{
 
+namespace brpc{
 
 class PollDataTask : public Task
 {
@@ -66,7 +66,12 @@ PollDataThreadPool::~PollDataThreadPool()
 
 void PollDataThreadPool::addSocket(RpcSocket* socket)
 {
-	(void)pool.addTask(new PollDataTask(socket));
+	(void)this->pool.addTask(new PollDataTask(socket));
+}
+
+void PollDataThreadPool::stopAndWait()
+{
+	this->pool.stop();
 }
 
 }//end of namespace bluemei
