@@ -183,12 +183,13 @@ bool Reader::parse(const String& strValue, ObjectMap*& methodObjMap)
 	parser.SetDocFlags(CMarkup::MDF_IGNORECASE);
 	if(!parser.Parse(strValue))
 	{
+		addError(parser.GetError());
 		return false;
 	}
 	else if(parser.FindElem())
 	{
 		std::string tag = parser.GetTagName();
-		std::string cls=parser.GetAttrib("class");
+		std::string cls = parser.GetAttrib("class");
 		if(tag == TAG_MAP && cls == MAP_CLASS_METHOD){
 			methodObjMap = new ObjectMap();
 			if(!readObject(*methodObjMap)){
@@ -200,7 +201,9 @@ bool Reader::parse(const String& strValue, ObjectMap*& methodObjMap)
 		}
 		else
 		{
-			addError(String::format("'%s<%s>' is an invalid object",
+			if(cls.empty())
+				cls = "null";
+			addError(String::format("'%s<class %s>' is an invalid object",
 				tag.c_str(), cls.c_str()));
 			return false;
 		}
@@ -214,7 +217,12 @@ bool Reader::parse(const String& strValue, ObjectMap*& methodObjMap)
 
 String Reader::getFormatedErrorMessages() const
 {
-	return errorList.toString();
+	StringBuilder sb(errorList.size() * 20);
+	for(unsigned int i = 0; i < errorList.size(); i++)
+	{
+		sb.append(errorList[i]);
+	}
+	return sb.toString();
 }
 
 void Reader::addError( const String& str )

@@ -242,21 +242,14 @@ int RpcMethodXmlSerializer::write(OutputStream& output, const RpcMethod& method,
 		return -1;
 	}
 	ObjectMap methodObjMap("Method");
-	methodObjMap.putValue("version", method.version);
-	methodObjMap.putValue("status", method.status);
-	methodObjMap.putValue("authToken", method.authToken);
-	methodObjMap.putValue("owner", method.owner);
-	methodObjMap.putValue("method", method.methodName);
-	methodObjMap.putValue("needReturn", method.waitResult);
-	methodObjMap.put("args", const_cast<Object*>(method.args));
-	if(method.status >= RpcMethod::STATUS_RESPONSE_OK)
-		methodObjMap.put("returnValue", method.returnValue);
+	method.writeTo(methodObjMap);
 	Type2XmlSerializer xmlVisiter;
 	String result = xmlVisiter.toXml(&methodObjMap);
 	//gbk->encoding
 	if (encoding.length() > 0 && !encoding.compare("gbk", false)){
 		result = convertEncoding(result, "gbk", encoding);
 	}
+	//@TODO(lzm): don't delete this ptrs twice
 	(void)methodObjMap.remove("args", false);
 	(void)methodObjMap.remove("returnValue", false);
 	unsigned int count = result.length();
@@ -275,26 +268,17 @@ int RpcMethodXmlSerializer::read(RpcMethod& method, const InputStream& input,
 	if (encoding.length() > 0 && !encoding.compare("gbk", false)){
 		strValue = convertEncoding(strValue, encoding, "gbk").c_str();
 	}
-	//printf(">>>>read: %s\n\n", strValue.c_str());
-	/*method.name = "echo";
-	method.args = new ObjectList();
-	method.autoDel = true;
-	method.args->addValue("hi rpc");
-	return input.size();*/
 
 	Xml::Reader reader;
 	ObjectMap* methodObjMap = null;
 	if (reader.parse(strValue, methodObjMap))
 	{
+		method.reset();
 		method.setAutoDelArgs(true);
-		methodObjMap->getValue("version", method.version);
-		methodObjMap->getValue("status", method.status);
-		methodObjMap->getValue("authToken", method.authToken);
-		methodObjMap->getValue("owner", method.owner);
-		methodObjMap->getValue("method", method.methodName);
-		method.args = methodObjMap->remove("args", false);
-		method.returnValue = methodObjMap->remove("returnValue", false);
-		methodObjMap->getValue("needReturn", method.waitResult);
+		method.readFrom(*methodObjMap);
+		//@TODO(lzm): don't delete this ptrs twice
+		(void)methodObjMap->remove("args", false);
+		(void)methodObjMap->remove("returnValue", false);
 		
 		delete methodObjMap;
 		methodObjMap = null;

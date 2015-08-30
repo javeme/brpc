@@ -47,10 +47,12 @@ void P2pRpcConnection::parseUrl(const String& url)
 void P2pRpcConnection::onNotifyEvent(cstring event, const ObjectList& args)
 {
 	if(eventMap.contain(event)){
+		//remote method name
 		String method = eventMap.getDefault(event, "");
 		//this->cast(method, args);
 		Headers headers;
 		headers.put(KEY_RESPONSE, "true");
+		headers.put(KEY_CONTENT_TYPE, this->serializerType);
 		;
 		sendEvent(headers, method, args);
 	}
@@ -112,7 +114,7 @@ DataPackage P2pRpcConnection::onSendSynch(const DataPackage& output)
 
 bool P2pRpcConnection::onSerializeException(SerializeException& e)
 {
-	ErrorHandler::handle(RpcException("invalid request " + e.toString()));
+	ErrorHandler::handle(e);
 	return false;	
 }
 

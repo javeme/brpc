@@ -145,17 +145,10 @@ int RpcMethodBinarySerializer::write(OutputStream& output, const RpcMethod& meth
 		return -1;
 	}
 	ObjectMap methodObjMap("Method");
-	methodObjMap.putValue("version", method.version);
-	methodObjMap.putValue("status", method.status);
-	methodObjMap.putValue("authToken", method.authToken);
-	methodObjMap.putValue("owner", method.owner);
-	methodObjMap.putValue("method", method.methodName);
-	methodObjMap.putValue("needReturn", method.waitResult);
-	methodObjMap.put("args", const_cast<Object*>(method.args));
-	if(method.status >= RpcMethod::STATUS_RESPONSE_OK)
-		methodObjMap.put("returnValue", method.returnValue);
+	method.writeTo(methodObjMap);
 	Type2BinarySerializer binVisiter(output);
 	unsigned int count = binVisiter.toBinary(&methodObjMap);
+	//@TODO(lzm): don't delete this ptrs twice
 	(void)methodObjMap.remove("args", false);
 	(void)methodObjMap.remove("returnValue", false);
 	//printf(">>>>write: %s\n\n", result.c_str());
@@ -174,15 +167,12 @@ int RpcMethodBinarySerializer::read(RpcMethod& method, const InputStream& input,
 	ObjectMap* methodObjMap = null;
 	if (reader.parse(input, methodObjMap))//待加入异常处理!!!
 	{
+		method.reset();
 		method.setAutoDelArgs(true);
-		methodObjMap->getValue("version", method.version);
-		methodObjMap->getValue("status", method.status);
-		methodObjMap->getValue("authToken", method.authToken);
-		methodObjMap->getValue("owner", method.owner);
-		methodObjMap->getValue("method", method.methodName);
-		method.args = methodObjMap->remove("args", false);
-		method.returnValue = methodObjMap->remove("returnValue", false);
-		methodObjMap->getValue("needReturn", method.waitResult);
+		method.readFrom(*methodObjMap);
+		//@TODO(lzm): don't delete this ptrs twice
+		(void)methodObjMap->remove("args", false);
+		(void)methodObjMap->remove("returnValue", false);
 		
 		delete methodObjMap;
 		methodObjMap = null;

@@ -193,6 +193,7 @@ bool RpcConnection::doEvent(const Headers& headers, RpcMethod& method)
 		delete onCall(method.owner, methodName, *args);
 		success = true;
 	}catch (Exception& e){
+		success = false;
 		ErrorHandler::handle(e);
 	}
 	return success;
@@ -217,6 +218,7 @@ bool RpcConnection::invoke(const Headers& headers, const InputStream& input)
 	}catch (SerializeException& e)
 	{
 		String str = e.toString();
+		//@TODO(lzm): does it need to response if it's an event? 
 		bool r = doCallResponse(headers, method, &str, RpcMethod::STATUS_RESPONSE_ERROR);
 		bool s = onSerializeException(e);
 		return (r && s);

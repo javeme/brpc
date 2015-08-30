@@ -2,6 +2,7 @@
 #include "stdafx.h"
 #include "blib.h"
 #include "ObjectList.h"
+#include "ObjectMap.h"
 
 
 namespace brpc{
@@ -49,13 +50,19 @@ public:
 	virtual String getMethodNameWithVersion() const;
 	virtual cstring currentVersion() const;
 
-	bool isRequest() const;
-	bool isEvent() const;
+	virtual bool isRequest() const;
+	virtual bool isEvent() const;
 
 	virtual String getResultString() const;
 	virtual void releaseResult();
 	virtual String getResultStringAndRelease();
 
+public:
+	virtual bool isAutoDelArgs() const { return autoDelArgs; }
+	virtual void setAutoDelArgs(bool val) { autoDelArgs = val; }
+	
+	virtual void writeTo(ObjectMap& map) const;
+	virtual void readFrom(const ObjectMap& map);
 public:
 	String version;//such as "1.0"
 	int status;//request or response status
@@ -67,10 +74,6 @@ public:
 	Object* returnValue;
 
 	bool waitResult;
-
-public:
-	bool isAutoDelArgs() const { return autoDelArgs; }
-	void setAutoDelArgs(bool val) { autoDelArgs = val; }
 	
 private:
 	bool autoDelArgs;

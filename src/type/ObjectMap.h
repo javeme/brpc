@@ -30,7 +30,7 @@ public:
 	}
 
 	template<typename Type>
-	bool getValue(cstring name, Type& val){ 
+	bool getValue(cstring name, Type& val)const{ 
 		Object* obj = this->get(name);
 		if (obj)
 		{

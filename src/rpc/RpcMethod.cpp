@@ -131,4 +131,28 @@ String RpcMethod::getResultStringAndRelease()
 	return msg;
 }
 
+void RpcMethod::writeTo(ObjectMap& methodObjMap) const
+{
+	methodObjMap.putValue("version",this->version);
+	methodObjMap.putValue("status",this->status);
+	methodObjMap.putValue("authToken",this->authToken);
+	methodObjMap.putValue("owner",this->owner);
+	methodObjMap.putValue("method",this->methodName);
+	methodObjMap.putValue("needReturn",this->waitResult);
+	methodObjMap.put("args", this->args);
+	methodObjMap.put("returnValue", this->returnValue);
+}
+
+void RpcMethod::readFrom(const ObjectMap& methodObjMap)
+{
+	methodObjMap.getValue("version",this->version);
+	methodObjMap.getValue("status",this->status);
+	methodObjMap.getValue("authToken",this->authToken);
+	methodObjMap.getValue("owner",this->owner);
+	methodObjMap.getValue("method",this->methodName);
+	methodObjMap.getValue("needReturn",this->waitResult);
+	this->args = methodObjMap.get("args");
+	this->returnValue = methodObjMap.get("returnValue");
+}
+
 }

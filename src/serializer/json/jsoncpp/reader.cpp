@@ -14,7 +14,8 @@
 
 namespace Json {
 
-#define setComment toString();
+#define setComment(s, t) toString()
+
 // Implementation of class Features
 // ////////////////////////////////
 
@@ -173,21 +174,20 @@ Reader::parse( const char *beginDoc, const char *endDoc,
    
    bool successful = readValue();
 
-   bluemei::Object* result = &currentValue();
-   nodes_.pop();
-
-   root = null;
-   if(dynamic_cast<brpc::ObjectMap*>(result))
-	   root = dynamic_cast<brpc::ObjectMap*>(result);
+   bluemei::Object* result = null;
+   if(successful) {
+	   result = &currentValue();
+	   nodes_.pop();
+   }
 
    Token token;
    skipCommentTokens( token );
+   root = dynamic_cast<brpc::ObjectMap*>(result);
    if ( root && collectComments_  &&  !commentsBefore_.empty() )
 	   root->setComment( commentsBefore_, commentAfter );
 
    if ( features_.strictRoot_ )
    {
-
       if ( !dynamic_cast<brpc::ObjectList*>(result)  
 		  &&  !dynamic_cast<brpc::ObjectMap*>(result) )
       {

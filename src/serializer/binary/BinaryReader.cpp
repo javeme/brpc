@@ -132,13 +132,14 @@ bool BinaryReader::parse(const InputStream& input, ObjectMap*& methodObjMap)
 	if(readValue(val) && val != null){
 		methodObjMap = dynamic_cast<ObjectMap*>(val);
 		if(methodObjMap == null){
-			addError(String::format("'<%s>' is an invalid object",
+			addError(String::format("'%s' is an invalid object",
 				val->toString().c_str()));
 			delete val;
 			return false;
 		}
 		if(methodObjMap->getClassType() != MAP_CLASS_METHOD){
-			addError("not a method");
+			addError(String::format("'%s' is not a method",
+				methodObjMap->getClassType().c_str()));
 			return false;
 		}
 
@@ -149,7 +150,12 @@ bool BinaryReader::parse(const InputStream& input, ObjectMap*& methodObjMap)
 
 String BinaryReader::getFormatedErrorMessages() const
 {
-	return errorList.toString();
+	StringBuilder sb(errorList.size() * 20);
+	for(unsigned int i = 0; i < errorList.size(); i++)
+	{
+		sb.append(errorList[i]);
+	}
+	return sb.toString();
 }
 
 void BinaryReader::addError( const String& str )
