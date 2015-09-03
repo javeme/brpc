@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="Create Runnable Jar for Project brpc-client-java">
+    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
+    <!--ANT 1.7 is required                                        -->
+    <target name="create_run_jar">
+        <jar destfile="C:/Users/Administrator/Desktop/brpc.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+                <attribute name="Built-By" value="${user.name}"/>
+                <attribute name="Main-Class" value="brpc.cmd.Client"/>
+                <attribute name="Class-Path" value="."/>
+            </manifest>
+            <fileset dir="D:/c++/c++vs2010/brpc/clients/brpc-client-java/bin"/>
+            <zipfileset excludes="META-INF/*.SF" src="G:/eclipse中文版/eclipse/plugins/org.junit_3.8.2.v20080602-1318/junit.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="D:/c++/c++vs2010/brpc/clients/brpc-client-java/lib/json/commons-beanutils-1.7.0.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="D:/c++/c++vs2010/brpc/clients/brpc-client-java/lib/json/commons-collections-3.2.1.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="D:/c++/c++vs2010/brpc/clients/brpc-client-java/lib/json/commons-httpclient-3.1.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="D:/c++/c++vs2010/brpc/clients/brpc-client-java/lib/json/commons-lang-2.3.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="D:/c++/c++vs2010/brpc/clients/brpc-client-java/lib/json/commons-logging-1.1.1.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="D:/c++/c++vs2010/brpc/clients/brpc-client-java/lib/json/ezmorph-1.0.3.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="D:/c++/c++vs2010/brpc/clients/brpc-client-java/lib/json/json-lib-2.2.3-jdk15.jar"/>
+        </jar>
+    </target>
+</project>

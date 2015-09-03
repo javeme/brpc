@@ -1,0 +1,3 @@
+Manifest-Version: 1.0
+Main-Class: brpc.cmd.Client
+Class-Path: lib/json/commons-beanutils-1.7.0.jar lib/json/json-lib-2.2.3-jdk15.jar lib/json/commons-collections-3.2.1.jar lib/json/commons-lang-2.3.jar lib/json/commons-logging-1.1.1.jar lib/json/ezmorph-1.0.3.jar
