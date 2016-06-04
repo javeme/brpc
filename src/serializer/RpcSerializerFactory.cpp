@@ -97,4 +97,4 @@ cstring RpcSerializerFactory::contentType2str(BrpcContentType type)
 }
 
 
-}//end of namespace bluemei
+}//end of namespace brpc

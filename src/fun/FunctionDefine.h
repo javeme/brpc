@@ -125,4 +125,4 @@ DEFINE_FUNC_OF_ARGS(5);
 DEFINE_FUNC_OF_ARGS(6);
 //...
 
-}//end of namespace bluemei
+}//end of namespace brpc

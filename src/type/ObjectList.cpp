@@ -93,4 +93,4 @@ void ObjectList::visitElements(TypeVisiter* visitor)
 	}
 }
 
-}//end of namespace bluemei
+}//end of namespace brpc

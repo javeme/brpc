@@ -61,4 +61,4 @@ protected:
 	VarContext* m_context;
 };
 
-}//end of namespace bluemei
+}//end of namespace brpc

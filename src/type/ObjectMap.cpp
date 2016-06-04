@@ -47,4 +47,4 @@ String ObjectMap::toString() const
 	return sb.toString();
 }
 
-}//end of namespace bluemei
+}//end of namespace brpc

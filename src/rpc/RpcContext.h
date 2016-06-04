@@ -8,7 +8,7 @@ namespace brpc{
 
 /*
 * RPC远程调用环境
-* @author 李章梅
+* @author Javeme
 * @create 2014/7/13
 */
 class RpcContext : public HashMap<String, Object*>
@@ -23,4 +23,4 @@ protected:
 };
 
 
-}//end of namespace bluemei
+}//end of namespace brpc

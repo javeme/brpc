@@ -8,7 +8,7 @@ namespace brpc{
 
 /*
 * RPC远程调用器
-* @author 李章梅
+* @author Javeme
 * @create 2014/7/13
 */
 class RpcInvoker : public virtual Object
@@ -40,4 +40,4 @@ public:
 };
 
 
-}//end of namespace bluemei
+}//end of namespace brpc

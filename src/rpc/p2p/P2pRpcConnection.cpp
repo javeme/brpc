@@ -129,4 +129,4 @@ String P2pRpcConnection::toString() const
 	return rpcSocket->toString();
 }
 
-}//end of namespace bluemei
+}//end of namespace brpc

@@ -560,4 +560,4 @@ void HttpResponse::readCookiesFrom( InputStream& input ) throw(Exception)
 	throw Exception("not implement");
 }
 
-}//end of namespace bluemei
+}//end of namespace brpc

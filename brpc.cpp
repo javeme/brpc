@@ -32,7 +32,7 @@ void testMyRpcApi()
 	cstring url = "http://127.0.0.1"; // jmtp://127.0.0.1
 	cstring name = "test", password = "123456";
 	MyRpcApi myApi(url, name, password);
-		
+	
 	myApi.subscribe("nova.onclick", "callback.onclick");
 
 	String sss = myApi.ping();
@@ -179,7 +179,7 @@ int main(int argc, char* argv[])
 	ErrorHandler::setHandler(&logHandler);
 
 	SocketTools::initSocketContext();
-	
+
 	try
 	{
 		log->trace("before running");

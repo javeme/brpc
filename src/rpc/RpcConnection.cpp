@@ -363,4 +363,4 @@ void RpcConnection::setDataHookHandler(RpcDataHookHandler* handler)
 }
 
 
-}//end of namespace bluemei
+}//end of namespace brpc

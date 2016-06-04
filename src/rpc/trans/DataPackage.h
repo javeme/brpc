@@ -14,7 +14,7 @@ namespace brpc{
 
 /*
 * 数据包
-* @author 李章梅
+* @author Javeme
  @create 2012/5/28
 */
 class DataPackage : public Object
@@ -47,4 +47,4 @@ public:
 	DataPackage& operator=(const DataPackage& other){ return *this; }*/
 };
 
-}//end of namespace bluemei
+}//end of namespace brpc

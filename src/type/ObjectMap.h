@@ -8,7 +8,7 @@ namespace brpc{
 
 /*
 * Object¶ÔÏóMap
-* @author ÀîÕÂÃ·
+* @author Javeme
 * @create 2014/7/15
 */
 class ObjectMap : public BeanContainer, public TypeVisitable
@@ -134,4 +134,4 @@ struct Converter<std::map<std::string,T>>
 
 //map << key1: value1 << key2: value2;
 
-}//end of namespace bluemei
+}//end of namespace brpc

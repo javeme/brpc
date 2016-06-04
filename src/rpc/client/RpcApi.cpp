@@ -137,4 +137,4 @@ String RpcApi::object() const
 		return name();
 }
 
-}//end of namespace bluemei
+}//end of namespace brpc

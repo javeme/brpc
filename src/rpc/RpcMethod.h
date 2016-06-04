@@ -13,7 +13,7 @@ const static unsigned int BRPC_MAX_BODY_LEN = 1024 * 1024 * 4;//4M
 
 /*
 * RPC 方法封装
-* @author 李章梅
+* @author Javeme
 * @create 2014/9/21
 */
 class RpcMethod : public Object
@@ -80,4 +80,4 @@ private:
 };
 
 
-}//end of namespace bluemei
+}//end of namespace brpc

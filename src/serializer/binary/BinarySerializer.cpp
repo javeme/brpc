@@ -191,4 +191,4 @@ int RpcMethodBinarySerializer::read(RpcMethod& method, const InputStream& input,
 }
 
 
-}//end of namespace bluemei
+}//end of namespace brpc

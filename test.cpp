@@ -583,13 +583,48 @@ void testJson()
 	printf("toJson: %s\n", json.c_str());
 }
 
+#include "Colume.h"
+
+class UserModel : public Object
+{
+public:
+	DECLARE_DCLASS(UserModel);
+public:
+	COLUME(varchar<20>, name);
+	COLUME(int, age);
+};
+
+void testColume()
+{
+	UserModel user;
+	user.name = "jack";
+	user.age = 18;
+	int age = user.age;
+
+	varchar<2> ss("12");
+	ss = "13579";
+	cstring cstr = ss;
+
+	Condition* cond = *(*user.name.query() == "mike") 
+		&& *(
+			*(*(*user.age.query() > 1) && *(*user.age.query() <= 100))
+			 || 
+			*(*user.age.query() >= 200)
+		);
+	String sql = cond->toSQL();
+	printf("toSQL: %s\n", sql.c_str());
+	delete cond;
+}
+
 int main2(int argc, char* argv[])
 {
 	//_CrtSetBreakAlloc(637);
-	cstring ssssss=CODE2STRING(CLS_PF_OF_ARGS(0));
+	cstring s1=CODE2STRING(COLUME(varchar<32>, name));
+	cstring s2=CODE2STRING(CLS_PF_OF_ARGS(0));
 
 	testDispatcher();
 	testJson();
+	testColume();
 
 	System::instance().destroy();
 

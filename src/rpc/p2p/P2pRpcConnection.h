@@ -19,7 +19,7 @@ private:
 
 /*
 * 点对点RPC远程调用环境(基于TCP Socket)
-* @author 李章梅
+* @author Javeme
 * @create 2014/7/13
 */
 class P2pRpcConnection : public RpcConnection, 
@@ -65,4 +65,4 @@ protected:
 };
 
 
-}//end of namespace bluemei
+}//end of namespace brpc

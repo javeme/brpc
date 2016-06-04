@@ -21,4 +21,4 @@ protected:
 	CriticalLock m_sendLock;
 };
 
-}//end of namespace bluemei
+}//end of namespace brpc

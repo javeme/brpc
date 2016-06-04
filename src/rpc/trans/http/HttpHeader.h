@@ -208,4 +208,4 @@ protected:
 	String description;
 };
 
-}//end of namespace bluemei
+}//end of namespace brpc

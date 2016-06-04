@@ -157,4 +157,4 @@ void RpcOnHttpSocket::sendResponse(HttpResponse::Status status, const String& pk
 }
 
 
-}//end of namespace bluemei
+}//end of namespace brpc

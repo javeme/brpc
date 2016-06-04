@@ -9,7 +9,7 @@ namespace brpc{
 
 /*
 * RPC Client
-* @author ภ๎ียรท
+* @author Javeme
 * @create 2014/7/13
 */
 class RpcClient : public RpcInvoker
@@ -40,4 +40,4 @@ private:
 };
 
 
-}//end of namespace bluemei
+}//end of namespace brpc

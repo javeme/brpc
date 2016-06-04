@@ -38,4 +38,4 @@ RpcConnAcceptor* RpcInvokerFacatory::loadRpcAcceptor(cstring url, RpcServer* ser
 	}
 }
 
-}//end of namespace bluemei
+}//end of namespace brpc

@@ -152,4 +152,4 @@ String HttpParser::decodeUrl(const String& url)
 	return CodeUtil::urlDecode(url);
 }
 
-}//end of namespace bluemei
+}//end of namespace brpc

@@ -51,4 +51,4 @@ struct SerializerReg
 #define REG_SERIALIZER(name, cls) \
 	static SerializerReg<cls> ANONYMOUS(__s_regFor##cls)(name);
 
-}//end of namespace bluemei
+}//end of namespace brpc

@@ -10,7 +10,7 @@ class RpcConnAcceptor;
 
 /*
 * RPC远程调用器工厂
-* @author 李章梅
+* @author Javeme
 * @create 2014/7/13
 */
 class RpcInvokerFacatory : public Object
@@ -21,4 +21,4 @@ public:
 	static RpcConnAcceptor* loadRpcAcceptor(cstring url, RpcServer* server);
 };
 
-}//end of namespace bluemei
+}//end of namespace brpc

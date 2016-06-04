@@ -61,4 +61,4 @@ String LoginException::toString() const
 	return "LoginException : "+m_strLastError;
 }
 
-}//end of namespace bluemei
+}//end of namespace brpc

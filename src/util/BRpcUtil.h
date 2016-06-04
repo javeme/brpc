@@ -10,10 +10,10 @@ namespace brpc{
 	
 /*
 * 字符及其编码工具类
-* @author 李章梅
+* @author Javeme
 * @create 2014/7/5
 */
-class BRpcUtil : public CodeUtil
+class BRpcUtil : public bluemei::CodeUtil
 {
 public:
 	static int debug(cstring frmt, ...)
@@ -196,7 +196,7 @@ protected:
 
 /*
 * Object对象转换为指定类型(无法转换时抛出异常)
-* @author 李章梅
+* @author Javeme
 * @create 2014/7/4
 */
 template <typename Type>
@@ -228,7 +228,7 @@ inline Type valueOf(Object* obj)
 
 /*
 * 指定类型转换为Object对象(无法转换时抛出异常)
-* @author 李章梅
+* @author Javeme
 * @create 2014/7/4
 */
 template <typename Type>
@@ -313,4 +313,4 @@ struct Converter<SmartPtr<T>>
 	}
 };
 
-}//end of namespace bluemei
+}//end of namespace brpc

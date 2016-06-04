@@ -90,6 +90,6 @@ void P2pRpcConnAcceptor::wait()
 	this->pool.stopAndWait();
 }
 
-}//end of namespace bluemei
+}//end of namespace brpc
 
 

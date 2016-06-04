@@ -310,6 +310,6 @@ void RpcService::publishEvent(cstring name, const ObjectList& args)
 	}
 }
 
-}//end of namespace bluemei
+}//end of namespace brpc
 
 

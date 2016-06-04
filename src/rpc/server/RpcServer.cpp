@@ -138,4 +138,4 @@ void RpcServer::onError(cstring name,cstring err,RpcReceiveListener* listener)
 	}
 }
 
-}//end of namespace bluemei
+}//end of namespace brpc

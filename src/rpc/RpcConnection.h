@@ -13,7 +13,7 @@ namespace brpc{
 
 /*
 * RPC远程调用环境
-* @author 李章梅
+* @author Javeme
 * @create 2014/7/13
 */
 class RpcConnection : public RpcInvoker
@@ -77,4 +77,4 @@ protected:
 	String authToken;//client's token from server
 };
 
-}//end of namespace bluemei
+}//end of namespace brpc

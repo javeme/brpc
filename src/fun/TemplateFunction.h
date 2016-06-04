@@ -29,7 +29,7 @@ struct returner<false>{
 
 /*
 * 函数半实现类
-* @author 李章梅
+* @author Javeme
 * @create 2014/7/5
 */
 class ConcreteAnyFunction : public AnyFunction
@@ -46,7 +46,7 @@ private:
 
 /*
 * 模板函数类
-* @author 李章梅
+* @author Javeme
 * @create 2014/7/5
 */
 template <typename Func>
@@ -124,4 +124,4 @@ private:
 };
 
 
-}//end of namespace bluemei
+}//end of namespace brpc

@@ -74,4 +74,4 @@ void RpcClient::notifyEvent(cstring event, Object* sender, const ObjectList& arg
 	return this->rpcInvoker->notifyEvent(event, sender, args);
 }
 
-}//end of namespace bluemei
+}//end of namespace brpc

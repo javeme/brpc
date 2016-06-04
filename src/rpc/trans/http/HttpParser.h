@@ -21,4 +21,4 @@ public:
 	static String decodeUrl(const String& url);
 };
 
-}//end of namespace bluemei
+}//end of namespace brpc

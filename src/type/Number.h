@@ -636,5 +636,5 @@ ADD_ASSIGN_INT_NumberVisiter(NumberAssignBXorVisiter	, ^=	);
 ADD_ASSIGN_INT_NumberVisiter(NumberAssignBOrVisiter		, |=	);
 
 
-}//end of namespace bluemei
+}//end of namespace brpc
 

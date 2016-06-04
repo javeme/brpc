@@ -35,4 +35,4 @@ private:
 	String authToken;
 };
 
-}//end of namespace bluemei
+}//end of namespace brpc

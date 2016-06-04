@@ -146,4 +146,4 @@ void Url::parseUrl()
 	}
 }
 
-}//end of namespace bluemei
+}//end of namespace brpc

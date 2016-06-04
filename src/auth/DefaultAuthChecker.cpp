@@ -66,4 +66,4 @@ bool DefaultAuthChecker::addAuthToken(const String& authToken, const String& nam
 }
 
 
-}//end of namespace bluemei
+}//end of namespace brpc

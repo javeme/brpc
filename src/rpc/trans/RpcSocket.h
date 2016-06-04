@@ -11,7 +11,7 @@ typedef unsigned int dword;
 
 /*
 * RPC接收数据监听器
-* @author 李章梅
+* @author Javeme
 * @create 2012/5/28
 */
 class RpcReceiveListener : public virtual Object
@@ -25,7 +25,7 @@ public:
 * RPC传输层处理器 
 * RPC传输层抽象接口(RpcConnection)
 *
-* @author 李章梅
+* @author Javeme
 * @create 2012/5/28
 */
 class RpcSocket : public Object
@@ -107,4 +107,4 @@ protected:
 	String path;
 };
 
-}//end of namespace bluemei
+}//end of namespace brpc

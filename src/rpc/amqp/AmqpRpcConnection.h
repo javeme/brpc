@@ -7,7 +7,7 @@ namespace brpc{
 
 /*
 * 基于AMQP协议RPC远程调用环境
-* @author 李章梅
+* @author Javeme
 * @create 2014/7/13
 */
 class AmqpRpcConnection : public RpcConnection
@@ -51,4 +51,4 @@ public:
 };
 
 
-}//end of namespace bluemei
+}//end of namespace brpc

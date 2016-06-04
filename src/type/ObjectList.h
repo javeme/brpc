@@ -8,7 +8,7 @@ namespace brpc{
 
 /*
 * Object对象列表
-* @author 李章梅
+* @author Javeme
 * @create 2014/7/4
 */
 class ObjectList : public Vector<Object*>, public TypeVisitable
@@ -108,4 +108,4 @@ struct Converter<std::vector<T>>
 };
 
 
-}//end of namespace bluemei
+}//end of namespace brpc

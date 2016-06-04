@@ -21,4 +21,4 @@ RpcSocket* RpcSocketFactory::getRpcSocket(const String& name)
 		return nullptr;
 }
 
-}//end of namespace bluemei
+}//end of namespace brpc

@@ -11,7 +11,7 @@ class Template;
 
 /*
 * 日志类
-* @author 李章梅
+* @author Javeme
 * @create 2014/7/4
 */
 class BLUEMEILIB_API Log : public Object
@@ -104,7 +104,7 @@ protected:
 
 /*
 * 日志实例管理器
-* @author 李章梅
+* @author Javeme
 * @create 2014/7/4
 */
 class BLUEMEILIB_API LogManager : public Object

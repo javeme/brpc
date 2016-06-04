@@ -317,4 +317,4 @@ bool FuncDispatcher::exclude(FuncDispatcher* dispatcher)
 }
 
 
-}//end of namespace bluemei
+}//end of namespace brpc

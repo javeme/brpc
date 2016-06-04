@@ -41,4 +41,4 @@ private:
 	HashMap<String, String> authMap;//auth,username
 };
 
-}//end of namespace bluemei
+}//end of namespace brpc

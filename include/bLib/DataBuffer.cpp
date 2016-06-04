@@ -50,18 +50,18 @@ void memClear(Type* buffer,unsigned int count){//BLUEMEILIB_TEMPLATE
 }
 
 template<typename Type>
-DataBuffer<Type>::DataBuffer(unsigned int maxSize,unsigned int size)
+DataBuffer<Type>::DataBuffer(unsigned int capacity,unsigned int size)
 {
-	if(maxSize<2)
-		maxSize=2;
-	if(maxSize<size)
-		maxSize=size;
-	this->m_nMaxSize=maxSize;
-	this->m_buffer=new Type[m_nMaxSize];
+	if(capacity<1)
+		capacity=1;
+	if(capacity<size)
+		capacity=size;
+	this->m_nCapacity=capacity+(8-capacity%8);
+	this->m_buffer=new Type[m_nCapacity];
 
-	memClear(m_buffer,maxSize);
+	memClear(m_buffer,capacity);
 
-	this->m_nOffset=size;
+	this->m_nSize=size;
 	this->m_nReadOffset=0;
 }
 
@@ -77,14 +77,14 @@ DataBuffer<Type>& DataBuffer<Type>::operator=(const DataBuffer<Type>& other)
 {
 	if(this!=&other)
 	{
-		this->m_nMaxSize=other.m_nMaxSize;
-		this->m_nOffset=other.m_nOffset;
+		this->m_nCapacity=other.m_nCapacity;
+		this->m_nSize=other.m_nSize;
 		this->m_nReadOffset=other.m_nReadOffset;
 		if(m_buffer!=nullptr)
 			delete[] m_buffer;
-		this->m_buffer=new Type[m_nMaxSize];
-		memClear(m_buffer,m_nMaxSize);
-		copyData<Type>(m_buffer,other.m_buffer,other.m_nOffset);
+		this->m_buffer=new Type[m_nCapacity];
+		memClear(m_buffer,m_nCapacity);
+		copyData<Type>(m_buffer,other.m_buffer,other.m_nSize);
 	}
 	return *this;
 }
@@ -101,17 +101,17 @@ DataBuffer<Type>& DataBuffer<Type>::operator=(DataBuffer<Type>&& other)
 {
 	if(this!=&other)
 	{
-		this->m_nMaxSize=other.m_nMaxSize;
-		this->m_nOffset=other.m_nOffset;
+		this->m_nCapacity=other.m_nCapacity;
+		this->m_nSize=other.m_nSize;
 		this->m_nReadOffset=other.m_nReadOffset;
 		if(m_buffer!=nullptr)
 			delete[] m_buffer;
 		this->m_buffer = other.m_buffer;
 		
-		other.m_nMaxSize = 2;
-		other.m_buffer = new Type[other.m_nMaxSize];
-		memClear(other.m_buffer,other.m_nMaxSize);
-		other.m_nOffset = 0;
+		other.m_nCapacity = 2;
+		other.m_buffer = new Type[other.m_nCapacity];
+		memClear(other.m_buffer,other.m_nCapacity);
+		other.m_nSize = 0;
 		other.m_nReadOffset = 0;
 	}
 	return *this;
@@ -125,64 +125,68 @@ DataBuffer<Type>::~DataBuffer(void)
 }
 
 template<typename Type>
-bool DataBuffer<Type>::increaseCapacity( unsigned int newCapacity )
+bool DataBuffer<Type>::increaseCapacity(unsigned int newCapacity)
 {
-	if(newCapacity<=m_nMaxSize)
+	if(newCapacity<=m_nCapacity)
 		return false;
 	Type* newBuffer=new Type[newCapacity];
-	copyData<Type>(newBuffer,m_buffer,m_nMaxSize);
+	copyData<Type>(newBuffer,m_buffer,m_nCapacity);
 	delete[] m_buffer;
 	m_buffer=newBuffer;
-	m_nMaxSize=newCapacity;
+	m_nCapacity=newCapacity;
 	return true;
+}
+
+template<typename Type>
+void DataBuffer<Type>::ensureCapacity(unsigned int append)
+{
+	unsigned int len=append;
+	//need increase capacity
+	if(m_nSize+len>=m_nCapacity)
+	{
+		len=len+(8-len%8);
+		if(!increaseCapacity(m_nCapacity*2+len))
+		{
+			throw OutOfBoundException("DataBuffer::ensureCapacity(): can't increase capacity.");
+		}
+	}
 }
 
 template<typename Type>
 unsigned int DataBuffer<Type>::put(const Type& value)
 {
-	m_buffer[m_nOffset++]=value;
-	//扩容
-	if(m_nOffset>=m_nMaxSize)
-	{
-		increaseCapacity(m_nMaxSize*2);
-	}
-	return m_nOffset-1;
+	ensureCapacity(1);
+	m_buffer[m_nSize++]=value;
+	return m_nSize-1;
 }
 
 template<typename Type>
-unsigned int DataBuffer<Type>::put( const Type values[],unsigned int len )
+unsigned int DataBuffer<Type>::put(const Type values[],unsigned int len)
 {
-	unsigned int oldoffset=m_nOffset;
-	//扩容
-	if(m_nOffset+len>=m_nMaxSize)
-	{
-		increaseCapacity(m_nMaxSize*2+len);
-	}
-	copyData<Type>(m_buffer+m_nOffset,values,len);
-	m_nOffset+=len;
-	return oldoffset;
+	unsigned int oldOffset=m_nSize;
+	ensureCapacity(len);
+	copyData<Type>(m_buffer+m_nSize,values,len);
+	m_nSize+=len;
+	return oldOffset;
 }
 
+//setReadOffset() => put2ReadPos() => read()
 template<typename Type>
-unsigned int DataBuffer<Type>::put2ReadPos( const Type values[],unsigned int len )
+unsigned int DataBuffer<Type>::put2ReadPos(const Type values[],unsigned int len)
 {
-	unsigned int oldoffset=m_nReadOffset;
-	//检查是否越界
-	if(m_nReadOffset+len>m_nOffset)
-	{
-		throw OutOfBoundException("DataBuffer::put2ReadPos(): there is no element any more.");
-	}
+	unsigned int oldOffset=m_nReadOffset;
+	ensureCapacity(len);
 	copyData<Type>(m_buffer+m_nReadOffset,values,len);
 	m_nReadOffset+=len;
-	return oldoffset;
+	return oldOffset;
 }
 
 template<typename Type>
 const Type& DataBuffer<Type>::pop() throw(OutOfBoundException)
 {
-	if(m_nOffset>0){
-		m_nOffset--;
-		return m_buffer[m_nOffset];
+	if(m_nSize>0){
+		m_nSize--;
+		return m_buffer[m_nSize];
 	}
 	else{
 		throw OutOfBoundException("DataBuffer::pop(): there is no element any more.");
@@ -190,10 +194,10 @@ const Type& DataBuffer<Type>::pop() throw(OutOfBoundException)
 }
 
 template<typename Type>
-void DataBuffer<Type>::read( Type values[],unsigned int len ) throw(OutOfBoundException)
+void DataBuffer<Type>::read(Type values[],unsigned int len) throw(OutOfBoundException)
 {
-	if(m_nReadOffset+len>m_nOffset)
-		throw OutOfBoundException(m_nReadOffset+len,m_nOffset);
+	if(m_nReadOffset+len>m_nSize)
+		throw OutOfBoundException(m_nReadOffset+len,m_nSize);
 	copyData<Type>(values,m_buffer+m_nReadOffset,len);
 	m_nReadOffset+=len;
 }
@@ -201,21 +205,44 @@ void DataBuffer<Type>::read( Type values[],unsigned int len ) throw(OutOfBoundEx
 template<typename Type>
 Type DataBuffer<Type>::read() throw(OutOfBoundException)
 {
-	if(m_nReadOffset>=m_nOffset)
-		throw OutOfBoundException(m_nReadOffset,m_nOffset);
+	if(m_nReadOffset>=m_nSize)
+		throw OutOfBoundException(m_nReadOffset,m_nSize);
 	return m_buffer[m_nReadOffset++];
 }
 
 template<typename Type>
 void DataBuffer<Type>::setReadOffset(unsigned int offset)
 {
+	if(offset>=m_nSize)
+		throw OutOfBoundException(m_nReadOffset,m_nSize);
 	m_nReadOffset=offset;
+}
+
+template<typename Type>
+void bluemei::DataBuffer<Type>::skipn(unsigned int bytes)
+{
+	setReadOffset(m_nReadOffset+bytes);
+}
+
+//remove the first @bytes data
+template<typename Type>
+void bluemei::DataBuffer<Type>::shrink(unsigned int bytes)
+{
+	if(bytes==0)
+		return;
+	if(bytes>m_nReadOffset)
+		bytes=m_nReadOffset;
+
+	unsigned int remain = m_nSize - bytes;
+	memmove(m_buffer, ((char*)m_buffer)+bytes, remain);
+	this->m_nReadOffset -= bytes;
+	this->m_nSize -= bytes;
 }
 
 template<typename Type>
 bool DataBuffer<Type>::set(const Type& value,unsigned int index)
 {
-	if(index<m_nMaxSize)
+	if(index<m_nCapacity)
 	{
 		m_buffer[index]=value;
 		return true;
@@ -227,7 +254,7 @@ bool DataBuffer<Type>::set(const Type& value,unsigned int index)
 template<typename Type>
 bool DataBuffer<Type>::get(Type& value,unsigned int index)
 {
-	if(index<m_nOffset)
+	if(index<m_nSize)
 	{
 		value=m_buffer[index];
 		return true;
@@ -239,23 +266,24 @@ bool DataBuffer<Type>::get(Type& value,unsigned int index)
 template<typename Type>
 void DataBuffer<Type>::clear()
 {
-	this->m_nOffset=0;
-	memClear(m_buffer,m_nMaxSize);
+	this->m_nSize=0;
+	this->m_nReadOffset=0;
+	memClear(m_buffer,m_nCapacity);
 }
 
 
 template<typename Type>
-unsigned int DataBuffer<Type>::remainBytes()const
+unsigned int DataBuffer<Type>::remains()const
 {
-	if(m_nOffset<=m_nReadOffset)
+	if(m_nSize<=m_nReadOffset)
 		return 0;
-	return m_nOffset-m_nReadOffset;
+	return m_nSize-m_nReadOffset;
 }
 
 template<typename Type>
 unsigned int DataBuffer<Type>::size() const
 {
-	return this->m_nOffset;
+	return this->m_nSize;
 }
 
 template<typename Type>

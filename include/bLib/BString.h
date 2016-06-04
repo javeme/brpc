@@ -13,7 +13,7 @@ template<class T> class ArrayList;
 
 /*
 * 字符串类
-* @author 李章梅(整理)
+* @author Javeme(整理)
 * @create 2012/4/15
 * 初始源码来自http://www.programfan.com/article/2917.html
 */

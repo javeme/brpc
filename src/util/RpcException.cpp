@@ -48,4 +48,4 @@ int RpcCallException::error() const
 	return this->err;
 }
 
-}//end of namespace bluemei
+}//end of namespace brpc

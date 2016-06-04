@@ -8,7 +8,7 @@ class RpcReceiveListener;
 
 /*
 * RPC接收数据收发监听钩子
-* @author 李章梅
+* @author Javeme
 * @create 2012/8/8
 */
 class RpcDataHookHandler : public virtual Object
@@ -22,4 +22,4 @@ public:
 #define HOOK_ERR_RECV_STOPED "stoped-receiving"
 #define HOOK_ERR_CLOSED "closed"
 
-}//end of namespace bluemei
+}//end of namespace brpc

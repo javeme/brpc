@@ -7,7 +7,7 @@ namespace brpc{
 
 /*
 * 函数对象类
-* @author 李章梅
+* @author Javeme
 * @create 2014/7/5
 */
 class AnyFunction : public Object
@@ -39,4 +39,4 @@ public:
 };
 
 
-}//end of namespace bluemei
+}//end of namespace brpc

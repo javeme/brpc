@@ -6,7 +6,7 @@ namespace brpc{
 
 /*
 * Rpc异常
-* @author 李章梅
+* @author Javeme
 * @create 2013/5/28
 */
 class RpcException : public bluemei::Exception
@@ -33,7 +33,7 @@ private:
 
 /*
 * 参数不匹配异常类
-* @author 李章梅
+* @author Javeme
 * @create 2014/7/4
 */
 class ArgNotMatchedException : public RuntimeException
@@ -85,4 +85,4 @@ public:
 	}
 };
 
-}//end of namespace bluemei
+}//end of namespace brpc

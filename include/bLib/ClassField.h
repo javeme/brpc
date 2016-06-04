@@ -97,7 +97,7 @@ public:
     Field(const T& val) : m_value(val), m_setted(true), m_modified(false) {}
 	virtual ~Field() {}
 public:
-	const Field& operator=(const T& val) {
+	virtual Field& operator=(const T& val) {
 		m_value = val;
 		m_setted = true;
 		m_modified = true;
@@ -124,7 +124,6 @@ private:
 	T m_value;
 	bool m_setted;
 	bool m_modified;
-	//Field& m_fieldType
 	//T m_default;
 };
 

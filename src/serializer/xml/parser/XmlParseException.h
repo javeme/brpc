@@ -5,7 +5,7 @@ namespace brpc{
 	
 /*
 * Xml解析异常类
-* @author 李章梅
+* @author Javeme
 * @create 2012/3/30
 */
 class XmlParseException : public SerializeException

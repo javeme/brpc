@@ -10,12 +10,12 @@ namespace brpc{
 template <typename Type>
 struct Converter
 {
-	static inline Type valueOf(Object* obj)
+	static inline Type valueOf(bluemei::Object* obj)
 	{
 		return bluemei::Converter<Type>::valueOf(obj);
 	}
 
-	static inline Object* toObject(const Type& val)
+	static inline bluemei::Object* toObject(const Type& val)
 	{
 		return bluemei::Converter<Type>::toObject(val);
 	}
@@ -28,7 +28,7 @@ namespace bluemei{
 
 /*
 * 类型不匹配异常类
-* @author 李章梅
+* @author Javeme
 * @create 2014/7/4
 */
 class TypeNotMatchedException : public BadCastException

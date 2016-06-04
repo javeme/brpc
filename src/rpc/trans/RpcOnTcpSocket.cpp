@@ -207,4 +207,4 @@ String RpcOnTcpSocket::toString() const
 		return m_pSocket->toString();
 }
 
-}//end of namespace bluemei
+}//end of namespace brpc

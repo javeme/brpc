@@ -23,7 +23,7 @@ typedef uint32		dword;
 
 /*
 * 字符及其编码工具类
-* @author 李章梅
+* @author Javeme
 * @create 2012/3/30
 */
 class BLUEMEILIB_API CodeUtil : public Util

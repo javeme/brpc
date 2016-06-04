@@ -48,4 +48,4 @@ public:
 };
 
 
-}//end of namespace bluemei
+}//end of namespace brpc

@@ -22,9 +22,6 @@
     <Filter Include="src\type">
       <UniqueIdentifier>{71e4e84f-72d3-49bb-bae6-cc79376b104c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\blib">
-      <UniqueIdentifier>{a10e20ad-0c0c-4820-9009-fd9ca17bafa8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\util">
       <UniqueIdentifier>{ed2dca64-30da-4fae-a7d8-346cb60e1efa}</UniqueIdentifier>
     </Filter>
@@ -73,6 +70,9 @@
     <Filter Include="src\serializer\binary">
       <UniqueIdentifier>{6eed73d6-3d77-4348-8612-e0a0efcbd147}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\orm">
+      <UniqueIdentifier>{7bc99e9c-8e99-458a-a127-fe3e601cb4c5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -83,219 +83,6 @@
     </ClInclude>
     <ClInclude Include="targetver.h">
       <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\AccurateTimeTicker.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\Application.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\ArrayList.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\BeanContainer.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\bluemeiLib.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\BString.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\ByteBuffer.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\CallStackUtil.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\Class.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\ClassNotFoundException.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\ClientSocket.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\CodeUtil.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\Context.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\CriticalLock.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\DataBuffer.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\Date.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\ErrorHandler.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\Exception.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\File.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\FtpConnection.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\FtpException.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\HashCoder.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\HashMap.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\IOCompletionPort.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\IOCompletionPortImpl.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\IOCompletionPortImplLinux.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\IOCompletionPortImplWin32.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\IOCPEvent.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\IOCPException.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\IOCPModel.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\IOException.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\Iterator.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\KVPairTree.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\LambdaThread.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\LinkedList.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\Log.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\MemoryPool.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\MultiValueHashMap.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\NotFoundException.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\NullPointerException.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\Object.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\ObjectFactory.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\Observer.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\OutOfBoundException.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\OutOfMemoryException.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\Pair.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\ReferencePointer.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\ResourceLock.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\Runnable.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\RuntimeException.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\ServerSocket.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\Session.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\SmartPtr.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\SmartPtrManager.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\SocketException.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\SocketTools.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\SortArray.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\StackWalker.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\StringBuilder.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\System.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\Task.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\Thread.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\ThreadException.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\ThreadParameter.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\ThreadPool.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\TimeoutException.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\Timer.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\TypeManager.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\Util.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\Vector.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blib\WorkThread.h">
-      <Filter>src\blib</Filter>
     </ClInclude>
     <ClInclude Include="src\util\BRpcUtil.h">
       <Filter>src\util</Filter>
@@ -429,9 +216,6 @@
     <ClInclude Include="src\rpc\trans\http\HttpException.h">
       <Filter>src\rpc\trans\http</Filter>
     </ClInclude>
-    <ClInclude Include="src\bLib\ClassField.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
     <ClInclude Include="src\rpc\trans\RpcSocketFactory.h">
       <Filter>src\rpc\trans</Filter>
     </ClInclude>
@@ -471,10 +255,10 @@
     <ClInclude Include="src\rpc\trans\PollDataThreadPool.h">
       <Filter>src\rpc\trans</Filter>
     </ClInclude>
-    <ClInclude Include="src\bLib\blib.h">
-      <Filter>src\blib</Filter>
-    </ClInclude>
     <ClInclude Include="src\type\TypeConverter.h">
+      <Filter>src\type</Filter>
+    </ClInclude>
+    <ClInclude Include="src\type\Colume.h">
       <Filter>src\type</Filter>
     </ClInclude>
   </ItemGroup>
@@ -484,21 +268,6 @@
     </ClCompile>
     <ClCompile Include="brpc.cpp">
       <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="src\blib\DataBuffer.cpp">
-      <Filter>src\blib</Filter>
-    </ClCompile>
-    <ClCompile Include="src\blib\KVPairTree.cpp">
-      <Filter>src\blib</Filter>
-    </ClCompile>
-    <ClCompile Include="src\blib\LinkedList.cpp">
-      <Filter>src\blib</Filter>
-    </ClCompile>
-    <ClCompile Include="src\blib\MemoryPool.cpp">
-      <Filter>src\blib</Filter>
-    </ClCompile>
-    <ClCompile Include="src\blib\Vector.cpp">
-      <Filter>src\blib</Filter>
     </ClCompile>
     <ClCompile Include="src\fun\FuncDispatcher.cpp">
       <Filter>src\fun</Filter>
@@ -614,10 +383,8 @@
     <ClCompile Include="src\rpc\trans\PollDataThreadPool.cpp">
       <Filter>src\rpc\trans</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Library Include="src\blib\bluemeiLib.lib">
-      <Filter>src\blib</Filter>
-    </Library>
+    <ClCompile Include="src\type\Colume.cpp">
+      <Filter>src\type</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

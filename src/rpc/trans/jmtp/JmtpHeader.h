@@ -88,4 +88,4 @@ enum JmtpEncoding
 	JMTP_ENCODING_GB2312=5,
 };*/
 
-}//end of namespace bluemei
+}//end of namespace brpc

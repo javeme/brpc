@@ -10,7 +10,7 @@ namespace brpc{
 
 /*
 * 函数管理类
-* @author 李章梅
+* @author Javeme
 * @create 2014/7/5
 */
 class FuncDispatcher : public VarContext
@@ -107,4 +107,4 @@ private:
 	DispatcherList extendDispatchers;
 };
 
-}//end of namespace bluemei
+}//end of namespace brpc

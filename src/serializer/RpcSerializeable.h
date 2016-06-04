@@ -53,4 +53,4 @@ inline String RpcSerializeable::convertEncoding(const String& src,
 }
 
 
-}//end of namespace bluemei
+}//end of namespace brpc

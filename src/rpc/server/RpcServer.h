@@ -69,4 +69,4 @@ protected:
 	RpcServer* server;
 };
 
-}//end of namespace bluemei
+}//end of namespace brpc

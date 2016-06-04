@@ -74,4 +74,4 @@ void PollDataThreadPool::stopAndWait()
 	this->pool.stop();
 }
 
-}//end of namespace bluemei
+}//end of namespace brpc

@@ -13,4 +13,4 @@ public:
 	virtual bool logout(cstring authToken)=0;
 };
 
-}//end of namespace bluemei
+}//end of namespace brpc

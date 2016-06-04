@@ -122,4 +122,4 @@ struct TypeObjectHelper<RpcContext*, true>
 	}
 };
 
-}//end of namespace bluemei
+}//end of namespace brpc

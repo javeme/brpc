@@ -71,4 +71,4 @@ protected:
 	const ObjectList nullArgs;
 };
 
-}//end of namespace bluemei
+}//end of namespace brpc

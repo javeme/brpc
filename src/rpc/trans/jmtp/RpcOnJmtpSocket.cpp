@@ -134,4 +134,4 @@ void RpcOnJmtpSocket::sendResponse(JmtpHeader::Status status, const String& pkgI
 	send(package);
 }
 
-}//end of namespace bluemei
+}//end of namespace brpc

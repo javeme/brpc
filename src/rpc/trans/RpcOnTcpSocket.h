@@ -42,4 +42,4 @@ protected:
 	const static int m_nMaxTimeoutCount = 10;
 };
 
-}//end of namespace bluemei
+}//end of namespace brpc
