@@ -258,8 +258,26 @@
     <ClInclude Include="src\type\TypeConverter.h">
       <Filter>src\type</Filter>
     </ClInclude>
-    <ClInclude Include="src\type\Colume.h">
-      <Filter>src\type</Filter>
+    <ClInclude Include="src\orm\Colume.h">
+      <Filter>src\orm</Filter>
+    </ClInclude>
+    <ClInclude Include="src\orm\Condition.h">
+      <Filter>src\orm</Filter>
+    </ClInclude>
+    <ClInclude Include="src\orm\Query.h">
+      <Filter>src\orm</Filter>
+    </ClInclude>
+    <ClInclude Include="src\orm\Session.h">
+      <Filter>src\orm</Filter>
+    </ClInclude>
+    <ClInclude Include="src\orm\SqlExpression.h">
+      <Filter>src\orm</Filter>
+    </ClInclude>
+    <ClInclude Include="src\orm\CURD.h">
+      <Filter>src\orm</Filter>
+    </ClInclude>
+    <ClInclude Include="src\orm\Connection.h">
+      <Filter>src\orm</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -383,8 +401,20 @@
     <ClCompile Include="src\rpc\trans\PollDataThreadPool.cpp">
       <Filter>src\rpc\trans</Filter>
     </ClCompile>
-    <ClCompile Include="src\type\Colume.cpp">
-      <Filter>src\type</Filter>
+    <ClCompile Include="src\orm\Colume.cpp">
+      <Filter>src\orm</Filter>
+    </ClCompile>
+    <ClCompile Include="src\orm\Condition.cpp">
+      <Filter>src\orm</Filter>
+    </ClCompile>
+    <ClCompile Include="src\orm\Query.cpp">
+      <Filter>src\orm</Filter>
+    </ClCompile>
+    <ClCompile Include="src\orm\Session.cpp">
+      <Filter>src\orm</Filter>
+    </ClCompile>
+    <ClCompile Include="src\orm\SqlExpression.cpp">
+      <Filter>src\orm</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

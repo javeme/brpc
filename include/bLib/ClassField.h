@@ -5,7 +5,7 @@
 #include "Object.h"
 
 namespace bluemei{
-		
+
 //for field in class
 class BLUEMEILIB_API FieldInfo : public Object
 {
@@ -22,6 +22,8 @@ public:
 
 	virtual void setValue(Object& obj, Object* val) const = 0;
 	virtual Object* getValue(const Object& obj) const = 0;
+
+	virtual const void* getAddr(const Object& obj) const = 0;
 
 	virtual FieldInfo* clone() const = 0;
 public:
@@ -72,10 +74,18 @@ public:
 		return Converter<Var>::toObject(this->get(*inst));
 	}
 
+	virtual const void* getAddr(const Object& obj) const
+	{
+		const Cls* inst = dynamic_cast<const Cls*>(&obj);
+		if (inst == null)
+			throwTypeException(&obj, typeid(const Cls*).name());
+		return &this->get(*inst);
+	}
+
 	virtual FieldInfo* clone() const { return new FieldType(*this); }
 
 	void set(Cls& obj, const Var& val) const { obj.*m_offset = val; }
-	Var get(const Cls& obj) const { return obj.*m_offset; }
+	const Var& get(const Cls& obj) const { return obj.*m_offset; }
 public:
 	static bool registerField(const FieldType& fld)
 	{
@@ -88,9 +98,21 @@ private:
 	Offset m_offset;
 };
 
+
+//for field in class
+class BLUEMEILIB_API FieldBase : public Object
+{
+public:
+	virtual bool modified() const = 0;
+	virtual void setModified(bool state) = 0;
+
+	virtual bool setted() const = 0;
+	virtual void setSetted(bool state) = 0;
+};
+
 //field value
 template <typename T/*, T deftVal=T()*/>
-class BLUEMEILIB_TEMPLATE Field : public Object
+class BLUEMEILIB_TEMPLATE Field : public FieldBase
 { 
 public:
 	Field() : /*m_value(deftVal),*/ m_setted(false), m_modified(false) {}
@@ -108,11 +130,11 @@ public:
 	operator T() const { return value(); }
     //const Field& fieldType() const { return *m_fieldType; } 
 
-    bool modified() const { return m_modified; }
-    void setModified(bool state) { m_modified = state; }
+    virtual bool modified() const { return m_modified; }
+    virtual void setModified(bool state) { m_modified = state; }
 	
-	bool setted() const { return m_setted; }
-	void setSetted(bool state) { m_setted = state; }
+	virtual bool setted() const { return m_setted; }
+	virtual void setSetted(bool state) { m_setted = state; }
 
     bool operator==(const T& v) const { return m_value == v; }
 	bool operator!=(const T& v) const { return !(*this == v); }

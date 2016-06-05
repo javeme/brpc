@@ -583,20 +583,25 @@ void testJson()
 	printf("toJson: %s\n", json.c_str());
 }
 
-#include "Colume.h"
 
-class UserModel : public Object
+#include "Colume.h"
+#include "orm/Session.h"
+
+class UserModel : public Model
 {
 public:
 	DECLARE_DCLASS(UserModel);
 public:
-	COLUME(varchar<20>, name);
-	COLUME(int, age);
+	TABLE(users);
+	ID(varchar<32>, "_id");
+	COLUME3(name, varchar<20>, "user_name");
+	COLUME(age, int);
 };
 
 void testColume()
 {
 	UserModel user;
+	user._id = "12345678-1234-4321-8998";
 	user.name = "jack";
 	user.age = 18;
 	int age = user.age;
@@ -605,20 +610,56 @@ void testColume()
 	ss = "13579";
 	cstring cstr = ss;
 
-	Condition* cond = *(*user.name.query() == "mike") 
-		&& *(
-			*(*(*user.age.query() > 1) && *(*user.age.query() <= 100))
-			 || 
-			*(*user.age.query() >= 200)
+	ConditionWrapper cond = (user.name.query() == "mike") || (user.name.query() == "mike3");
+	cond = (user.name.query() == "mike") 
+		&& (
+		  ((user.age.query() > 1) && (user.age.query() <= 100))
+		   ||
+		  (user.age.query() >= 200 && user.age.query() != 300.8)
 		);
 	String sql = cond->toSQL();
-	printf("toSQL: %s\n", sql.c_str());
-	delete cond;
+	String expect = "((`name` = 'mike')"\
+		" and (((`age` > 1) and (`age` <= 100)) or ((`age` >= 200) and (`age` != 300.800000))))";
+	printf("toSQL (expected equal: %d): %s\n", expect == sql, sql.c_str());
+
+	//TODO: query = user.query(user.name).filter(user.sex == "male");
+	brpc::DbConnection db;
+	brpc::Session session(&db);
+
+	cstring fields[] = {user.name.fieldName(), user.age.fieldName()};
+	size_t len = sizeof(fields) / sizeof(cstring);
+	sql = session.query<UserModel>(fields, len).toSQL();
+	sql = session.query<UserModel>().toSQL();
+	sql = session.query<UserModel>()
+		.filter(user.name.query() == "mike")
+		.toSQL();
+	printf("query.toSQL: %s\n", sql.c_str());
+
+	// test session
+	session.add(&user);
+
+	user.age = 19;
+	session.update(&user);
+
+	auto rs = session.query<UserModel>()
+		.query(user.name)
+		.query(user.age)
+		.filterById(user)
+		.filter(user.age)
+		.all();
+
+	session.remove(&user);
+
+	try {
+		session.update(&user);
+	} catch (Exception& e) {
+		e.printException();
+	}
 }
 
-int main2(int argc, char* argv[])
+int main(int argc, char* argv[])
 {
-	//_CrtSetBreakAlloc(637);
+	_CrtSetBreakAlloc(249);
 	cstring s1=CODE2STRING(COLUME(varchar<32>, name));
 	cstring s2=CODE2STRING(CLS_PF_OF_ARGS(0));
 

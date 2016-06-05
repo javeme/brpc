@@ -49,7 +49,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)\include\bLib;$(ProjectDir)\src\util;$(ProjectDir)\src\type;$(ProjectDir)\src\fun;$(ProjectDir)\src\serializer;$(ProjectDir)\src\serializer\json;$(ProjectDir)\src\serializer\json\jsoncpp;$(ProjectDir)\src\serializer\xml;$(ProjectDir)\src\serializer\xml\parser;$(ProjectDir)\src\serializer\binary;$(ProjectDir)\src\auth;$(ProjectDir)\src\rpc;$(ProjectDir)\src\rpc\server;$(ProjectDir)\src\rpc\client;$(ProjectDir)\src\rpc\p2p;$(ProjectDir)\src\rpc\amqp;$(ProjectDir)\src\rpc\trans;$(ProjectDir)\src\rpc\trans\jmtp;$(ProjectDir)\src\rpc\trans\http</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)\include\bLib;$(ProjectDir)\src;$(ProjectDir)\src\util;$(ProjectDir)\src\type;$(ProjectDir)\src\orm;$(ProjectDir)\src\fun;$(ProjectDir)\src\serializer;$(ProjectDir)\src\serializer\json;$(ProjectDir)\src\serializer\json\jsoncpp;$(ProjectDir)\src\serializer\xml;$(ProjectDir)\src\serializer\xml\parser;$(ProjectDir)\src\serializer\binary;$(ProjectDir)\src\auth;$(ProjectDir)\src\rpc;$(ProjectDir)\src\rpc\server;$(ProjectDir)\src\rpc\client;$(ProjectDir)\src\rpc\p2p;$(ProjectDir)\src\rpc\amqp;$(ProjectDir)\src\rpc\trans;$(ProjectDir)\src\rpc\trans\jmtp;$(ProjectDir)\src\rpc\trans\http</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -65,7 +65,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)\include\bLib;$(ProjectDir)\src\util;$(ProjectDir)\src\type;$(ProjectDir)\src\fun;$(ProjectDir)\src\serializer;$(ProjectDir)\src\serializer\json;$(ProjectDir)\src\serializer\json\jsoncpp;$(ProjectDir)\src\serializer\xml;$(ProjectDir)\src\serializer\xml\parser;$(ProjectDir)\src\serializer\binary;$(ProjectDir)\src\auth;$(ProjectDir)\src\rpc;$(ProjectDir)\src\rpc\server;$(ProjectDir)\src\rpc\client;$(ProjectDir)\src\rpc\p2p;$(ProjectDir)\src\rpc\amqp;$(ProjectDir)\src\rpc\trans;$(ProjectDir)\src\rpc\trans\jmtp;$(ProjectDir)\src\rpc\trans\http</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)\include\bLib;$(ProjectDir)\src;$(ProjectDir)\src\util;$(ProjectDir)\src\type;$(ProjectDir)\src\orm;$(ProjectDir)\src\fun;$(ProjectDir)\src\serializer;$(ProjectDir)\src\serializer\json;$(ProjectDir)\src\serializer\json\jsoncpp;$(ProjectDir)\src\serializer\xml;$(ProjectDir)\src\serializer\xml\parser;$(ProjectDir)\src\serializer\binary;$(ProjectDir)\src\auth;$(ProjectDir)\src\rpc;$(ProjectDir)\src\rpc\server;$(ProjectDir)\src\rpc\client;$(ProjectDir)\src\rpc\p2p;$(ProjectDir)\src\rpc\amqp;$(ProjectDir)\src\rpc\trans;$(ProjectDir)\src\rpc\trans\jmtp;$(ProjectDir)\src\rpc\trans\http</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -89,6 +89,13 @@
     <ClInclude Include="src\fun\FunctionWrapper.h" />
     <ClInclude Include="src\fun\AnyFunction.h" />
     <ClInclude Include="src\fun\TemplateFunction.h" />
+    <ClInclude Include="src\orm\Colume.h" />
+    <ClInclude Include="src\orm\Condition.h" />
+    <ClInclude Include="src\orm\Connection.h" />
+    <ClInclude Include="src\orm\CURD.h" />
+    <ClInclude Include="src\orm\Query.h" />
+    <ClInclude Include="src\orm\Session.h" />
+    <ClInclude Include="src\orm\SqlExpression.h" />
     <ClInclude Include="src\rpc\amqp\AmqpRpcConnection.h" />
     <ClInclude Include="src\rpc\client\RpcClient.h" />
     <ClInclude Include="src\rpc\p2p\P2pRpcConnAcceptor.h" />
@@ -128,7 +135,6 @@
     <ClInclude Include="src\serializer\xml\parser\XmlReader.h" />
     <ClInclude Include="src\serializer\xml\parser\XmlParseException.h" />
     <ClInclude Include="src\serializer\xml\XmlSerializer.h" />
-    <ClInclude Include="src\type\Colume.h" />
     <ClInclude Include="src\type\Number.h" />
     <ClInclude Include="src\type\ObjectList.h" />
     <ClInclude Include="src\type\ObjectMap.h" />
@@ -147,6 +153,11 @@
     <ClCompile Include="src\auth\AuthException.cpp" />
     <ClCompile Include="src\auth\DefaultAuthChecker.cpp" />
     <ClCompile Include="src\fun\FuncDispatcher.cpp" />
+    <ClCompile Include="src\orm\Colume.cpp" />
+    <ClCompile Include="src\orm\Condition.cpp" />
+    <ClCompile Include="src\orm\Query.cpp" />
+    <ClCompile Include="src\orm\Session.cpp" />
+    <ClCompile Include="src\orm\SqlExpression.cpp" />
     <ClCompile Include="src\rpc\client\RpcClient.cpp" />
     <ClCompile Include="src\rpc\p2p\P2pRpcConnAcceptor.cpp" />
     <ClCompile Include="src\rpc\RpcConnection.cpp" />
@@ -176,7 +187,6 @@
     <ClCompile Include="src\serializer\xml\parser\XmlReader.cpp" />
     <ClCompile Include="src\serializer\xml\parser\XmlParseException.cpp" />
     <ClCompile Include="src\serializer\xml\XmlSerializer.cpp" />
-    <ClCompile Include="src\type\Colume.cpp" />
     <ClCompile Include="src\type\ObjectList.cpp" />
     <ClCompile Include="src\type\ObjectMap.cpp" />
     <ClCompile Include="src\util\BRpcUtil.cpp" />

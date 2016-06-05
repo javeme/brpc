@@ -22,44 +22,90 @@ protected:
 
 
 template<typename T> 
-class BLUEMEILIB_TEMPLATE ScopePointer : public Object
+class BLUEMEILIB_TEMPLATE Pointer : public Object
 {
 public:
-	ScopePointer(T* pObj=null)
-	{
-		targetObj = pObj;
+	Pointer(T* target=null) : m_target(target) {}
+	Pointer(const Pointer& other) : m_target(other.m_target) {}
+
+public:
+	virtual bool operator==(T* target) const {
+		return this->m_target == target;
 	}
+
+	virtual bool operator!=(T* target) const {
+		return this->m_target != target;
+	}
+
+	virtual bool operator==(const Pointer& other) const {
+		return m_target == other.m_target;
+	}
+
+	virtual bool operator!=(const Pointer& other) const {
+		return m_target != other.m_target;
+	}
+
+	operator T* () const {
+		return m_target;
+	}
+
+	T* operator->() const {
+		return m_target;
+	}
+
+	T* detach() {
+		T* tmp = m_target;
+		m_target = null;
+		return tmp;
+	}
+
+protected:
+	T* m_target;
+};
+
+
+//Wrapper for PointerReference
+template<typename T> 
+class BLUEMEILIB_TEMPLATE RefPointer : public Pointer<T>
+{
+public:
+	RefPointer(T* target) : Pointer(target) {
+		checkNullPtr(m_target);
+		m_target->attach();
+	}
+
+	RefPointer(const RefPointer& other) : Pointer(other) {
+		checkNullPtr(m_target);
+		m_target->attach();
+	}
+
+	virtual ~RefPointer() {
+		m_target->disattach();
+	}
+
+	RefPointer& operator=(const RefPointer& other) {
+		m_target->disattach();
+		m_target = other.m_target;
+		m_target->attach();
+		return *this;
+	}
+};
+
+
+template<typename T> 
+class BLUEMEILIB_TEMPLATE ScopePointer : public Pointer<T>
+{
+public:
+	ScopePointer(T* target=null) : Pointer(target) {}
 		
 	virtual ~ScopePointer(void)
 	{
-		delete targetObj;
+		delete m_target;
 	}
 
 private:
 	ScopePointer(const ScopePointer& other);
 	ScopePointer& operator = (const ScopePointer& other) const;
-
-public:
-	int operator==(T* p) const {
-		return this->targetObj == p;
-	}
-
-	operator T* () const {
-		return targetObj;
-	}
-
-	T* operator->() const {
-		return targetObj;
-	}
-
-	T* detach() {
-		T* tmp = targetObj;
-		targetObj = null;
-		return tmp;
-	}
-
-protected:
-	T* targetObj;
 };
 
 }//end of namespace bluemei

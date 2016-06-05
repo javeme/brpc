@@ -26,7 +26,8 @@ public:
 	virtual Object* clone()const; 
 	virtual const Class* getThisClass() const; 
 	virtual void setAttribute(cstring name, Object* val); 
-	virtual Object* getAttribute(cstring name);
+	virtual Object* getAttribute(cstring name) const;
+	virtual const void* getAttributeAddr(cstring name) const;
 public:
 	Object();
 	virtual ~Object();

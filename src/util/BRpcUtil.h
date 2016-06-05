@@ -35,13 +35,16 @@ protected:
 };
 
 
+/////////////////////////////////////////////////////////////
+// tow strings are the same value
 static bool streq(cstring str1, cstring str2)
 {
 	return strcmp(str1, str2) == 0;
 }
 
 
-//Object <==> ObjectMap相互转换
+/////////////////////////////////////////////////////////////
+// Object <==> ObjectMap相互转换
 struct MapObjectConverter
 {
 	static Object* object2map(Object* obj);
@@ -89,108 +92,6 @@ struct MapObjectHelper<Type, false>
 	{
 		return throwConversionException<Object*, Type>();
 	}
-};
-
-
-template<typename Type, typename bool>
-struct TypeObjectHelper;
-
-template<typename Type>
-struct TypeObjectHelper<Type, true>
-{
-	static bool deletePtr(Type& ptr)
-	{
-		delete ptr;
-		ptr = null;
-		return true;
-	}
-	static Type setNull(Type& ptr)
-	{
-		Type val = ptr;
-		ptr = null;
-		return val;
-	}
-};
-
-template<typename Type>
-struct TypeObjectHelper<SmartPtr<Type>, true>
-{
-	static bool deletePtr(SmartPtr<Type>& ptr)
-	{
-		ptr = null;
-		return false;
-	}
-	static SmartPtr<Type> setNull(SmartPtr<Type>& ptr)
-	{
-		SmartPtr<Type> val = ptr;
-		ptr = null;
-		return val;
-	}
-};
-
-template<typename Type>
-struct TypeObjectHelper<Type, false>
-{
-	static bool deletePtr(Type& ptr)
-	{
-		return false;
-	}
-	static Type setNull(Type& ptr)
-	{
-		return ptr;
-	}
-};
-
-template <typename Type>
-class TypeObject : public Object
-{
-public:
-	TypeObject(const Type& val=Type(), bool dontDelete=false)
-		: m_val(val), m_dontDelete(dontDelete) {
-	}
-
-	~TypeObject() {
-		if(!this->m_dontDelete)
-			deletePtr();
-	}
-
-	TypeObject(TypeObject&& other) {
-		*this = std::move(other);
-	}
-
-	TypeObject& operator=(TypeObject&& other) { 
-		this->m_val = other.detach();
-		this->m_dontDelete = other.m_dontDelete;
-		return *this; 
-	}
-
-public:
-	operator Type () const {
-		return m_val;
-	}
-
-	operator Type& () {
-		return m_val;
-	}
-
-	Type detach() {
-		const bool IS_PTR = bluemei::is_convertible<Type, void*>::value;
-		return TypeObjectHelper<Type, IS_PTR>::setNull(m_val);
-	}
-
-protected:
-	void deletePtr() {
-		const bool IS_PTR = bluemei::is_convertible<Type, void*>::value;
-		(void)TypeObjectHelper<Type, IS_PTR>::deletePtr(m_val);
-	}
-
-private:
-	TypeObject(const TypeObject& other);
-	TypeObject& operator = (const TypeObject& other) const;
-
-protected:
-	Type m_val;
-	bool m_dontDelete;
 };
 
 
@@ -254,6 +155,112 @@ inline Type mapToObject(Object* map)
 }
 
 
+/////////////////////////////////////////////////////////////
+// TypeObjectHelper for TypeObject
+template<typename Type, typename bool>
+struct TypeObjectHelper;
+
+template<typename Type>
+struct TypeObjectHelper<Type, true>
+{
+	static bool deletePtr(Type& ptr)
+	{
+		delete ptr;
+		ptr = null;
+		return true;
+	}
+	static Type setNull(Type& ptr)
+	{
+		Type val = ptr;
+		ptr = null;
+		return val;
+	}
+};
+
+template<typename Type>
+struct TypeObjectHelper<SmartPtr<Type>, true>
+{
+	static bool deletePtr(SmartPtr<Type>& ptr)
+	{
+		ptr = null;
+		return false;
+	}
+	static SmartPtr<Type> setNull(SmartPtr<Type>& ptr)
+	{
+		SmartPtr<Type> val = ptr;
+		ptr = null;
+		return val;
+	}
+};
+
+template<typename Type>
+struct TypeObjectHelper<Type, false>
+{
+	static bool deletePtr(Type& ptr)
+	{
+		return false;
+	}
+	static Type setNull(Type& ptr)
+	{
+		return ptr;
+	}
+};
+
+// for auto release type ptr
+template <typename Type>
+class TypeObject : public Object
+{
+public:
+	TypeObject(const Type& val=Type(), bool dontDelete=false)
+		: m_val(val), m_dontDelete(dontDelete) {
+	}
+
+	~TypeObject() {
+		if(!this->m_dontDelete)
+			deletePtr();
+	}
+
+	TypeObject(TypeObject&& other) {
+		*this = std::move(other);
+	}
+
+	TypeObject& operator=(TypeObject&& other) { 
+		this->m_val = other.detach();
+		this->m_dontDelete = other.m_dontDelete;
+		return *this; 
+	}
+
+public:
+	operator Type () const {
+		return m_val;
+	}
+
+	operator Type& () {
+		return m_val;
+	}
+
+	Type detach() {
+		const bool IS_PTR = bluemei::is_convertible<Type, void*>::value;
+		return TypeObjectHelper<Type, IS_PTR>::setNull(m_val);
+	}
+
+protected:
+	void deletePtr() {
+		const bool IS_PTR = bluemei::is_convertible<Type, void*>::value;
+		(void)TypeObjectHelper<Type, IS_PTR>::deletePtr(m_val);
+	}
+
+private:
+	TypeObject(const TypeObject& other);
+	TypeObject& operator = (const TypeObject& other) const;
+
+protected:
+	Type m_val;
+	bool m_dontDelete;
+};
+
+
+// arg object to type object
 template <typename Type>
 inline TypeObject<Type> methodArg(Object* obj)
 {
@@ -272,6 +279,8 @@ inline TypeObject<Type> methodArg(Object* obj)
 }
 
 
+/////////////////////////////////////////////////////////////
+// Match args
 enum MatchLevel{ LEVEL_NOT_MATCHED, LEVEL_CAN_CONVERT, LEVEL_MATCHED };
 template <typename Type>
 inline MatchLevel matchLevel(Object* obj)
@@ -298,18 +307,24 @@ inline MatchLevel matchLevel(Object* obj)
 }
 
 
-template <typename T>
-struct Converter<SmartPtr<T>>
-{
-	static inline SmartPtr<T> valueOf(Object* obj)
-	{
-		return brpc::valueOf<T*>(obj);
-	}
+/////////////////////////////////////////////////////////////
+// string_caster
+template <typename Type, typename bool>
+struct string_caster;
 
-	static inline Object* toObject(SmartPtr<T> val)
-	{
-		T* ptr = (T*)val;
-		return brpc::toObject(ptr);
+template <typename Type>
+struct string_caster<Type, true>
+{
+	static String toString(const Type& val){
+		return String::format("'%s'", String(val).c_str());
+	}
+};
+
+template <typename Type>
+struct string_caster<Type, false>
+{
+	static String toString(const Type& val){
+		return Value2String<Type>(val);;
 	}
 };
 
