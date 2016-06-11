@@ -2,6 +2,8 @@
 #include "DataPackage.h"
 #include "RpcException.h"
 #include "RpcDataHookHandler.h"
+#include "Url.h"
+
 
 namespace brpc{
 
@@ -65,46 +67,6 @@ protected:
 	String m_idWaitData;
 	SyncLock m_waitLock;
 	unsigned int timeout;
-};
-
-class Url : public Object
-{
-public:
-	Url(const String& url="");
-	virtual ~Url() {}
-	
-public:
-	virtual String toString()const { return url; }
-
-	String getProtocol(const String& deft) const { 
-		if(protocol.empty())
-			return deft;
-		return protocol; 
-	}
-	String getIp(const String& deft="127.0.0.1") const { 
-		if(ip.empty())
-			return deft;
-		return ip; 
-	}
-	String getPort(const String& deft) const { 
-		if(port.empty())
-			return deft;
-		return port; 
-	}
-	String getPath(const String& deft="") const { 
-		if(path.empty())
-			return deft;
-		return path; 
-	}
-protected:
-	virtual void parseUrl();
-protected:
-	String url;
-
-	String protocol;
-	String ip;
-	String port;
-	String path;
 };
 
 }//end of namespace brpc

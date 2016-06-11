@@ -53,7 +53,7 @@ public:
 	virtual bool endWith(const String& substr) const;
 	virtual String trim(int part=TRIM_BOTH) const;
 	virtual String replace(const String& strNeedReplaced, const String& strReplace) const;
-	virtual ArrayList<String> splitWith(const String& separator) const;
+	virtual ArrayList<String> splitWith(const String& separator, unsigned int max=-1) const;
 	virtual String join(const ArrayList<String>& list, unsigned int from=0, unsigned int to=-1) const;
 	virtual String substring(unsigned int start ,unsigned int sublen) const;
 	virtual String substring(unsigned int start) const;

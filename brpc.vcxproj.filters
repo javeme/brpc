@@ -73,6 +73,12 @@
     <Filter Include="src\orm">
       <UniqueIdentifier>{7bc99e9c-8e99-458a-a127-fe3e601cb4c5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\orm\drivers">
+      <UniqueIdentifier>{f43095b0-418b-4d02-8551-6f545d50ac45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\orm\drivers\mysql">
+      <UniqueIdentifier>{eaa69fe4-55bd-4e57-ab94-e0f68bfb1c51}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -273,11 +279,29 @@
     <ClInclude Include="src\orm\SqlExpression.h">
       <Filter>src\orm</Filter>
     </ClInclude>
-    <ClInclude Include="src\orm\CURD.h">
+    <ClInclude Include="src\orm\Functions.h">
+      <Filter>src\orm</Filter>
+    </ClInclude>
+    <ClInclude Include="src\orm\Driver.h">
       <Filter>src\orm</Filter>
     </ClInclude>
     <ClInclude Include="src\orm\Connection.h">
       <Filter>src\orm</Filter>
+    </ClInclude>
+    <ClInclude Include="src\orm\Actions.h">
+      <Filter>src\orm</Filter>
+    </ClInclude>
+    <ClInclude Include="src\orm\drivers\mysql\MySQLConnection.h">
+      <Filter>src\orm\drivers\mysql</Filter>
+    </ClInclude>
+    <ClInclude Include="src\orm\drivers\mysql\MySQLTool.h">
+      <Filter>src\orm\drivers\mysql</Filter>
+    </ClInclude>
+    <ClInclude Include="src\orm\Types.h">
+      <Filter>src\orm</Filter>
+    </ClInclude>
+    <ClInclude Include="src\util\Url.h">
+      <Filter>src\util</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -415,6 +439,18 @@
     </ClCompile>
     <ClCompile Include="src\orm\SqlExpression.cpp">
       <Filter>src\orm</Filter>
+    </ClCompile>
+    <ClCompile Include="src\orm\Functions.cpp">
+      <Filter>src\orm</Filter>
+    </ClCompile>
+    <ClCompile Include="src\orm\drivers\mysql\MySQLConnection.cpp">
+      <Filter>src\orm\drivers\mysql</Filter>
+    </ClCompile>
+    <ClCompile Include="src\orm\Driver.cpp">
+      <Filter>src\orm</Filter>
+    </ClCompile>
+    <ClCompile Include="src\util\Url.cpp">
+      <Filter>src\util</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

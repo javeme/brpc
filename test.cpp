@@ -586,6 +586,7 @@ void testJson()
 
 #include "Colume.h"
 #include "orm/Session.h"
+#include "orm/Functions.h"
 
 class UserModel : public Model
 {
@@ -594,14 +595,24 @@ public:
 public:
 	TABLE(users);
 	ID(varchar<32>, "_id");
-	COLUME3(name, varchar<20>, "user_name");
+	COLUME_N(name, varchar<32>, "user_name");
 	COLUME(age, int);
+
+	FUNCTION_V(count, lint);
+	FUNCTION_C(avg, age);
+
+public:
+	String toString() const {
+		#define str(c) c.value().value()
+		return String::format("User(id=%s, name=%s, age=%d, count=%d)",
+			str(_id), str(name), (int)age, (int)count);
+	}
 };
 
-void testColume()
+void testDbUser()
 {
 	UserModel user;
-	user._id = "12345678-1234-4321-8998";
+	user._id = Util::uuid4().c_str();
 	user.name = "jack";
 	user.age = 18;
 	int age = user.age;
@@ -610,6 +621,7 @@ void testColume()
 	ss = "13579";
 	cstring cstr = ss;
 
+	// Condition
 	ConditionWrapper cond = (user.name.query() == "mike") || (user.name.query() == "mike3");
 	cond = (user.name.query() == "mike") 
 		&& (
@@ -618,14 +630,22 @@ void testColume()
 		  (user.age.query() >= 200 && user.age.query() != 300.8)
 		);
 	String sql = cond->toSQL();
-	String expect = "((`name` = 'mike')"\
+	String expect = "((`user_name` = 'mike')"\
 		" and (((`age` > 1) and (`age` <= 100)) or ((`age` >= 200) and (`age` != 300.800000))))";
-	printf("toSQL (expected equal: %d): %s\n", expect == sql, sql.c_str());
+	assert(expect == sql);
+	printf("toSQL (Condition): %s\n", sql.c_str());
 
+	// null
+	cond = user.name.query() == nullptr && !(user.name.query() != nullptr);
+	sql = cond->toSQL();
+	printf("toSQL (test null): %s\n\n",  sql.c_str());
+
+	// session
 	//TODO: query = user.query(user.name).filter(user.sex == "male");
-	brpc::DbConnection db;
+	brpc::DatabaseConnection db("mysql://127.0.0.1:3306/test"
+		"?username=root&password=0315&charset=utf8");
 	brpc::Session session(&db);
-
+	
 	cstring fields[] = {user.name.fieldName(), user.age.fieldName()};
 	size_t len = sizeof(fields) / sizeof(cstring);
 	sql = session.query<UserModel>(fields, len).toSQL();
@@ -633,23 +653,47 @@ void testColume()
 	sql = session.query<UserModel>()
 		.filter(user.name.query() == "mike")
 		.toSQL();
-	printf("query.toSQL: %s\n", sql.c_str());
+	printf("session.query.toSQL: %s\n\n", sql.c_str());
 
 	// test session
+	session.begin();
 	session.add(&user);
+	session.commit(); // default, the mysql will auto commit!
+
+	session.begin();
+	user.age = 17;
+	session.update(&user);
+	session.rollback();
 
 	user.age = 19;
 	session.update(&user);
 
 	auto rs = session.query<UserModel>()
+		.filterById(user)
+		.all();
+	printf("query.Result(filterById): %s\n\n", rs->toString().c_str());
+
+	rs = session.query<UserModel>()
 		.query(user.name)
 		.query(user.age)
-		.filterById(user)
 		.filter(user.age)
+		.orderBy(user.id())
+		.limit(10)
+		.offset(3)
 		.all();
+	printf("query.Result(limit): %s\n\n", rs->toString().c_str());
+
+	rs = session.query<UserModel>()
+		.query(user.age)
+		.query(user.count)
+		.filter(user.age.query() > 18)
+		.groupBy(user.age)
+		.having(user.count.group() > 1)
+		.all();
+	printf("query.Result(group): %s\n\n", rs->toString().c_str());
 
 	session.remove(&user);
-
+	
 	try {
 		session.update(&user);
 	} catch (Exception& e) {
@@ -657,15 +701,70 @@ void testColume()
 	}
 }
 
+
+class TestTable : public Model
+{
+public:
+	DECLARE_DCLASS(TestTable);
+public:
+	TABLE(test_table);
+	ID(varchar<32>, "_id");
+	COLUME8(uuid, varchar<32>, "uuid", true, true, true, "0", true);
+	COLUME_N(name, varchar<32>, "user_name");
+	COLUME_S(password);
+	COLUME(level, int);
+	COLUME(sex, bool);
+
+	FUNCTION_V(count, lint);
+};
+
+void testCreateDrop()
+{
+	brpc::DatabaseConnection db("mysql://127.0.0.1:3306/test"
+		"?username=root&password=0315&charset=utf8");
+	brpc::Session session(&db);
+
+	//database
+	bool success = true;
+	success = session.createDatabase("db_2");
+	assert(success);
+
+	success = session.dropDatabase("db_2");
+	assert(success);
+
+	//table
+	success = session.createTable(
+		"table_test_2(id int not null auto_increment primary key,"
+		"name varchar(100) not null)");
+	assert(success);
+
+	success = session.dropTable("table_test_2");
+	assert(success);
+
+	//table(auto)
+	success = session.createTable<TestTable>();
+	assert(success);
+	success = session.dropTable<TestTable>();
+	assert(success);
+}
+
 int main(int argc, char* argv[])
 {
 	_CrtSetBreakAlloc(249);
-	cstring s1=CODE2STRING(COLUME(varchar<32>, name));
-	cstring s2=CODE2STRING(CLS_PF_OF_ARGS(0));
+	cstring s0=CODE2STRING(CLS_PF_OF_ARGS(0));
+	cstring s1=CODE2STRING(COLUME(name, varchar<32>));
+	cstring s2=CODE2STRING(FUNCTION_C(avg, age));
+	
+	BRpcUtil::setBrpcDebug(true);
 
-	testDispatcher();
-	testJson();
-	testColume();
+	try {
+		testDispatcher();
+		testJson();
+		testCreateDrop();
+		testDbUser();
+	} catch (Exception& e) {
+		e.printException();
+	}
 
 	System::instance().destroy();
 

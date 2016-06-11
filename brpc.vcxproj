@@ -54,7 +54,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(ProjectDir)\include\bLib\bluemeiLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(TargetDir)\bluemeiLib.lib;libmysql.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -72,7 +73,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>$(ProjectDir)\include\bLib\bluemeiLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(TargetDir)\bluemeiLib.lib;libmysql.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)\src;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -92,10 +94,15 @@
     <ClInclude Include="src\orm\Colume.h" />
     <ClInclude Include="src\orm\Condition.h" />
     <ClInclude Include="src\orm\Connection.h" />
-    <ClInclude Include="src\orm\CURD.h" />
+    <ClInclude Include="src\orm\Driver.h" />
+    <ClInclude Include="src\orm\Actions.h" />
+    <ClInclude Include="src\orm\drivers\mysql\MySQLConnection.h" />
+    <ClInclude Include="src\orm\drivers\mysql\MySQLTool.h" />
+    <ClInclude Include="src\orm\Functions.h" />
     <ClInclude Include="src\orm\Query.h" />
     <ClInclude Include="src\orm\Session.h" />
     <ClInclude Include="src\orm\SqlExpression.h" />
+    <ClInclude Include="src\orm\Types.h" />
     <ClInclude Include="src\rpc\amqp\AmqpRpcConnection.h" />
     <ClInclude Include="src\rpc\client\RpcClient.h" />
     <ClInclude Include="src\rpc\p2p\P2pRpcConnAcceptor.h" />
@@ -144,6 +151,7 @@
     <ClInclude Include="src\type\TypeVisitor.h" />
     <ClInclude Include="src\util\BRpcUtil.h" />
     <ClInclude Include="src\util\RpcException.h" />
+    <ClInclude Include="src\util\Url.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -155,6 +163,9 @@
     <ClCompile Include="src\fun\FuncDispatcher.cpp" />
     <ClCompile Include="src\orm\Colume.cpp" />
     <ClCompile Include="src\orm\Condition.cpp" />
+    <ClCompile Include="src\orm\Driver.cpp" />
+    <ClCompile Include="src\orm\drivers\mysql\MySQLConnection.cpp" />
+    <ClCompile Include="src\orm\Functions.cpp" />
     <ClCompile Include="src\orm\Query.cpp" />
     <ClCompile Include="src\orm\Session.cpp" />
     <ClCompile Include="src\orm\SqlExpression.cpp" />
@@ -191,6 +202,7 @@
     <ClCompile Include="src\type\ObjectMap.cpp" />
     <ClCompile Include="src\util\BRpcUtil.cpp" />
     <ClCompile Include="src\util\RpcException.cpp" />
+    <ClCompile Include="src\util\Url.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

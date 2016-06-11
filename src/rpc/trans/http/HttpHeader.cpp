@@ -397,7 +397,7 @@ void HttpRequest::setParametersAsString(const String& paras)
 		String pair = list[i];
 		auto kv = pair.splitWith("=");
 		String k = CodeUtil::urlDecodeComponent(kv[0]);
-		String v = kv.size() > 0 ? CodeUtil::urlDecodeComponent(kv[1]) : "";
+		String v = kv.size() > 1 ? CodeUtil::urlDecodeComponent(kv[1]) : "";
 		setParameter(k, v);
 	}
 }

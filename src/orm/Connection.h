@@ -1,31 +1,61 @@
 #pragma once
 #include "blib.h"
+#include "Driver.h"
 
 
 namespace brpc{
 
+
 typedef class Connection : public Object
 {
 public:
-	virtual String query(const String& sql)
+	Connection(const String& connInfo)
 	{
-		printf(">>>> excute SQL(query): %s\n", sql.c_str());
-		// TODO: call driver
-		return "";
+		m_driverConnection = DriverConnection::loadDriver(connInfo);
+		checkNullPtr(m_driverConnection);
+
+		try {
+			m_driverConnection->open(connInfo);
+		} catch (...) {
+			delete m_driverConnection;
+			m_driverConnection = null;
+			throw;
+		}
+	}
+	virtual ~Connection()
+	{
+		try {
+			m_driverConnection->close();
+		} catch (Exception& e) {
+			Log::getLogger()->warn(e.toString());
+		}
+		delete m_driverConnection;
+	}
+public:
+	virtual ResultSet* query(cstring sql)
+	{
+		BRpcUtil::debug(">>>> excute SQL(query): %s\n", sql);
+		// call driver
+		return m_driverConnection->executeQuery(sql);
 	}
 
-	virtual int excute(const String& sql)
+	// return changed rows number
+	virtual int excute(cstring sql)
 	{
-		printf(">>>> excute SQL: %s\n", sql.c_str());
-		// TODO: call driver
-		return -1;
+		BRpcUtil::debug(">>>> excute SQL: %s\n", sql);
+		// call driver
+		return m_driverConnection->executeUpdate(sql);
 	}
 
-	virtual int excute(const CURD& curd)
+	virtual int excute(const Action& curd)
 	{
 		return excute(curd.toSQL());
 	}
-}DbConnection;
+
+private:
+	DriverConnection* m_driverConnection;
+
+} DatabaseConnection;
 
 
 }//end of namespace brpc

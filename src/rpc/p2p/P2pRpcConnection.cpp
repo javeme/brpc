@@ -40,7 +40,7 @@ void P2pRpcConnection::parseUrl(const String& url)
 
 	Url parser(url);
 	protocol = parser.getProtocol(protocol);
-	ip = parser.getIp(ip);
+	ip = parser.getHost(ip);
 	port = parser.getPort(port);
 }
 

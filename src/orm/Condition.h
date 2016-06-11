@@ -8,7 +8,7 @@ namespace brpc{
 class ConditionWrapper;
 
 
-class Condition : public SqlExpression, public PointerReference
+class Condition : public SQLExpression /*, public PointerReference*/
 {
 public:
 	Condition(){
@@ -17,10 +17,13 @@ public:
 	virtual ~Condition(){
 		//printf(">>>>>>>>>>>>>>>Condition Release!!!\n");
 	}
+	virtual String toString()const{
+		return SQLExpression::toString();
+	}
 public:
 	virtual ConditionWrapper operator ==(cstring val);
 	virtual ConditionWrapper operator !=(cstring val);
-
+	
 	virtual ConditionWrapper operator ==(int val);
 	virtual ConditionWrapper operator !=(int val);
 	virtual ConditionWrapper operator >(int val);
@@ -44,36 +47,27 @@ public:
 
 	virtual ConditionWrapper operator &&(const ConditionWrapper& other);
 	virtual ConditionWrapper operator ||(const ConditionWrapper& other);
+	virtual ConditionWrapper operator !();
 };
 
 class ConditionWrapper : public RefPointer<Condition>
 {
 public:
+	ConditionWrapper() : RefPointer(null) {}
 	ConditionWrapper(Condition* cond) : RefPointer(cond) {}
 
-	/*ConditionWrapper(const ConditionWrapper& other) : m_target(other.m_target) {
-		checkNullPtr(m_target);
-		//printf(">>>>>>>>>>>>>>>Condition CCCCCCCCCCCCCCCCCCCopy!!!\n");
-		m_target->attach();
+private:
+	bool operator==(const ConditionWrapper& other) const {
+		return (Condition*)*this == (Condition*)other;
 	}
 
-	virtual ~ConditionWrapper() {
-		m_target->disattach();
-	}
-
-	ConditionWrapper& operator=(const ConditionWrapper& other) {
-		m_target->disattach();
-		m_target = other.m_target;
-		m_target->attach();
-		return *this;
-	}*/
 public:
 	operator Condition& () const {
 		return *(Condition*)*this;
 	}
 	
 	virtual bool equals(const ConditionWrapper& other) const {
-		return (Condition*)*this == (Condition*)other;
+		return this->operator==(other);
 	}
 public:
 	virtual ConditionWrapper operator ==(cstring val) { return *m_target == val; }
@@ -93,12 +87,24 @@ public:
 	virtual ConditionWrapper operator <(double val) { return *m_target < val; }
 	virtual ConditionWrapper operator <=(double val) { return *m_target <= val; }
 
-	virtual ConditionWrapper operator ==(Condition* val) { return *m_target == val; }
-	virtual ConditionWrapper operator !=(Condition* val) { return *m_target != val; }
-	virtual ConditionWrapper operator >(Condition* val) { return *m_target > val; }
-	virtual ConditionWrapper operator >=(Condition* val) { return *m_target >= val; }
-	virtual ConditionWrapper operator <(Condition* val) { return *m_target < val; }
-	virtual ConditionWrapper operator <=(Condition* val) { return *m_target <= val; }
+	virtual ConditionWrapper operator ==(const ConditionWrapper& val) {
+		return *m_target == val;
+	}
+	virtual ConditionWrapper operator !=(const ConditionWrapper& val) {
+		return *m_target != val;
+	}
+	virtual ConditionWrapper operator >(const ConditionWrapper& val) {
+		return *m_target > val;
+	}
+	virtual ConditionWrapper operator >=(const ConditionWrapper& val) {
+		return *m_target >= val;
+	}
+	virtual ConditionWrapper operator <(const ConditionWrapper& val) {
+		return *m_target < val;
+	}
+	virtual ConditionWrapper operator <=(const ConditionWrapper& val) {
+		return *m_target <= val;
+	}
 
 	virtual ConditionWrapper operator &&(const ConditionWrapper& other) {
 		return *m_target && other;
@@ -106,11 +112,15 @@ public:
 	virtual ConditionWrapper operator ||(const ConditionWrapper& other) {
 		return *m_target || other;
 	}
+	virtual ConditionWrapper operator !() {
+		return !(*m_target);
+	}
 private:
 	//PointerReference<Condition> m_target;
 public:
 	const static ConditionWrapper NONE;
 };
+
 #define CW_NONE ConditionWrapper::NONE
 
 
@@ -150,6 +160,12 @@ private:
 	String m_value;
 };
 
+class NullCondition : public ValueCondition
+{
+public:
+	NullCondition() : ValueCondition("null") {}
+};
+
 class IntCondition : public Condition
 {
 public:
@@ -172,24 +188,46 @@ private:
 	double m_val;
 };
 
-class OperatorCondition : public Condition
+
+class UnaryOperatorCondition : public Condition
 {
 public:
-	OperatorCondition(const ConditionWrapper& left, const ConditionWrapper& right)
-		: m_left(left),  m_right(right){
-			//checkNullPtr(m_left);
-			//checkNullPtr(m_right);
+	UnaryOperatorCondition(const ConditionWrapper& val)
+		: m_value(val) {
+		//checkNullPtr(m_value);
 	}
-	virtual ~OperatorCondition() {
+	virtual ~UnaryOperatorCondition() {
+		//delete m_value;
+	}
+
+	virtual String toSQL() const {
+		return String::format("%s %s",
+			this->conditionOperator().c_str(),
+			this->m_value->toSQL().c_str());
+	}
+	virtual String conditionOperator() const = 0;
+protected:
+	ConditionWrapper m_value;
+};
+
+class BinOperatorCondition : public Condition
+{
+public:
+	BinOperatorCondition(const ConditionWrapper& left, const ConditionWrapper& right)
+		: m_left(left),  m_right(right){
+		//checkNullPtr(m_left);
+		//checkNullPtr(m_right);
+	}
+	virtual ~BinOperatorCondition() {
 		//delete m_left;
 		//delete m_right;
 	}
 
 	virtual String toSQL() const {
 		return String::format("(%s %s %s)",
-			m_left->toSQL().c_str(),
+			this->m_left->toSQL().c_str(),
 			this->conditionOperator().c_str(),
-			m_right->toSQL().c_str());
+			this->m_right->toSQL().c_str());
 	}
 	virtual String conditionOperator() const = 0;
 protected:
@@ -197,11 +235,11 @@ protected:
 	ConditionWrapper m_right;
 };
 
-class EqCondition : public OperatorCondition
+class EqCondition : public BinOperatorCondition
 {
 public:
 	EqCondition(const ConditionWrapper& left, const ConditionWrapper& right)
-		: OperatorCondition(left, right) {
+		: BinOperatorCondition(left, right) {
 	}
 
 	virtual String conditionOperator() const {
@@ -209,11 +247,11 @@ public:
 	}
 };
 
-class NeCondition : public OperatorCondition
+class NeCondition : public BinOperatorCondition
 {
 public:
 	NeCondition(const ConditionWrapper& left, const ConditionWrapper& right)
-		: OperatorCondition(left, right) {
+		: BinOperatorCondition(left, right) {
 	}
 
 	virtual String conditionOperator() const {
@@ -221,11 +259,11 @@ public:
 	}
 };
 
-class GtCondition : public OperatorCondition
+class GtCondition : public BinOperatorCondition
 {
 public:
 	GtCondition(const ConditionWrapper& left, const ConditionWrapper& right)
-		: OperatorCondition(left, right) {
+		: BinOperatorCondition(left, right) {
 	}
 
 	virtual String conditionOperator() const {
@@ -233,11 +271,11 @@ public:
 	}
 };
 
-class GeCondition : public OperatorCondition
+class GeCondition : public BinOperatorCondition
 {
 public:
 	GeCondition(const ConditionWrapper& left, const ConditionWrapper& right)
-		: OperatorCondition(left, right) {
+		: BinOperatorCondition(left, right) {
 	}
 
 	virtual String conditionOperator() const {
@@ -245,11 +283,11 @@ public:
 	}
 };
 
-class LtCondition : public OperatorCondition
+class LtCondition : public BinOperatorCondition
 {
 public:
 	LtCondition(const ConditionWrapper& left, const ConditionWrapper& right)
-		: OperatorCondition(left, right) {
+		: BinOperatorCondition(left, right) {
 	}
 
 	virtual String conditionOperator() const {
@@ -257,11 +295,11 @@ public:
 	}
 };
 
-class LeCondition : public OperatorCondition
+class LeCondition : public BinOperatorCondition
 {
 public:
 	LeCondition(const ConditionWrapper& left, const ConditionWrapper& right)
-		: OperatorCondition(left, right) {
+		: BinOperatorCondition(left, right) {
 	}
 
 	virtual String conditionOperator() const {
@@ -269,11 +307,23 @@ public:
 	}
 };
 
-class AndCondition : public OperatorCondition
+class IsCondition : public BinOperatorCondition
+{
+public:
+	IsCondition(const ConditionWrapper& left, const ConditionWrapper& right)
+		: BinOperatorCondition(left, right) {
+	}
+
+	virtual String conditionOperator() const {
+		return "is";
+	}
+};
+
+class AndCondition : public BinOperatorCondition
 {
 public:
 	AndCondition(const ConditionWrapper& left, const ConditionWrapper& right)
-		: OperatorCondition(left, right) {
+		: BinOperatorCondition(left, right) {
 	}
 
 	virtual String conditionOperator() const {
@@ -281,11 +331,11 @@ public:
 	}
 };
 
-class OrCondition : public OperatorCondition
+class OrCondition : public BinOperatorCondition
 {
 public:
 	OrCondition(const ConditionWrapper& left, const ConditionWrapper& right)
-		: OperatorCondition(left, right) {
+		: BinOperatorCondition(left, right) {
 	}
 
 	virtual String conditionOperator() const {
@@ -293,5 +343,62 @@ public:
 	}
 };
 
+class NotCondition : public UnaryOperatorCondition
+{
+public:
+	NotCondition(const ConditionWrapper& val): UnaryOperatorCondition(val) {}
+
+	virtual String conditionOperator() const {
+		return "not";
+	}
+};
+
+
+// AsCondition: actually this is not a condition!
+class AsCondition : public BinOperatorCondition
+{
+public:
+	AsCondition(const ConditionWrapper& left, const ConditionWrapper& right)
+		: BinOperatorCondition(left, right) {
+	}
+
+	virtual String toSQL() const {
+		return String::format("%s %s %s",
+			this->m_left->toSQL().c_str(),
+			this->conditionOperator().c_str(),
+			this->m_right->toSQL().c_str());
+	}
+
+	virtual String conditionOperator() const {
+		return "as";
+	}
+};
+
 
 }//end of namespace brpc
+
+
+namespace bluemei{
+
+using brpc::ConditionWrapper;
+using brpc::Condition;
+
+template <>
+struct dynamic_caster<ConditionWrapper, true>
+{
+	static ConditionWrapper toType(Object* obj){
+		checkNullPtr(obj);
+		if (dynamic_cast<Condition*>(obj))
+			return dynamic_cast<Condition*>(obj);
+		return throwConversionException<Object*, ConditionWrapper>();
+	}
+	static Object* toObject(ConditionWrapper val){
+		if (val.equals(null))
+			return null;
+		else if (dynamic_cast<Object*>((Condition*)val))
+			return dynamic_cast<Object*>((Condition*)val);
+		return throwConversionException<ConditionWrapper, Object*>();
+	}
+};
+
+}//end of namespace bluemei

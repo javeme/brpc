@@ -5,7 +5,7 @@
 
 namespace bluemei{
 
-class BLUEMEILIB_API PointerReference : public Object
+class BLUEMEILIB_API PointerReference : virtual public Object
 {
 public:
 	PointerReference(void);
@@ -70,23 +70,26 @@ class BLUEMEILIB_TEMPLATE RefPointer : public Pointer<T>
 {
 public:
 	RefPointer(T* target) : Pointer(target) {
-		checkNullPtr(m_target);
-		m_target->attach();
+		if(m_target != null)
+			m_target->attach();
 	}
 
 	RefPointer(const RefPointer& other) : Pointer(other) {
-		checkNullPtr(m_target);
-		m_target->attach();
+		if(m_target != null)
+			m_target->attach();
 	}
 
 	virtual ~RefPointer() {
-		m_target->disattach();
+		if(m_target != null)
+			m_target->disattach();
 	}
 
 	RefPointer& operator=(const RefPointer& other) {
-		m_target->disattach();
+		if(m_target != null)
+			m_target->disattach();
 		m_target = other.m_target;
-		m_target->attach();
+		if (m_target != null)
+			m_target->attach();
 		return *this;
 	}
 };

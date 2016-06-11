@@ -6,81 +6,181 @@
 namespace brpc{
 
 
-Query Query::query(cstring field)
+_QueryResult::~_QueryResult()
+{
+	for(unsigned int i = size()-1; i < size(); i--) {
+		Model* toDelete = null;
+		this->removeAt(i, toDelete);
+		delete toDelete;
+	}
+}
+
+
+Query::Query(Connection* conn,
+	const Class* tableClass,
+	const String& table,
+	const ArrayList<String>& fileds,
+	const ConditionWrapper& where/*=CW_NONE*/,	
+	const ArrayList<String>& groupBy,
+	const ConditionWrapper& having/*=CW_NONE*/,
+	const OrderBy& orderBy,
+	unsigned int limit,
+	unsigned int offset,
+	bool distinct)
+	: CURD(table), m_connection(conn), m_tableClass(tableClass),
+	m_expectedFileds(fileds), m_where(where),
+	m_groupBy(groupBy), m_having(having), m_orderBy(orderBy),
+	m_limit(limit), m_offset(offset), m_distinct(distinct)
+{
+	;
+}
+
+Query& Query::query(cstring field)
 {
 	if (m_expectedFileds.size() == 1 && m_expectedFileds[0].trim() == "*") {
-		ArrayList<String> fields;
-		fields.add(field);
-		return Query(table(), fields, m_condition, m_connection);
+		m_expectedFileds[0] = field;
 	}
 	else {
-		ArrayList<String> fields = m_expectedFileds;
-		fields.add(field);
-		return Query(table(), fields, m_condition, m_connection);
+		m_expectedFileds.add(field);
 	}
+	return *this;
 }
 
-brpc::Query Query::query(Colume& field)
+Query& Query::query(const Colume& field)
 {
-	return query(field.columeName());
+	return this->query(field.query()->toSQL());
 }
 
-Query Query::filter(const ConditionWrapper& condition)
+Query& Query::filter(const ConditionWrapper& condition)
 {
-	if (m_condition.equals(CW_NONE)) {
-		return Query(table(), m_expectedFileds, condition, m_connection);
+	if (m_where.equals(CW_NONE)) {
+		m_where = condition;
 	}
 	else {
-		return Query(table(), m_expectedFileds,
-			m_condition && condition, m_connection);
+		m_where = m_where && condition;
 	}
+	return *this;
 }
 
-Query Query::filter(Colume& field)
+Query& Query::filter(const Colume& field)
 {
-	return filter(field.query() == new ValueCondition(field.columeValue()));
+	return this->filter(field.query() == field.columeValue());
 }
 
-Query Query::filterById(Model& model)
+Query& Query::filterById(Model& model)
 {
-	return filter(model.id().query() == new ValueCondition(model.id().columeValue()));
+	return this->filter(model.id().query() == model.id().columeValue());
+}
+
+Query& Query::groupBy(cstring field)
+{
+	this->m_groupBy.add(field);
+	return *this;
+}
+
+Query& Query::groupBy(const Colume& field)
+{
+	return this->groupBy(field.query()->toSQL());
+}
+
+Query& Query::having(const ConditionWrapper& condition)
+{
+	this->m_having = condition;
+	return *this;
+}
+
+Query& Query::orderBy(cstring field, bool desc/*=false*/)
+{
+	this->m_orderBy.add(Pair<String, bool>(field, desc));
+	return *this;
+}
+
+Query& Query::orderBy(const Colume& field, bool desc/*=false*/)
+{
+	return this->orderBy(field.query()->toSQL(), desc);
+}
+
+Query& Query::limit(unsigned int num)
+{
+	this->m_limit = num;
+	return *this;
+}
+
+Query& Query::offset(unsigned int index)
+{
+	this->m_offset = index;
+	return *this;
+}
+
+Query& Query::distinct(bool yes/*=false*/)
+{
+	this->m_distinct = yes;
+	return *this;
 }
 
 String Query::toSQL() const
 {
 	if (m_expectedFileds.size() == 0)
-		throw SqlException("No fields to query");
+		throw SQLException("No fields to query");
 	bool selectAll = (m_expectedFileds[0].trim() == "*");
 
-	String condition = m_condition->toSQL();
-	StringBuilder sql(32 + condition.length());
+	String where = m_where->toSQL();
+	String having = m_having->toSQL();
+	StringBuilder sql(128 + where.length() + having.length());
 
 	//String::format("select %s from %s where %s", ...);
-	// select
+	// select *
 	sql.append("select ");
-	if (!selectAll)
-		sql.append("`");
-	sql.append(String("`,`").join(m_expectedFileds));
-	if (!selectAll)
-		sql.append("`");
+	if (m_distinct)
+		sql.append("distinct ");
+	sql.append(String(",").join(m_expectedFileds));
+	// from table
 	sql.append(" from ");
 	sql.append(table());
 	// where
-	if (!m_condition.equals(CW_NONE)) {
+	if (!m_where.equals(CW_NONE)) {
 		sql.append(" where ");
-		sql.append(condition);
+		sql.append(where);
 	}
-	// TODO: add group-by...
+	// group-by
+	if (m_groupBy.size() > 0) {
+		sql.append(" group by ");
+		sql.append(String(",").join(m_groupBy));
+	}
+	// having
+	if (!m_having.equals(CW_NONE)) {
+		sql.append(" having ");
+		sql.append(having);
+	}
+	// order by
+	for (size_t i=0; i<m_orderBy.size(); i++) {
+		sql.append(" order by ");
+		sql.append(m_orderBy[i].key);
+		sql.append(m_orderBy[i].value ? " desc " : "");
+	}
+
+	// limit
+	if (m_limit > 0) {
+		sql.append(" limit ");
+		sql.append((int)m_limit);
+
+	}
+	// offset
+	if (m_offset > 0) {
+		sql.append(" offset ");
+		sql.append((int)m_offset);
+
+	}
 	return sql.toString();
 }
 
-ArrayList<Model*> Query::all()
+QueryResult Query::all()
 {
 	checkNullPtr(m_connection);
-	ArrayList<Model*> rs;
-	String result = m_connection->query(this->toSQL());
-	// TODO parse result
-	return rs;
+	ScopePointer<ResultSet> result = m_connection->query(this->toSQL());
+	// parse result
+	return Model::fromDatabase(result, m_tableClass);
 }
+
 
 }//end of namespace brpc

@@ -5,7 +5,10 @@
 
 namespace brpc{
 
-class SqlExpression : public Object
+
+//class SqlExpression: use virtual inheritance due to Condition
+//#pragma warning(disable:4250) // 菱形继承时不明确的方法继承(通过子类显示重载toString解决)
+class SQLExpression : public PointerReference
 {
 public:
 	virtual String toString() const { return toSQL(); }
@@ -13,12 +16,12 @@ public:
 };
 
 
-class SqlException : public RpcException
+class SQLException : public RpcException
 {
 public:
-	SqlException(void) {}
-	SqlException(cstring str) : RpcException(str) {}
-	virtual ~SqlException(void) {}
+	SQLException(void) {}
+	SQLException(cstring str) : RpcException(str) {}
+	virtual ~SQLException(void) {}
 	String name() const {
 		return "SqlException";
 	}

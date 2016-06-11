@@ -10,12 +10,22 @@ const ConditionWrapper ConditionWrapper::NONE = new ValueCondition("<null>");
 // Condition ? string
 ConditionWrapper Condition::operator==(cstring val)
 {
-	return new EqCondition(this, new StringCondition(val));
+	if (val == null) {
+		return new IsCondition(this, new NullCondition());
+	}
+	else {
+		return new EqCondition(this, new StringCondition(val));
+	}
 }
 
 ConditionWrapper Condition::operator!=(cstring val)
 {
-	return new NeCondition(this, new StringCondition(val));
+	if (val == null) {
+		return new IsCondition(this, new NotCondition(new NullCondition()));
+	}
+	else {
+		return new NeCondition(this, new StringCondition(val));
+	}
 }
 
 // Condition ? int
@@ -111,16 +121,22 @@ ConditionWrapper Condition::operator<=(const ConditionWrapper& val)
 	return new LeCondition(this, val);
 }
 
-// &&
+// and
 ConditionWrapper Condition::operator&&(const ConditionWrapper& other)
 {
 	return new AndCondition(this, other);
 }
 
-// ||
+// or
 ConditionWrapper Condition::operator||(const ConditionWrapper& other)
 {
 	return new OrCondition(this, other);
+}
+
+// not
+ConditionWrapper Condition::operator!()
+{
+	return new NotCondition(this);
 }
 
 }//end of namespace brpc

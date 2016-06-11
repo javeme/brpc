@@ -1,32 +1,11 @@
 #pragma once
 #include "blib.h"
 #include "Condition.h"
+#include "Types.h"
 #include "BRpcUtil.h"
 
 
 namespace brpc{
-
-/////////////////////////////////////////////////////////////////
-//varchar
-template <int SIZE=32>
-struct varchar{
-	char chars[SIZE+1];
-
-	varchar(cstring str="") {
-		memset(chars, 0, sizeof(chars));
-		strncpy_s(chars, str, min(SIZE, strlen(str)));
-	}
-	varchar& operator=(cstring str) {
-		strncpy_s(chars, str, min(SIZE, strlen(str)));
-		return *this;
-	}
-
-	size_t size() const { return SIZE; }
-	size_t length() const { return strlen(chars); }
-	cstring value() const { return chars; }
-	operator cstring() const { return value(); }
-	operator String() const { return value(); }
-};
 
 
 /////////////////////////////////////////////////////////////////
@@ -48,7 +27,7 @@ public:
 	virtual void setType(const FieldInfo* val) { m_fieldInfo = val; }
 
 public:
-	cstring fieldName() const {
+	virtual cstring fieldName() const {
 		return m_fieldInfo ? m_fieldInfo->name() : "";
 	}
 
@@ -58,21 +37,115 @@ private:
 
 
 //Colume Model
-class Colume : public Object
+class ColumeModel : public Object
 {
 public:
-	Colume(cstring name="", bool primary=false, bool notNull=false)
-		: m_name(name), m_primary(primary), m_notNull(notNull) {}
+	ColumeModel(cstring name="", bool primary=false, bool unique=false,
+		bool notNull=false, cstring default="", bool store=true)
+		: m_name(name), m_primary(primary), m_unique(unique),
+		m_notNull(notNull), m_default(default), m_needStore(store) {}
 public:
 	virtual void setColumeName(cstring str) { m_name = str; }
 	virtual String columeName() const { return m_name; }
-public:
-	virtual ConditionWrapper query() const = 0;
-	virtual String columeValue() const = 0;
+
+	virtual String defaultValue() const { return m_default; }
+	virtual void setDefaultValue(cstring val) { m_default = val; }
+
+	virtual bool isPrimary() const { return m_primary; }
+	virtual void setPrimary(bool val) { m_primary = val; }
+
+	virtual bool isUnique() const { return m_unique; }
+	virtual void setUnique(bool val) { m_unique = val; }
+
+	virtual bool isNotNull() const { return m_notNull; }
+	virtual void setNotNull(bool val) { m_notNull = val; }
+
+	virtual bool isNeedStore() const { return m_needStore; }
+	virtual void setNeedStore(bool val) { m_needStore = val; }
 protected:
 	String m_name;
+	String m_default;
 	bool m_primary;
+	bool m_unique;
 	bool m_notNull;
+
+	bool m_needStore;
+};
+
+class Colume : public Object
+{
+public:
+	Colume(ColumeModel* model=null) : m_model(model) {}
+
+	virtual ColumeModel* getModel() const { return m_model; }
+	virtual void setModel(ColumeModel* val) {
+		this->m_model = val;
+		checkNullPtr(this->m_model);
+	}
+public:
+	virtual void setColumeName(cstring str) {
+		checkNullPtr(this->m_model);
+		m_model->setColumeName(str);
+	}
+	virtual String columeName() const {
+		checkNullPtr(this->m_model);
+		return m_model->columeName();
+	}
+
+	virtual String defaultValue() const {
+		checkNullPtr(this->m_model);
+		return m_model->defaultValue();
+	}
+	virtual void setDefaultValue(cstring val) {
+		checkNullPtr(this->m_model);
+		m_model->setDefaultValue(val);
+	}
+
+	virtual bool isPrimary() const {
+		checkNullPtr(this->m_model);
+		return m_model->isPrimary();
+	}
+	virtual void setPrimary(bool val) {
+		checkNullPtr(this->m_model);
+		m_model->setPrimary(val);
+	}
+
+	virtual bool isUnique() const {
+		checkNullPtr(this->m_model);
+		return m_model->isUnique();
+	}
+	virtual void setUnique(bool val) {
+		checkNullPtr(this->m_model);
+		m_model->setUnique(val);
+	}
+
+	virtual bool isNotNull() const {
+		checkNullPtr(this->m_model);
+		return m_model->isNotNull();
+	}
+	virtual void setNotNull(bool val) {
+		checkNullPtr(this->m_model);
+		m_model->setNotNull(val);
+	}
+
+	virtual bool isNeedStore() const {
+		checkNullPtr(this->m_model);
+		return m_model->isNeedStore();
+	}
+	virtual void setNeedStore(bool val) {
+		checkNullPtr(this->m_model);
+		m_model->setNeedStore(val);
+	}
+public:
+	virtual ConditionWrapper query() const = 0;
+	virtual ConditionWrapper group() const = 0;
+
+	virtual ConditionWrapper columeValue() const = 0;
+
+	virtual String field() const = 0;
+	virtual String columeType() const = 0;
+private:
+	ColumeModel* m_model;
 };
 
 template <typename T>
@@ -93,49 +166,81 @@ public:
 
 public:
 	virtual ConditionWrapper query() const {
-		return new FieldCondition(this->columeName());
+		if (this->isNeedStore()) {
+			return new FieldCondition(this->columeName());
+		}
+		else {
+			// like count(*)
+			return new ValueCondition(this->columeName());
+		}
 	}
+	virtual ConditionWrapper group() const {
+		return new FieldCondition(this->fieldName());
+	}
+
 	virtual String columeName() const {
-		return m_name.length() ? m_name : fieldName();
+		String col = Colume::columeName();
+		return col.length() ? col : fieldName();
 	}
-	virtual String columeValue() const {
-		const bool convertible = is_convertible<T, String>::value;
-		return string_caster<T, convertible>::toString(*this);
+	virtual ConditionWrapper columeValue() const {
 		//return Value2String<T>(*this);
+		const bool convertible = is_convertible<T, String>::value;
+		return new ValueCondition(
+			string_caster<T, convertible>::toString(*this));
+	}
+
+	virtual String field() const {
+		return fieldName();
+	}
+	virtual String columeType() const {
+		const bool convertible = is_convertible<T, dbtype>::value;
+		return typename_getter<T, convertible>::typeName(value());
 	}
 };
 
 
+//define table name
 #define TABLE(table) \
 	static cstring tableName() { return #table; }						\
 	virtual String getTableName() const { return tableName(); }			\
+/*end of TABLE*/
 
-//define a db colume(field)
-#define COLUME3(name, type, colName) \
-	TypeColume<type> name;												\
+//define colume register method
+#define COLUME_REG(name, col, primary, unique, notNull, deflt, store)	\
 	class InerClassForRegField_##name									\
 	{																	\
 	public:																\
 		InerClassForRegField_##name(){									\
+			Self& parent = *(Self*)((char*)this - offsetof(Self,		\
+				_instanceOfInerClassForRegField_##name));				\
 		    static bool notReged = true;								\
+			static ColumeModel model(col, primary, unique,				\
+				notNull, deflt, store);									\
 			if(notReged) {												\
 				regField(#name, &Self::name);							\
 				notReged = false;										\
 			}															\
-			Self* parent = (Self*)((char*)this - offsetof(Self,			\
-				_instanceOfInerClassForRegField_##name));				\
-			parent->name.setType(Self::thisClass()->getField(#name));	\
-			parent->name.setColumeName(colName);						\
+			parent.name.setType(Self::thisClass()->getField(#name));	\
+			parent.name.setModel(&model);								\
 		}																\
 	}_instanceOfInerClassForRegField_##name;							\
-/*end of COLUME*/
+/*end of COLUME_REG*/
 
-#define COLUME2(name, type) COLUME3(name, type, "")
-#define COLUME1(name) COLUME2(name, varchar<64>)
-#define COLUME(name, type) COLUME2(name, type)
+//define a db colume(field)
+#define COLUME8(name, type, colName, primary, unique, notNull, deflt, store) \
+	TypeColume<type> name;													 \
+    COLUME_REG(name, colName, primary, unique, notNull, deflt, store)		 \
+/*end of COLUME8*/
 
-#define ID(type, colName) COLUME3(_id, type, colName); virtual Colume& id(){ return _id; }
+#define COLUME_P(name, type, colName, primary) \
+	COLUME8(name, type, colName, primary, false, false, "", true)
+#define COLUME_N(name, type, colName) COLUME_P(name, type, colName, false)
+#define COLUME_T(name, type) COLUME_N(name, type, "")
+#define COLUME_S(name) COLUME_T(name, varchar<32>)
+#define COLUME COLUME_T
 
+#define ID(type, colName) COLUME_N(_id, type, colName); \
+	virtual Colume& id(){ return _id; }
 
 }//end of namespace brpc
 
@@ -175,7 +280,5 @@ struct Converter<brpc::TypeColume<Type>>
 		return Converter<Type>::toObject(val.value());
 	}
 };
-
-//template<> Value2String<brpc::varchar<32>>::operator String() const{ return (cstring)value; }
 
 }//end of namespace bluemei

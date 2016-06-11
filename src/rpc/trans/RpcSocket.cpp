@@ -109,41 +109,4 @@ void RpcSocket::notifyHookError(cstring name, cstring error)
 	}
 }
 
-
-///////////////////////////////////////////////////////////////////////////
-//class Url
-Url::Url( const String& url/*=""*/ ) : url(url)
-{
-	if(!url.empty())
-		parseUrl();
-}
-
-void Url::parseUrl()
-{
-	String addr;
-	if(url.contain("://")) // http://127.0.0.1:8080
-	{
-		auto list = url.splitWith("://");
-		protocol = list[0];
-		addr = list[1];
-	}
-	else
-		addr = url;
-
-	if(addr.contain("/")){ // 127.0.0.1:8080/index.html
-		auto list = url.splitWith("/");
-		addr = list[0];
-		path = list[1];
-	}
-
-	if(addr.contain(":")){ // 127.0.0.1:8080
-		auto list = url.splitWith(":");
-		ip = list[0];
-		port = list[1];
-	}
-	else{ //127.0.0.1
-		ip = addr;
-	}
-}
-
 }//end of namespace brpc
