@@ -57,6 +57,7 @@ Debug/brpc.exe.embed.manifest.res
 Release/brpc.lastbuildstate
 Release/brpc.exe.intermediate.manifest
 Release/brpc.vcxprojResolveAssemblyReference.cache
+src/orm/drivers/mysql/mysql5.0/
 *.pyc
 *.class
 

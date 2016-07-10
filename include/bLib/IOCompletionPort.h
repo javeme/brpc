@@ -17,6 +17,7 @@ public:
 
 	int waitEvent(IOEvent* events,int maxEvents,int timeout){ return impl->waitEvent(events,maxEvents,timeout); }
 	bool cancelWait(){ return impl->cancelWait(); }
+	void releaseEventBuffer(IOEvent* e){ return impl->releaseEventBuffer(e); }
 
 	void send( const byte* buf, unsigned int len, socket_t sock ){	return impl->send(buf,len,sock); }
 

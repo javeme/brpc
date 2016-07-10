@@ -55,14 +55,23 @@ protected:
 class BLUEMEILIB_API MemoryPoolManager : public Object
 {
 public:
+	static MemoryPoolManager& instance() {
+		static MemoryPoolManager manager;
+		return manager;
+	}
+public:
 	template<class T>
-	static MemoryPool* getMemoryPool(unsigned int itemSize=128,unsigned int maxSize=1024){
-		static MemoryPool* pool=new SimpleMemoryPool<T>(itemSize,maxSize);
+	MemoryPool* getMemoryPool(unsigned int itemSize=128,unsigned int maxSize=1024){
+		MemoryPool* pool=new SimpleMemoryPool<T>(itemSize,maxSize);
+		m_listPool.addToLast(pool);
 		return pool;
 	}
-	static void releaseMemoryPool(MemoryPool* pool){
+	void releaseMemoryPool(MemoryPool* pool){
+		m_listPool.remove(pool);
 		delete pool;
 	}
+protected:
+	LinkedList<MemoryPool*> m_listPool;
 };
 
 }//end of namespace bluemei

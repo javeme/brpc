@@ -1,5 +1,4 @@
 #pragma once
-#include "stdafx.h"
 #include "DataBuffer.h"
 #include "Exception.h"
 #include "ArrayList.h"

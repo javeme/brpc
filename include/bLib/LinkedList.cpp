@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #ifndef LinkedList_CPP
 #define LinkedList_CPP
 

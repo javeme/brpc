@@ -9,13 +9,13 @@
 namespace brpc{
 
 RpcServer::RpcServer(cstring url, AuthChecker* authChecker, 
-	cstring serializerType, unsigned int timeout) 
+	cstring serializerType, unsigned int timeout, cstring name) 
 	: url(url), authChecker(authChecker), dispatcher(null),
-	  serializerType(serializerType)
+	  serializerType(serializerType), name(name)
 {
 	this->running = false;
 	this->timeout = timeout;//ms
-	connAcceptor = RpcInvokerFacatory::loadRpcAcceptor(url, this);
+	this->connAcceptor = RpcInvokerFacatory::loadRpcAcceptor(url, this);
 }
 
 RpcServer::~RpcServer()

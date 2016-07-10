@@ -21,8 +21,7 @@ void P2pRpcConnAcceptor::run()
 	Log* logger = Log::getLogger();
 	try{
 		waitConnection();
-	}catch (Exception& e)
-	{
+	}catch (Exception& e) {
 		logger->error("Wait for connection error: " + e.toString());
 	}
 }

@@ -19,12 +19,12 @@ public:
 	static void destroy(ThreadPool* pThreadPool);
 
 protected:
-	SyncLock taskLock;
-	CriticalLock mutexLock;
+	SyncLock m_taskLock;
+	CriticalLock m_mutexLock;
 
-	LinkedList<WorkThread*> threadList;
+	LinkedList<WorkThread*> m_threadList;
 	//LinkedList<WorkThread*> doingThreadList;
-	Queue<Task*> taskQueue;
+	Queue<Task*> m_taskQueue;
 
 	volatile bool m_bIsStop;
 	int m_nThreadCount;

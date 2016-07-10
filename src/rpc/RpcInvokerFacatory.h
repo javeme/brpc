@@ -16,9 +16,9 @@ class RpcConnAcceptor;
 class RpcInvokerFacatory : public Object
 {
 public:
-	static RpcInvoker* loadRpcInvoker(cstring url, RpcService* dispatcher, 
+	static RpcInvoker* loadRpcInvoker(String url, RpcService* dispatcher, 
 		AuthChecker* authChecker, cstring serializerType, unsigned int timeout=0);
-	static RpcConnAcceptor* loadRpcAcceptor(cstring url, RpcServer* server);
+	static RpcConnAcceptor* loadRpcAcceptor(String url, RpcServer* server);
 };
 
 }//end of namespace brpc

@@ -71,7 +71,9 @@ int run(int argc, char* argv[])
 
 			MyRpcService dispatcher("nova");
 			DefaultAuthChecker checker("test", "123456");
-			RpcServer server("http://0.0.0.0", &checker, "text/json");
+			//RpcServer server("http://0.0.0.0", &checker, "text/json");
+			RpcServer server("amqp://guest:guest@127.0.0.1:5672/?self=node-1",
+				&checker, "text/json");			
 			printf("server start...\n");
 			server.start(&dispatcher);
 			server.wait();
@@ -80,7 +82,9 @@ int run(int argc, char* argv[])
 		{
 			logger->info("brpc client starting...");
 
-			cstring url = "http://127.0.0.1";//http://192.168.1.131
+			//cstring url = "http://127.0.0.1";//http://192.168.1.131
+			cstring url = "amqp://guest:guest@127.0.0.1:5672/"\
+				"?self=node-1&destination=node-1&topic=rpc";
 			RpcService dispatcher;
 			DefaultAuthChecker checker("", "");
 			//"text/xml", "text/json", "application/brpc.bin"
@@ -151,7 +155,7 @@ int run(int argc, char* argv[])
 	return 0;
 }
 
-int main1(int argc, char* argv[])
+int main(int argc, char* argv[])
 {
 	//_CrtSetBreakAlloc(9373);
 

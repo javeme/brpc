@@ -748,7 +748,7 @@ void testCreateDrop()
 	assert(success);
 }
 
-int main(int argc, char* argv[])
+int main2(int argc, char* argv[])
 {
 	_CrtSetBreakAlloc(249);
 	cstring s0=CODE2STRING(CLS_PF_OF_ARGS(0));

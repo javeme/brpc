@@ -26,35 +26,5 @@ public:
 	virtual long getWaitCount() const;
 };
 
-class my_mutex
-{
-public:
-	my_mutex (bool be_initial_owner = false)
-	{
-		mutex = CreateMutexA (NULL, be_initial_owner, NULL);
-	}
-	~my_mutex (void)
-	{
-		CloseHandle (mutex);
-	}
-public:
-	int acquire (void)
-	{
-		DWORD ret = WaitForSingleObject (mutex, INFINITE);
-		return ret == WAIT_OBJECT_0 ? 0 : -1;
-	}
-	int release (void)
-	{
-		BOOL bret = ReleaseMutex (mutex);
-		return bret ? 0 : -1;
-	}
-	HANDLE handle (void)
-	{
-		return mutex;
-	}
-protected:
-	HANDLE mutex;
-};
-
 }//end of namespace bluemei
 #endif

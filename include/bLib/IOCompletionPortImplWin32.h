@@ -29,28 +29,9 @@ enum IOCPEventType
 	EVENT_FIRST_SOCKET		= 0x80000000,
 };
 
-
 typedef unsigned int __uint32_t;
 typedef unsigned long long __uint64_t;
-typedef struct IOEventData { //union  
-	void *ptr;   
-	int fd;   
-	__uint32_t u32;   
-	__uint64_t u64;   
-}epoll_data;   
 
-typedef struct IOEvent {   
-	__uint32_t events; /* Epoll events */   
-	IOEventData data; /* User data variable */   
-}epoll_event;  
-
-/*
-struct SocketHandle
-{
-	socket_t socket;
-	//sockaddr_in addr;
-	SocketHandle(socket_t s):socket(s){}
-};*/
 
 struct IOCPData
 {
@@ -67,6 +48,23 @@ struct IOCPData
 	unsigned long flags;
 };
 
+
+typedef struct IOEventData { //not union!
+	void *ptr;
+	int fd;
+	__uint32_t u32;
+	__uint64_t u64;
+
+	__uint32_t length() const { return u32; }
+	byte* bytes() const { return (byte*)((IOCPData*)ptr)->buf; }
+}iocp_data;   
+
+typedef struct IOEvent {   
+	__uint32_t events; /* Epoll events */   
+	IOEventData data; /* User data variable */   
+}iocp_event; 
+
+
 //class IOCompletionPortImplWin32 : public IOCompletionPortImpl
 class BLUEMEILIB_API IOCompletionPortImpl : public Object
 {
@@ -81,11 +79,16 @@ public:
 
 	int waitEvent(IOEvent* events,int maxEvents,int timeout);
 	bool cancelWait();
+	void releaseEventBuffer(IOEvent* event);
 
 	void send(const byte* buffer, unsigned int len, socket_t sock);
 public:
 	void create();
 	void close();
+
+protected:
+	void accept(socket_t sock);
+	void receive(socket_t sock);
 private:
 	 HANDLE m_hIOCompletionPort;
 	 

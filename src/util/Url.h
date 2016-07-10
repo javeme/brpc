@@ -38,6 +38,16 @@ public:
 			return deft;
 		return *val; 
 	}
+	String getUsername(const String& deft="") const {
+		if(username.empty())
+			return deft;
+		return username;
+	}
+	String getPassword(const String& deft="") const {
+		if(password.empty())
+			return deft;
+		return password;
+	}
 protected:
 	virtual void parseUrl();
 protected:
@@ -48,6 +58,9 @@ protected:
 	String port;
 	String path;
 	HashMap<String, String> params;
+
+	String username;
+	String password;
 };
 
 }//end of namespace brpc

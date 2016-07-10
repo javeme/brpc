@@ -8,7 +8,7 @@ namespace bluemei{
 class BLUEMEILIB_API IOCPEventHandle : public Object
 {
 public:
-	virtual bool onAccept(ClientSocket*& client,IOEvent& ev)=0;
+	virtual bool onAccepted(IOEvent& ev)=0;
 	virtual bool onWrite(IOEvent& ev)=0;
 	virtual bool onWriteFinish(IOEvent& ev)=0;
 	virtual bool onRead(IOEvent& ev)=0;

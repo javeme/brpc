@@ -24,11 +24,14 @@ public:
 
 	//服务端
 	virtual void listen(int port);
-	virtual void unlisten();//stop
+	virtual void unlisten();
 
 	//客户端
-	virtual void connect(cstring ip,int port);
-	virtual void disconnect();//stop
+	virtual socket_t connect(cstring ip,int port);
+	virtual void disconnect();
+
+	int timeout() const { return m_nTimeout; }
+	void setTimeout(int val) { m_nTimeout = val; }
 protected:
 	virtual void start();
 	virtual void stop();
@@ -37,21 +40,17 @@ protected:
 protected:
 	int getLastError();
 
-	bool addClient(socket_t sock){
-		socket_t v=sock;
-		return clientSockets.put(sock,v);
-	}
-	bool removeClient(socket_t sock){
-		m_oIOCompletionPort.unregisterEvents(EVENT_ACCEPT|EVENT_ALL,sock);
-		socket_t v;
-		return clientSockets.remove(sock,v);
-	}
+	bool addClient(socket_t sock);
+	bool removeClient(socket_t sock);
+	void closeAllClients();
 protected:
 	IOCPEventHandle* m_pIOCPEventHandler;
 	IOCompletionPort m_oIOCompletionPort;
 
 	ServerSocket listenSocket;
 	HashMap<socket_t,socket_t> clientSockets;
+
+	int m_nTimeout;
 private:
 	ThreadPool* m_pIOThreadPool;
 

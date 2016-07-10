@@ -1,18 +1,18 @@
 #pragma once
 #include "stdafx.h"
-#include "RpcInvokerFacatory.h"
 #include "amqp/AmqpRpcConnection.h"
+#include "amqp/AmqpRpcConnAcceptor.h"
 #include "p2p/P2pRpcConnection.h"
 #include "p2p/P2pRpcConnAcceptor.h"
+#include "RpcInvokerFacatory.h"
 
 namespace brpc{
 	
 
-RpcInvoker* RpcInvokerFacatory::loadRpcInvoker(cstring url, RpcService* dispatcher, 
+RpcInvoker* RpcInvokerFacatory::loadRpcInvoker(String url, RpcService* dispatcher, 
 	AuthChecker* authChecker, cstring serializerType, unsigned int timeout)
 {
-	String proto(url);
-	if (proto.startWith("amqp://"))
+	if (url.startWith("amqp://"))
 	{
 		return new AmqpRpcConnection(url, dispatcher, authChecker, 
 			serializerType, timeout);
@@ -24,13 +24,11 @@ RpcInvoker* RpcInvokerFacatory::loadRpcInvoker(cstring url, RpcService* dispatch
 	}
 }
 
-RpcConnAcceptor* RpcInvokerFacatory::loadRpcAcceptor(cstring url, RpcServer* server)
+RpcConnAcceptor* RpcInvokerFacatory::loadRpcAcceptor(String url, RpcServer* server)
 {
-	String proto(url);
-	if (proto.startWith("amqp://"))
+	if (url.startWith("amqp://"))
 	{
-		throw Exception("not implent");
-		//return new AmqpRpcConnAcceptor(server);
+		return new AmqpRpcConnAcceptor(server);
 	}
 	else
 	{

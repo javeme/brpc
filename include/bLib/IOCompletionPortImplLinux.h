@@ -41,26 +41,8 @@ enum IOCPEventType
 };
 
 typedef int socket_t;
+typedef epoll_event IOEvent;
 
-#ifdef WIN32
-	typedef unsigned int __uint32_t;
-	typedef unsigned long long __uint64_t;
-	typedef union IOEventData {   
-		void *ptr;   
-		int fd;   
-		__uint32_t u32;   
-		__uint64_t u64;   
-	}epoll_data;   
-
-	typedef struct IOEvent {   
-		__uint32_t events; /* Epoll events */   
-		IOEventData data; /* User data variable */   
-	}epoll_event;  
-
-#else
- typedef epoll_event IOEvent;
-
-#endif
 
 class BLUEMEILIB_API IOCompletionPortImpl : public Object
 {
@@ -75,6 +57,7 @@ public:
 
 	int waitEvent(IOEvent* events,int maxEvents,int timeout);
 	bool cancelWait();
+	void releaseEventBuffer(IOEvent* event);
 
 	void send(const byte* buffer, unsigned int len, socket_t sock);
 public:

@@ -19,7 +19,9 @@ class RpcServer : public RpcEventHandler, public RpcDataHookHandler
 {
 public:
 	RpcServer(cstring url, AuthChecker* authChecker,
-		cstring serializerType="text/json", unsigned int timeout=DFT_TIMEOUT);
+		cstring serializerType="text/json",
+		unsigned int timeout=DFT_TIMEOUT,
+		cstring name="rpc");
 	virtual ~RpcServer();
 public:
 	virtual void start(RpcService* service);
@@ -28,6 +30,7 @@ public:
 
 public:
 	String getUrl() const { return url; }
+	String getName() const { return name; }
 	RpcService* getDispatcher() const { return dispatcher; }
 	AuthChecker* getAuthChecker() const { return authChecker; }
 	String getSerializerType() const { return serializerType; }
@@ -47,6 +50,7 @@ protected:
 	void destroy();
 private:
 	String url;
+	String name;
 	RpcService* dispatcher;
 	AuthChecker* authChecker;
 	String serializerType;

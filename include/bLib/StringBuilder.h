@@ -39,7 +39,6 @@ exception statement from your version. */
 //package java.lang;
 //import java.io.Serializable;
 #pragma once
-#include "stdafx.h"
 #include "RuntimeException.h"
 #include "ArrayList.h"
 #include "BString.h"

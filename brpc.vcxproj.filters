@@ -303,6 +303,12 @@
     <ClInclude Include="src\util\Url.h">
       <Filter>src\util</Filter>
     </ClInclude>
+    <ClInclude Include="src\rpc\amqp\AmqpRpcConnAcceptor.h">
+      <Filter>src\rpc\amqp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rpc\amqp\IOCPLogHandler.h">
+      <Filter>src\rpc\amqp</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -451,6 +457,12 @@
     </ClCompile>
     <ClCompile Include="src\util\Url.cpp">
       <Filter>src\util</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rpc\amqp\AmqpRpcConnAcceptor.cpp">
+      <Filter>src\rpc\amqp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rpc\amqp\AmqpRpcConnection.cpp">
+      <Filter>src\rpc\amqp</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #ifndef KVPairTree_CPP
 #define KVPairTree_CPP
 

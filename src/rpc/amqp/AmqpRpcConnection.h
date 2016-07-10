@@ -1,6 +1,10 @@
 #pragma once
 #include "stdafx.h"
 #include "RpcConnection.h"
+#include "RpcSocket.h"
+#include "ChannelFactory.h"
+
+namespace AMQP{ class Message; }
 
 
 namespace brpc{
@@ -10,44 +14,73 @@ namespace brpc{
 * @author Javeme
 * @create 2014/7/13
 */
-class AmqpRpcConnection : public RpcConnection
+class AmqpRpcConnection : public RpcConnection, 
+	public RpcReceiveListener
 {
 public:
-	AmqpRpcConnection(cstring url, RpcService* dispatcher, 
-		AuthChecker* authChecker, cstring serializerType,
-		unsigned int timeout=0)
-		: RpcConnection(dispatcher, authChecker, serializerType)
-	{
-
-	}
-	virtual ~AmqpRpcConnection(){}
+	AmqpRpcConnection(cstring url,
+		RpcService* dispatcher, AuthChecker* authChecker,
+		cstring serializerType, unsigned int timeout=0,
+		AMQP::ChannelFactory* channelFactory=nullptr);
+	virtual ~AmqpRpcConnection();
 
 public:
-	virtual bool checkConnected() 
-	{
-		throw std::exception("The method or operation is not implemented.");
-	}
+	String getTopic() const { return topic; }
+	void setTopic(const String& val) { topic = val; }
 
-	virtual void onSend( const DataPackage& output ) 
-	{
-		throw std::exception("The method or operation is not implemented.");
-	}
+	String getId() const { return id; }
+	void setId(const String& val) { id = val; }
 
-	virtual DataPackage onSendSynch( const DataPackage& output ) 
-	{
-		throw std::exception("The method or operation is not implemented.");
-	}
+	String getPeerId() const { return peerId; }
+	void setPeerId(const String& val) { peerId = val; }
+	
+	virtual bool checkConnected();
 
-	virtual bool onSerializeException( SerializeException& e ) 
-	{
-		throw std::exception("The method or operation is not implemented.");
-	}
+	virtual void updateAliveTime();
+	virtual Date getAliveTime() const;
 
-	virtual bool onReturnCallException( Exception& e ) 
-	{
-		throw std::exception("The method or operation is not implemented.");
-	}
+	virtual void setAlive(bool alive);
+	virtual bool isAlive() const;
 
+	virtual void setReplyTo(const String& replyTo);
+	virtual void resetReplyTo();
+
+public:
+	virtual void onSend(const DataPackage& output);
+	virtual DataPackage onSendSynch(const DataPackage& output);
+
+	virtual bool onSerializeException(SerializeException& e);
+	virtual bool onReturnCallException(Exception& e);
+
+	virtual bool onReceive(DataPackage& input);
+	virtual bool onException(Exception& e);
+
+	virtual String toString() const;
+
+public:
+	static void parseMessage(DataPackage& package, const AMQP::Message& message);
+
+protected:
+	virtual void publish(const DataPackage& output, const String& replyMe="");
+
+	typedef std::function<void()> RequestCallback;
+	virtual void consume(DataPackage& input, const String& queue,
+		const RequestCallback& request);
+
+	virtual void connect();
+	virtual void disconnect();
+private:
+	String topic;
+	String id, peerId;
+	String replyTo;
+
+	bool alive;
+	Date aliveTime;
+
+	unsigned int timeout;
+
+	AMQP::ChannelFactory* channelFactory;
+	bool deleteChannelFactory;
 };
 
 
