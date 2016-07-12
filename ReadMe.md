@@ -8,14 +8,14 @@ a rpc lib for c++
 
 ### example 1. hello service:
 
-* 1.add class `MyRpcService`:
+* 1.add class `MyRpcService` as a service provider:
 ```c++
 class MyRpcService : public RpcService
 {
 public:
 	MyRpcService(cstring name) : RpcService(name)
 	{
-		//register function to provide service
+		//register functions to provide service
 		as(MyRpcService::hello);
 		as(MyRpcService::sum);
 	}
@@ -35,13 +35,13 @@ public:
 };
 ```
 
-* 2.add class `MyRpcApi`:
+* 2.add class `MyRpcApi` as stub:
 ```c++
 	class MyRpcApi : public RpcApi
 	{
 	public:
 		MyRpcApi(cstring url, cstring name, cstring password) : 
-			checker("", ""),
+			checker("name", "password"),
 			dispatcher("callback"),
 			client(url, &dispatcher, &checker, "text/json", 1000*10),
 			RpcApi("serviceName4Test")
