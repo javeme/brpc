@@ -8,15 +8,23 @@ namespace brpc{
 class ConditionWrapper;
 
 
+/* class Condition
+ * Base class of all values/conditions like a number / operator > expression
+ * We may use virtual inheritance to PointerReference
+ * For more simple we let SQLExpression inherit PointerReference
+ */
 class Condition : public SQLExpression /*, public PointerReference*/
 {
 public:
 	Condition(){
-		//printf(">>>>>>>>>>>>>>>Condition Init!!!!!!\n");
+		//debug(">>>>>>>>>>>>>>>Condition Init!!!!!!\n");
 	}
 	virtual ~Condition(){
-		//printf(">>>>>>>>>>>>>>>Condition Release!!!\n");
+		//debug(">>>>>>>>>>>>>>>Condition Release!!!\n");
 	}
+
+	//#pragma warning(disable:4250)
+	//多继承中，菱形继承时不明确的方法继承(通过子类显示重载toString解决)
 	virtual String toString()const{
 		return SQLExpression::toString();
 	}
@@ -48,6 +56,16 @@ public:
 	virtual ConditionWrapper operator &&(const ConditionWrapper& other);
 	virtual ConditionWrapper operator ||(const ConditionWrapper& other);
 	virtual ConditionWrapper operator !();
+
+	virtual ConditionWrapper like(cstring val);
+	virtual ConditionWrapper in(cstring* vals, int size);
+	virtual ConditionWrapper between(cstring from, cstring to);
+
+	virtual ConditionWrapper in(int* vals, int size);
+	virtual ConditionWrapper between(int from, int to);
+
+	virtual ConditionWrapper in(double* vals, int size);
+	virtual ConditionWrapper between(double from, double to);
 };
 
 class ConditionWrapper : public RefPointer<Condition>
@@ -215,10 +233,12 @@ class BinOperatorCondition : public Condition
 public:
 	BinOperatorCondition(const ConditionWrapper& left, const ConditionWrapper& right)
 		: m_left(left),  m_right(right){
+		//NOTE: allow it to be null
 		//checkNullPtr(m_left);
 		//checkNullPtr(m_right);
 	}
 	virtual ~BinOperatorCondition() {
+		//NOTE: We use ref pointer, so don't delete these pointer anymore
 		//delete m_left;
 		//delete m_right;
 	}
@@ -233,6 +253,38 @@ public:
 protected:
 	ConditionWrapper m_left;
 	ConditionWrapper m_right;
+};
+
+class ListCondition : public Condition
+{
+public:
+	ListCondition() {}
+
+public:
+	virtual void append(const ConditionWrapper& val) {
+		m_vals.add(val);
+	}
+
+	virtual unsigned int size() const {
+		return m_vals.size();
+	}
+
+	virtual String toSQL() const {
+		StringBuilder sb(m_vals.size() * 32);
+		sb.append("(");
+		for(unsigned int i = 0; i < m_vals.size(); i++) {
+			sb.append(m_vals[i]);
+			sb.append(",");
+		}
+		//delete the last char
+		if(m_vals.size() > 0)
+			sb.pop();
+		sb.append(")");
+		return sb.toString();
+	}
+
+protected:
+	ArrayList<ConditionWrapper> m_vals;
 };
 
 class EqCondition : public BinOperatorCondition
@@ -317,6 +369,52 @@ public:
 	virtual String conditionOperator() const {
 		return "is";
 	}
+};
+
+class LikeCondition : public BinOperatorCondition
+{
+public:
+	LikeCondition(const ConditionWrapper& left, const ConditionWrapper& right)
+		: BinOperatorCondition(left, right) {
+	}
+
+	virtual String conditionOperator() const {
+		return "like";
+	}
+};
+
+class InCondition : public BinOperatorCondition
+{
+public:
+	//NOTE: the right value is an instance of ListCondition
+	InCondition(const ConditionWrapper& left, const ConditionWrapper& right)
+		: BinOperatorCondition(left, right) {
+	}
+
+	virtual String conditionOperator() const {
+		return "in";
+	}
+};
+
+class BetweenCondition : public Condition
+{
+public:
+	BetweenCondition(const ConditionWrapper& val,
+		const ConditionWrapper& from, const ConditionWrapper& to)
+		: m_value(val), m_from(from), m_to(to){
+	}
+
+	virtual String toSQL() const {
+		return String::format("%s between %s and %s",
+			this->m_value->toSQL().c_str(),
+			this->m_from->toSQL().c_str(),
+			this->m_to->toSQL().c_str());
+	}
+
+protected:
+	ConditionWrapper m_value;
+	ConditionWrapper m_from;
+	ConditionWrapper m_to;
 };
 
 class AndCondition : public BinOperatorCondition

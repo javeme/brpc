@@ -116,9 +116,9 @@ public:
 		const_cast<FiledValues&>(m_pairs).releaseIterator(iter);
 
 		if (keys.length() > 0)
-			keys.deleteCharAt(keys.length() - 1);// remove ','
+			keys.pop();// remove ','
 		if (values.length() > 0)
-			values.deleteCharAt(values.length() - 1);// remove ','
+			values.pop();// remove ','
 
 		/*return String::format("insert into %s(%s) (%s)",
 			table(),
@@ -170,7 +170,7 @@ public:
 		const_cast<FiledValues&>(m_pairs).releaseIterator(iter);
 
 		if (setters.length() > 0)
-			setters.deleteCharAt(setters.length() - 1);// remove ','
+			setters.pop();// remove ','
 
 		String condition = m_condition->toSQL();
 

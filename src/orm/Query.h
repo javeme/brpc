@@ -74,7 +74,9 @@ public:
 	virtual Query& offset(unsigned int index);
 
 	virtual Query& distinct(bool yes=false);
-	
+
+	//virtual Query& join(cstring table);
+
 	virtual String toSQL() const;
 public:
 	Connection* getConnection() const { return m_connection; }

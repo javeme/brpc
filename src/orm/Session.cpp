@@ -217,7 +217,7 @@ bool Session::createTable(Model* model)
 		sql.append(",");
 	}
 	if (cols.size() > 0)
-		sql.deleteCharAt(sql.length() - 1);// remove ','
+		sql.pop();// remove ','
 
 	cols.releaseIterator(iter);
 

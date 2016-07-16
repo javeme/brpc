@@ -161,6 +161,7 @@ String Query::toSQL() const
 
 	// limit
 	if (m_limit > 0) {
+		// TODO: add more generic way('limit' is just in mysql/pg)
 		sql.append(" limit ");
 		sql.append((int)m_limit);
 

@@ -633,12 +633,31 @@ void testDbUser()
 	String expect = "((`user_name` = 'mike')"\
 		" and (((`age` > 1) and (`age` <= 100)) or ((`age` >= 200) and (`age` != 300.800000))))";
 	assert(expect == sql);
-	printf("toSQL (Condition): %s\n", sql.c_str());
 
 	// null
 	cond = user.name.query() == nullptr && !(user.name.query() != nullptr);
 	sql = cond->toSQL();
-	printf("toSQL (test null): %s\n\n",  sql.c_str());
+	expect = "((`user_name` is null) and not (`user_name` is not null))";
+	assert(expect == sql);
+
+	// like
+	cond = user.name.query()->like("hello%");
+	sql = cond->toSQL();
+	expect = "(`user_name` like 'hello%')";
+	assert(expect == sql);
+
+	// in
+	cstring names[] = {"name-1", "name-2"};
+	cond = user.name.query()->in(names, 2);
+	sql = cond->toSQL();
+	expect = "(`user_name` in ('name-1','name-2'))";
+	assert(expect == sql);
+
+	//between... and...
+	cond = user.name.query()->between(1, 10);
+	sql = cond->toSQL();
+	expect = "`user_name` between 1 and 10";
+	assert(expect == sql);
 
 	// session
 	//TODO: query = user.query(user.name).filter(user.sex == "male");
@@ -649,11 +668,16 @@ void testDbUser()
 	cstring fields[] = {user.name.fieldName(), user.age.fieldName()};
 	size_t len = sizeof(fields) / sizeof(cstring);
 	sql = session.query<UserModel>(fields, len).toSQL();
+	expect = "select name,age from users";
+	assert(expect == sql);
 	sql = session.query<UserModel>().toSQL();
+	expect = "select * from users";
+	assert(expect == sql);
 	sql = session.query<UserModel>()
 		.filter(user.name.query() == "mike")
 		.toSQL();
-	printf("session.query.toSQL: %s\n\n", sql.c_str());
+	expect = "select * from users where (`user_name` = 'mike')";
+	assert(expect == sql);
 
 	// test session
 	session.begin();

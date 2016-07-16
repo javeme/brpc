@@ -11,6 +11,7 @@ typedef class Connection : public Object
 public:
 	Connection(const String& connInfo)
 	{
+		SQLExpression::debug("Open a database connection...\n");
 		m_driverConnection = DriverConnection::loadDriver(connInfo);
 		checkNullPtr(m_driverConnection);
 
@@ -24,6 +25,7 @@ public:
 	}
 	virtual ~Connection()
 	{
+		SQLExpression::debug("Close a database connection...\n");
 		try {
 			m_driverConnection->close();
 		} catch (Exception& e) {
@@ -34,7 +36,7 @@ public:
 public:
 	virtual ResultSet* query(cstring sql)
 	{
-		BRpcUtil::debug(">>>> excute SQL(query): %s\n", sql);
+		SQLExpression::debug(">>>> query SQL: %s", sql);
 		// call driver
 		return m_driverConnection->executeQuery(sql);
 	}
@@ -42,7 +44,7 @@ public:
 	// return changed rows number
 	virtual int excute(cstring sql)
 	{
-		BRpcUtil::debug(">>>> excute SQL: %s\n", sql);
+		SQLExpression::debug(">>>> excute SQL: %s", sql);
 		// call driver
 		return m_driverConnection->executeUpdate(sql);
 	}
