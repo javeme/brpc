@@ -30,7 +30,7 @@ public:
 	
 	double sum(int a, double b)
 	{
-		return a+b;
+		return a + b;
 	}
 };
 ```
@@ -41,7 +41,7 @@ public:
 	{
 	public:
 		MyRpcApi(cstring url, cstring name, cstring password) : 
-			checker("name", "password"),
+			checker(name, password),
 			dispatcher("callback"),
 			client(url, &dispatcher, &checker, "text/json", 1000*10),
 			RpcApi("serviceName4Test")
@@ -85,7 +85,9 @@ void mian()
 {
 	MyRpcService dispatcher("serviceName4Test");
 	DefaultAuthChecker checker("test", "123456");
+
 	RpcServer server("http://0.0.0.0", &checker, "text/json");
+
 	printf("starting server...\n");
 	server.start(&dispatcher);
 	server.wait();
@@ -99,10 +101,10 @@ void mian()
 	cstring url = "http://127.0.0.1";
 	cstring name = "test", password = "123456";
 	MyRpcApi myApi(url, name, password);
-	
+
 	std::string result = myApi.hello("brpc");
 	printf("hello() returned: %s\n", result.c_str());
-	
+
 	double f = myApi.sum(2, 3.14);
 	printf("sum() returned: %lf\n", f);
 }
