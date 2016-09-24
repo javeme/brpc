@@ -42,7 +42,7 @@ bool MySQLResultSet::next()
 	return (currentRow!=nullptr);
 }
 
-bool MySQLResultSet::previous() 
+bool MySQLResultSet::previous()
 {
 	if(m_previousIndex<0)
 	{
@@ -113,7 +113,7 @@ uint32 MySQLResultSet::columnIndex(cstring columnName) const
 
 	uint32 pos=-1;
 	MYSQL_FIELD *fields = mysql_fetch_fields(m_result);
-	for(uint32 i = 0; i < count; i++){   
+	for(uint32 i = 0; i < count; i++){
 		if(strcmp(fields[i].name,columnName)==0)
 		{
 			pos=i;
@@ -125,7 +125,7 @@ uint32 MySQLResultSet::columnIndex(cstring columnName) const
 
 void MySQLResultSet::close()
 {
-	if(m_result!=nullptr) 
+	if(m_result!=nullptr)
 	{
 		mysql_free_result(m_result);//释放结果资源
 		m_result=nullptr;
@@ -189,7 +189,7 @@ double MySQLResultSet::getDouble(cstring columnName)
 
 ByteArray MySQLResultSet::getBytes(uint32 columnIndex)
 {
-	checkIndex(columnIndex);	
+	checkIndex(columnIndex);
 	return ByteArray((byte*)m_result->current_row[columnIndex],getDataLength(columnIndex));
 }
 
@@ -216,7 +216,7 @@ Object* MySQLResultSet::getObject(uint32 columnIndex)
 	case MYSQL_TYPE_LONG:
 		return new Integer(CodeUtil::str2Int(val));
 	case MYSQL_TYPE_LONGLONG:
-		return new Long(::_atoi64(val));		
+		return new Long(::_atoi64(val));
 	case MYSQL_TYPE_FLOAT:
 		return new Float((float)CodeUtil::str2Float(val));
 	case MYSQL_TYPE_DOUBLE:
@@ -288,7 +288,7 @@ void MySQLConnection::open(const String& connInfo)
 	String db = url.getPath();
 	String username = url.getParameter("username");
 	String password = url.getParameter("password");
-	String charset = url.getParameter("charset");	
+	String charset = url.getParameter("charset");
 
 	if ((mysql_real_connect(m_mysql, host, username, password,
 		db, port, NULL, 0)) == NULL)
@@ -337,7 +337,7 @@ bool MySQLConnection::usingDatabase(cstring dbName)
 	返回值
 	0表示成功，非0值表示出现错误。
 	错误
-	CR_COMMANDS_OUT_OF_SYNC  以不恰当的顺序执行了命令。 
+	CR_COMMANDS_OUT_OF_SYNC  以不恰当的顺序执行了命令。
 	CR_SERVER_GONE_ERROR  MySQL服务器不可用。
 	CR_SERVER_LOST 在查询过程中，与服务器的连接丢失。
 	CR_UNKNOWN_ERROR  出现未知错误。                                                                      */
@@ -355,14 +355,14 @@ bool MySQLConnection::usingDatabase(cstring dbName)
 
 void MySQLConnection::setCharset(cstring charset) /*"utf8" */
 {
-	if(0!=mysql_set_character_set(m_mysql, charset)) { 
+	if(0!=mysql_set_character_set(m_mysql, charset)) {
 		throw SQLException(mysql_error(m_mysql));
 	}
 }
 
 void MySQLConnection::executeSQLWithBytes(cstring sql,cstring buf,size_t len)
 {
-	//such as: bytes2SQLString("insert into tb(name, file) values('peter',?)",buf);		
+	//like: bytes2SQLString("insert into tb(name, file) values('peter',?)", buf);
 	size_t total=strlen(sql)+2*len+1+1;//加入单引号
 	char* newbuf=new char[total];
 
@@ -410,7 +410,7 @@ void MySQLConnection::executeSQLWithBytesArray(cstring sql,ByteArray bufs[],int 
 
 		startSql=tail+1;
 	}
-	strncpy_s(newbuf+pos,total-pos,startSql,strlen(startSql));//sql最后一个"?"号后面的字符串		
+	strncpy_s(newbuf+pos,total-pos,startSql,strlen(startSql));//sql最后一个"?"号后面的字符串
 	total=pos+strlen(startSql);
 	try
 	{

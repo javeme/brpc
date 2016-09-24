@@ -61,7 +61,7 @@ void RpcMethod::reset()
 	this->status = STATUS_REQUEST;
 	this->authToken = "";
 	this->owner = "";
-	this->methodName = "";	
+	this->methodName = "";
 
 	if (isAutoDelArgs())
 	{

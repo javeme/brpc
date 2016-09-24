@@ -25,7 +25,7 @@ public:
 
 public:
 	template <typename Func>
-	bool registerFunction(cstring funcName, Func func) 
+	bool registerFunction(cstring funcName, Func func)
 	{
 		checkNullPtr(funcName);
 		String fname = funcName;
@@ -43,25 +43,25 @@ public:
 	#define regFunc(fun) registerFunction(_CODE2STRING(fun), fun)
 
 	template <typename Func>
-	void unregisterFunction(cstring funcName, Func func) 
+	void unregisterFunction(cstring funcName, Func func)
 	{
 		auto itor = m_funcMap.find(funcName);
 		if (itor == m_funcMap.end())
-		{			
+		{
 			return;
 		}
 
 		union{Func funcAddress; byte* address;} addr;
 		addr.funcAddress = func;
 
-		FuncList& funcList = itor->second;	
+		FuncList& funcList = itor->second;
 		for(auto itor = funcList.begin(); itor != funcList.end(); )
 		{
 			if(addr.address == (*itor)->address())
 			{
 				itor = funcList.erase(itor);
 			}
-			else 
+			else
 				++itor;
 		}
 	}
@@ -69,7 +69,7 @@ public:
 	virtual void clearAllFunction();
 
 	virtual AnyFunction* getFunctionFromAll(cstring name, const ObjectList& args);
-	
+
 	virtual List<String> listFunctions() const;
 	virtual FuncList findFunction(cstring name) const;
 public:
@@ -90,7 +90,7 @@ public:
 public:
 	virtual Object* call(cstring name, const ObjectList& args);
 	virtual Object* call(cstring obj, cstring name, const ObjectList& args);
-	
+
 	virtual bool extend(FuncDispatcher* dispatcher);
 	virtual bool exclude(FuncDispatcher* dispatcher);
 protected:

@@ -8,7 +8,7 @@ namespace brpc{
 const static cstring SYSTEM_OBJ = "system";
 const static cstring SYSTEM_CLS = "RpcService";
 
-RpcService::RpcService(cstring name) : 
+RpcService::RpcService(cstring name) :
 	dispatcher(name), serviceName(name), eventHandler(null)
 {
 	(void)regObject(SYSTEM_OBJ, this);
@@ -20,7 +20,7 @@ RpcService::RpcService(cstring name) :
 	as(RpcService::listVars);
 	as(RpcService::listServices);
 	as(RpcService::listEextendServices);
-	
+
 	as(RpcService::signatureOf);
 	as(RpcService::typeOfVar);
 
@@ -89,14 +89,14 @@ Object* RpcService::call(RpcContext* ctx,
 	/*//system, RpcService.ping
 	if(String(SYSTEM_OBJ) == fthis)
 		fname = String::format("%s.%s", SYSTEM_CLS, name);*/
-	
+
 	if(fthis == "")
 	{
 		if(fname.contain(".")){
 			int pos = fname.find(".");
 			fthis = fname.substring(0, pos);
 			fname = fname.substring(pos+1);
-			
+
 			pos = fname.rfind(".");
 			if(pos > 0){
 				fsub = fname.substring(0, pos);
@@ -298,7 +298,7 @@ RpcService* RpcService::getSubService(cstring name)
 
 bool RpcService::hasSubService(cstring name)
 {
-	//return subServices.contain(name);	
+	//return subServices.contain(name);
 	return (getSubService(name) != null);
 }
 

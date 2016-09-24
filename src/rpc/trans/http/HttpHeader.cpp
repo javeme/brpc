@@ -7,14 +7,14 @@
 namespace brpc{
 
 // Mon, 19 Nov 2014 21:49:59 GMT
-#define DATE_FORMAT_GMT "%a, %d %b %Y %H:%M:%S GMT"	
+#define DATE_FORMAT_GMT "%a, %d %b %Y %H:%M:%S GMT"
 #define CRLF "\r\n"
 
 HttpHeader::HttpHeader(const HashMap<String,String>& headers)
 {
 	int len = CodeUtil::str2Int(headers.getDefault(KEY_CONTENT_LEN, "0"));
 	String contentType = headers.getDefault(KEY_CONTENT_TYPE, "text/json");
-	
+
 	this->entities = headers;
 
 	init((dword)len, contentType);
@@ -46,7 +46,7 @@ void HttpHeader::writeEntitiesTo(OutputStream& output) throw(Exception)
 	setEntity(KEY_CONTENT_TYPE, getContentTypeAndCharset());
 	if (!contain(KEY_CONTENT_LEN))
 		setEntity(KEY_CONTENT_LEN, CodeUtil::int2Str(contentLen));
-	
+
 	auto itor = this->entities.iterator();
 	while(itor->hasNext())
 	{
@@ -94,18 +94,18 @@ cstring HttpHeader::getContentType() const
 	return contentType;
 }
 
-void HttpHeader::setContentType(cstring val) 
+void HttpHeader::setContentType(cstring val)
 {
 	String str = val;
 	auto list = str.splitWith(";");
 	contentType = list[0].trim();
 
 	//like this: "Content-Type:text/html; charset=UTF-8" ?
-	if(list.size() > 1 && 
+	if(list.size() > 1 &&
 		(list = list[1].splitWith("="))[0].trim() == "charset"){
 		setCharset(list.size() > 1 ? list[1].trim() : "GBK");
 	}
-}	
+}
 
 String HttpHeader::getContentTypeAndCharset() const
 {
@@ -155,7 +155,7 @@ String HttpHeader::getCookieAsString(const String& name)const
 	const Cookie* cookie = cookies.get(name);
 	checkNullPtr(cookie);
 	return String::format("%s=%s;Expires=%s;Domain=%s;Path=%s;%s",
-		_c(cookie->name).c_str(), _c(cookie->value).c_str(), 
+		_c(cookie->name).c_str(), _c(cookie->value).c_str(),
 		(cookie->expires.formatDate(DATE_FORMAT_GMT)).c_str(),
 		_c(cookie->domain).c_str(), _c(cookie->path).c_str(),
 		cookie->secure?"Secure":"");
@@ -224,17 +224,17 @@ void HttpHeader::writeCrlfTo( OutputStream& output )
 
 
 
-HttpRequest::HttpRequest( cstring url/*="/"*/ ) 
+HttpRequest::HttpRequest( cstring url/*="/"*/ )
 	:HttpHeader(),requestUrl(url),requestType(HTTP_GET)
 {
 }
 
-HttpRequest::HttpRequest( dword len, cstring type ) 
+HttpRequest::HttpRequest( dword len, cstring type )
 	:HttpHeader(len, type),requestType(HTTP_GET),requestUrl("/")
 {
 }
 
-HttpRequest::HttpRequest( const HashMap<String,String>& headers ) 
+HttpRequest::HttpRequest( const HashMap<String,String>& headers )
 	:HttpHeader(headers),requestType(HTTP_GET),requestUrl("/")
 {
 }
@@ -244,7 +244,7 @@ HttpRequest::~HttpRequest()
 }
 
 const static cstring requestTypes[HttpRequest::REQUEST_TYPE_COUNT] = {
-	"GET", "POST", "PUT", "DELETE", 
+	"GET", "POST", "PUT", "DELETE",
 	"HEAD", "TRACE", "OPTIONS"
 };
 cstring HttpRequest::requestType2Str( RequestType val )
@@ -324,8 +324,8 @@ void HttpRequest::writeTo( OutputStream& output ) throw(Exception)
 	//such as: "GET /index?paras HTTP/1.1"
 	String url = getUrlWithParas();
 	String line = String::format("%s %s %s/%s",
-		requestType2Str(requestType), 
-		url.c_str(), 
+		requestType2Str(requestType),
+		url.c_str(),
 		name.c_str(), version.c_str());
 	output.writeBytes((byte*)line.c_str(), line.length());
 	writeCrlfTo(output);
@@ -358,7 +358,7 @@ void HttpRequest::writeCookiesTo( OutputStream& output ) throw(Exception)
 		}
 		this->cookies.releaseIterator(itor);
 
-		output.writeBytes((byte*)cookieTag.c_str(), cookieTag.length());		
+		output.writeBytes((byte*)cookieTag.c_str(), cookieTag.length());
 		output.writeBytes((byte*)cookies.toString().c_str(), cookies.length());
 		writeCrlfTo(output);
 	}
@@ -422,7 +422,7 @@ void HttpRequest::setUrlWithParas(const String& url)
 }
 
 
-HttpResponse::HttpResponse(const HashMap<String,String>& headers) 
+HttpResponse::HttpResponse(const HashMap<String,String>& headers)
 	: HttpHeader(headers),status(Ok)
 {
 	String status = headers.getDefault(KEY_STATUS, "200 Ok");
@@ -472,10 +472,10 @@ String HttpResponse::status2str(Status stat)
 		break;
 	case RequestTimeout:
 		status="408 RequestTimeout";
-		break;	
+		break;
 	case LengthRequired:
 		status="411 Length Required";
-		break;	
+		break;
 	case RequestEntityTooLarge:
 		status="413 Request Entity Too Large";
 		break;
@@ -528,7 +528,7 @@ void HttpResponse::setServer( const String& val )
 
 void HttpResponse::writeTo( OutputStream& output ) throw(Exception)
 {
-	String line = String::format("%s/%s %s", //HTTP/1.0 200 OK 
+	String line = String::format("%s/%s %s", //HTTP/1.0 200 OK
 		name.c_str(), version.c_str(), status2str(status).c_str());
 	output.writeBytes((byte*)line.c_str(), line.length());
 	writeCrlfTo(output);

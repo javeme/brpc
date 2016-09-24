@@ -21,7 +21,7 @@ private:
 	ObjectMap& operator=(const ObjectMap& other){ return *this; }
 public:
 	template<typename Type>
-	bool putValue(cstring name, const Type& val){ 
+	bool putValue(cstring name, const Type& val){
 		Object* obj = brpc::toObject(val);
 		bool sucess = this->put(name, obj);
 		if(!sucess)
@@ -30,7 +30,7 @@ public:
 	}
 
 	template<typename Type>
-	bool getValue(cstring name, Type& val)const{ 
+	bool getValue(cstring name, Type& val)const{
 		Object* obj = this->get(name);
 		if (obj)
 		{
@@ -40,7 +40,7 @@ public:
 		return false;
 	}
 
-	bool putValue(cstring name, cstring val){ 
+	bool putValue(cstring name, cstring val){
 		Object* obj = brpc::toObject(val);
 		bool sucess = this->put(name, obj);
 		if(!sucess)
@@ -48,7 +48,7 @@ public:
 		return sucess;
 	}
 
-	bool putValue(cstring name, const String& val){ 
+	bool putValue(cstring name, const String& val){
 		return this->putValue(name, val.c_str());
 	}
 
@@ -64,7 +64,7 @@ public:
 	{
 		return BeanContainer::operator [](name);
 	}
-	
+
 	virtual String toString() const;
 public:
 	typedef BeanContainer::ObjectMap::const_iterator MapIterator;
@@ -80,7 +80,7 @@ public:
 		Object* value;
 	};
 
-	virtual void accept(TypeVisiter* visitor) 
+	virtual void accept(TypeVisiter* visitor)
 	{
 		checkNullPtr(visitor);
 		visitor->visit(this);
@@ -115,7 +115,7 @@ struct Converter<std::map<std::string,T>>
 		std::map<std::string,T> map;
 		ObjectMap& objMap = *pMap;
 		for (auto itor = objMap.begin(); itor != objMap.end(); ++itor)
-		{	
+		{
 			map.insert(make_pair(itor->first, brpc::valueOf<T>(itor->second)));
 		}
 		return map;
@@ -125,7 +125,7 @@ struct Converter<std::map<std::string,T>>
 	{
 		ObjectMap* objMap = new ObjectMap();
 		for (auto itor = val.begin(); itor != val.end(); ++itor)
-		{	
+		{
 			objMap->putValue(itor->first.c_str(), itor->second);
 		}
 		return objMap;

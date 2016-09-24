@@ -16,14 +16,14 @@ typedef struct ByteArray{
 		length=len;
 		data=new byte[len];
 	}
-	ByteArray(byte* d,int len=-1){		
+	ByteArray(byte* d,int len=-1){
 		if(len<0)
 			len=strlen((cstring)d);
 		length=len;
 		data=new byte[length];
 		memcpy(data,d,length);
 	}
-	
+
 	void release()
 	{
 		if(length>0 || data!=nullptr)
@@ -69,7 +69,7 @@ public:
 	virtual Object* getObject(cstring columnName) = 0;
 
 	virtual size_t getDataLength(uint32 columnIndex) = 0;
-	virtual size_t getDataLength(cstring columnName) = 0;	
+	virtual size_t getDataLength(cstring columnName) = 0;
 } DatabaseResult;
 
 

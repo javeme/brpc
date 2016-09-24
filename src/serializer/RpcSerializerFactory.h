@@ -24,7 +24,7 @@ public:
 public:
 	static BrpcContentType str2contentType(cstring type);
 	static cstring contentType2str(BrpcContentType type);
-private: 
+private:
 	RpcSerializerFactory();
 	virtual ~RpcSerializerFactory();
 private:

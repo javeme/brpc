@@ -7,7 +7,7 @@ namespace brpc{
 
 #define JMTP_NAME "JMTP"
 #define JMTP_VERSION 1
-	
+
 class JmtpHeader : public Object
 {
 public:
@@ -39,7 +39,7 @@ public:
 
 	word getStatus() const { return status; }
 	void setStatus(word val) { status = val; }
-	String getStatusStr() const;	
+	String getStatusStr() const;
 
 	dword getContentLength() const { return length; }
 	void setContentLength(dword val) { length = val; }

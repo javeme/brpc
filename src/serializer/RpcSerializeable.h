@@ -31,11 +31,11 @@ public:
 	virtual int read(RpcMethod& method, const InputStream& input,
 		const String& encoding="") throw(SerializeException)=0;
 public:
-	inline static String convertEncoding(const String& src, 
+	inline static String convertEncoding(const String& src,
 		const String& encodingFrom, const String& encodingTo);
 };
 
-inline String RpcSerializeable::convertEncoding(const String& src, 
+inline String RpcSerializeable::convertEncoding(const String& src,
 	const String& encodingFrom, const String& encodingTo)
 {
 	if(encodingTo.compare("gbk", false)){

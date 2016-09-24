@@ -81,7 +81,7 @@ bool Reader::readArray(ObjectList& list)
 		(void)list.add(val);
 
 		parser.OutOfElem();//outof item
-	}	
+	}
 	return true;
 }
 
@@ -99,7 +99,7 @@ bool Reader::readObject(ObjectMap& obj)
 			addError("expected key");
 			return false;
 		}
-		std::string key = parser.GetChildData();	
+		std::string key = parser.GetChildData();
 
 		//value
 		parser.ResetChildPos();
@@ -122,7 +122,7 @@ bool Reader::readObject(ObjectMap& obj)
 		(void)obj.put(key, val);
 
 		parser.OutOfElem();//outof pair
-	}	
+	}
 	return true;
 }
 

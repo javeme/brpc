@@ -25,10 +25,10 @@ public:
 public:
 	virtual Object* call(cstring name, const ObjectList& args);
 	virtual void cast(cstring name, const ObjectList& args);
-	
+
 	virtual Object* call(cstring obj, cstring name, const ObjectList& args);
 	virtual void cast(cstring obj, cstring name, const ObjectList& args);
-	
+
 	virtual void notifyEvent(cstring event, Object* sender, const ObjectList& args);
 
 	virtual String login(const ObjectList& args);
@@ -51,7 +51,7 @@ protected:
 
 	virtual void onNotifyEvent(cstring event, const ObjectList& args);
 protected:
-	virtual bool doCallResponse(const Headers& headers, const RpcMethod& method, 
+	virtual bool doCallResponse(const Headers& headers, const RpcMethod& method,
 								Object* result, int status);
 	virtual bool doCall(const Headers& headers, RpcMethod& method);
 	virtual bool doEvent(const Headers& headers, RpcMethod& method);

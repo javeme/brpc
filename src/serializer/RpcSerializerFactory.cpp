@@ -60,7 +60,7 @@ struct ContentTypeMapIniter
 		ct2s(BRPC_TYPE_BIN, "application/brpc.bin");//application/octet-stream
 		ct2s(BRPC_TYPE_JSON, "text/json");
 		ct2s(BRPC_TYPE_XML, "text/xml");
-		
+
 
 		for(auto i=contentType2strMap.begin();i!=contentType2strMap.end();i++)
 		{

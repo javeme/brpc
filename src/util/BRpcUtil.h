@@ -7,7 +7,7 @@
 
 
 namespace brpc{
-	
+
 /*
 * 字符及其编码工具类
 * @author Javeme
@@ -224,10 +224,10 @@ public:
 		*this = std::move(other);
 	}
 
-	TypeObject& operator=(TypeObject&& other) { 
+	TypeObject& operator=(TypeObject&& other) {
 		this->m_val = other.detach();
 		this->m_dontDelete = other.m_dontDelete;
-		return *this; 
+		return *this;
 	}
 
 public:
@@ -287,7 +287,7 @@ inline MatchLevel matchLevel(Object* obj)
 {
 	try{
 		TypeObject<Type> val = methodArg<Type>(obj);
-		
+
 		Number* number = dynamic_cast<Number*>(obj);
 		if (number != null)
 		{

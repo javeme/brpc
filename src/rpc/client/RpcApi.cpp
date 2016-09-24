@@ -5,13 +5,13 @@
 namespace brpc{
 
 
-RpcApi::RpcApi(cstring name, RpcApi* parent) 
+RpcApi::RpcApi(cstring name, RpcApi* parent)
 	: serviceName(name), rpcClient(null), parent(parent)
 {
 	(void)init(parent);
 }
 
-RpcApi::RpcApi(cstring name, RpcClient* rpcClient, const ObjectList& loginArgs) 
+RpcApi::RpcApi(cstring name, RpcClient* rpcClient, const ObjectList& loginArgs)
 	: serviceName(name), rpcClient(rpcClient), parent(null)
 {
 	(void)init(rpcClient, loginArgs);

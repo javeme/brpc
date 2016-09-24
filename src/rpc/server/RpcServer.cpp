@@ -8,8 +8,8 @@
 
 namespace brpc{
 
-RpcServer::RpcServer(cstring url, AuthChecker* authChecker, 
-	cstring serializerType, unsigned int timeout, cstring name) 
+RpcServer::RpcServer(cstring url, AuthChecker* authChecker,
+	cstring serializerType, unsigned int timeout, cstring name)
 	: url(url), authChecker(authChecker), dispatcher(null),
 	  serializerType(serializerType), name(name)
 {
@@ -46,7 +46,7 @@ void RpcServer::start(RpcService* service)
 {
 	if (running)
 		return;
-	
+
 	checkNullPtr(service);
 	dispatcher = service;
 	dispatcher->setEventHandler(this);
@@ -107,7 +107,7 @@ void RpcServer::onReceived(cstring name,const DataPackage& data,long time)
 	BRpcUtil::debug("====received: %s\n", content.c_str());
 	String msg = String::format(
 		"<<<< received from %s: headers<%s>, body<%s>",
-		name, data.headers.toString().c_str(), 
+		name, data.headers.toString().c_str(),
 		content.c_str());
 	Log::getLogger()->debug(msg);
 }
@@ -118,7 +118,7 @@ void RpcServer::onSent(cstring name,const DataPackage& data,long time)
 	BRpcUtil::debug("====sended: %s\n", content.c_str());
 	String msg = String::format(
 		">>>> sended to %s: headers<%s>, body<%s>",
-		name, data.headers.toString().c_str(), 
+		name, data.headers.toString().c_str(),
 		content.c_str());
 	Log::getLogger()->debug(msg);
 }
@@ -130,7 +130,7 @@ void RpcServer::onError(cstring name,cstring err,RpcReceiveListener* listener)
 		name, err);
 	BRpcUtil::debug("====%s\n", msg.c_str());
 	Log::getLogger()->debug(msg);
-	
+
 	if(streq(HOOK_ERR_RECV_STOPED, err) ||
 	   streq(HOOK_ERR_CLOSED, err))
 	{

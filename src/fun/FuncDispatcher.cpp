@@ -21,29 +21,29 @@ FuncDispatcher::~FuncDispatcher()
 void FuncDispatcher::unregisterFunction(cstring funcName)
 {
 	auto itor = m_funcMap.find(funcName);
-	if (itor == m_funcMap.end()) {			
+	if (itor == m_funcMap.end()) {
 		return;
 	}
 
-	FuncList& funcList = itor->second;	
+	FuncList& funcList = itor->second;
 
 	for(auto itor = funcList.begin(); itor != funcList.end(); ++itor) {
 		delete (*itor);
 	}
-	m_funcMap.erase(funcName);	
+	m_funcMap.erase(funcName);
 }
 
 void FuncDispatcher::clearAllFunction()
 {
 	for (auto itor = m_funcMap.begin(); itor != m_funcMap.end(); /*++itor*/) {
-		FuncList& funcList = itor->second;	
+		FuncList& funcList = itor->second;
 
 		for(auto itor2 = funcList.begin(); itor2 != funcList.end(); ++itor2) {
 			delete (*itor2);
 		}
 		itor = m_funcMap.erase(itor);
 	}
-	
+
 	DispatcherList& ed = m_extendDispatchers;
 	for (auto itor = ed.begin(); itor != ed.end(); ++itor) {
 		FuncDispatcher* dispatcher = (*itor);
@@ -99,11 +99,11 @@ AnyFunction* FuncDispatcher::matchedFunction(cstring name, const ObjectList& arg
 
 
 //matched all Function include Extend
-AnyFunction* FuncDispatcher::matchedAllFunction(cstring name, 
+AnyFunction* FuncDispatcher::matchedAllFunction(cstring name,
 	const ObjectList& args)
 {
 	AnyFunction* fun = matchedFunction(name, args);
-	
+
 	if (fun != null){
 		return fun;
 	}
@@ -143,7 +143,7 @@ Object* FuncDispatcher::call(cstring name, const ObjectList& args)
 		return call(fthis, fname, args);
 	}
 	else {
-		AnyFunction* func = getFunctionFromAll(name, args);		
+		AnyFunction* func = getFunctionFromAll(name, args);
 		return AnyFunction::invoke(func, args);
 	}
 }
@@ -230,7 +230,7 @@ Object* FuncDispatcher::getVar(cstring name) const
 List<String> FuncDispatcher::listVars() const
 {
 	List<String> vars;
-	for(auto itor = m_objMap.begin(); itor != m_objMap.end(); ++itor) {	
+	for(auto itor = m_objMap.begin(); itor != m_objMap.end(); ++itor) {
 		vars.push_back(itor->first);
 	}
 
@@ -258,7 +258,7 @@ Object* FuncDispatcher::getVarFromAll(cstring name) const
 
 void FuncDispatcher::clearAllVar()
 {
-	for(auto itor = m_objMap.begin(); itor != m_objMap.end(); /*++itor*/) {	
+	for(auto itor = m_objMap.begin(); itor != m_objMap.end(); /*++itor*/) {
 		delete itor->second;
 		itor = m_objMap.erase(itor);
 	}
@@ -273,8 +273,8 @@ void FuncDispatcher::clearAllVar()
 String FuncDispatcher::functionsAsString() const
 {
 	StringBuilder sb(m_objMap.size() * 20);
-	for(auto itor = m_funcMap.begin(); itor != m_funcMap.end(); ++itor) {	
-		const FuncList& funcList = itor->second;	
+	for(auto itor = m_funcMap.begin(); itor != m_funcMap.end(); ++itor) {
+		const FuncList& funcList = itor->second;
 
 		for(auto itor2 = funcList.begin(); itor2 != funcList.end(); ++itor2) {
 			auto& func = *itor2;
@@ -291,11 +291,11 @@ String FuncDispatcher::functionsAsString() const
 String FuncDispatcher::varsAsString() const
 {
 	StringBuilder sb(m_objMap.size() * 20);
-	for(auto itor = m_objMap.begin(); itor != m_objMap.end(); ++itor) {	
+	for(auto itor = m_objMap.begin(); itor != m_objMap.end(); ++itor) {
 		sb.append(itor->first);
 		sb.append("\n");
 	}
-	
+
 	return sb.toString();
 }
 

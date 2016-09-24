@@ -16,7 +16,7 @@ class RpcConnAcceptor;
 class RpcInvokerFacatory : public Object
 {
 public:
-	static RpcInvoker* loadRpcInvoker(String url, RpcService* dispatcher, 
+	static RpcInvoker* loadRpcInvoker(String url, RpcService* dispatcher,
 		AuthChecker* authChecker, cstring serializerType, unsigned int timeout=0);
 	static RpcConnAcceptor* loadRpcAcceptor(String url, RpcServer* server);
 };

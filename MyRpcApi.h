@@ -36,12 +36,12 @@ public:
 class MyRpcApi : public RpcApi
 {
 public:
-	MyRpcApi(cstring url, cstring name, cstring password) : 
+	MyRpcApi(cstring url, cstring name, cstring password) :
 		checker("", ""),
 		dispatcher("callback"),
 		client(url, &dispatcher, &checker, "text/json", 1000*10),
 		//RpcApi(&client, loginArgs)
-		//_init1(loginArgs.addValue(name)), 
+		//_init1(loginArgs.addValue(name)),
 		//_init2(loginArgs.addValue(password)),
 		//RpcApi(client=new P2pRpcClient(url, &dispatcher, &serializer, &checker), loginArgs)
 		RpcApi("nova")

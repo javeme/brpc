@@ -3,7 +3,7 @@
 #include "JmtpHeader.h"
 
 namespace brpc{
-	
+
 
 JmtpHeader::JmtpHeader(const HashMap<String,String>& headers)
 {
@@ -15,7 +15,7 @@ JmtpHeader::JmtpHeader(const HashMap<String,String>& headers)
 }
 
 void JmtpHeader::init(dword len/*=0*/, word type/*=0*/,
-	word counter/*=0*/, dword version/*=JMTP_VERSION*/, 
+	word counter/*=0*/, dword version/*=JMTP_VERSION*/,
 	word reserv1/*=0*/, word reserv2/*=0*/)
 {
 	(void)memcpy(name, JMTP_NAME, NAME_LEN);

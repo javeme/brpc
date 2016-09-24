@@ -27,15 +27,15 @@ public:
 	virtual ~DataPackage(){}
 
 	DataPackage(DataPackage&& other){ *this = std::move(other); }
-	DataPackage& operator=(DataPackage&& other){ 
+	DataPackage& operator=(DataPackage&& other){
 		this->headers = std::move(other.headers);
 		this->body = std::move(other.body);
-		return *this; 
+		return *this;
 	}
 	bool operator==(const DataPackage& other) const{ return this == &other; }
 public:
-	virtual String getId()const{ 
-		return headers.getDefault(KEY_PACKAGE_ID, ""); 
+	virtual String getId()const{
+		return headers.getDefault(KEY_PACKAGE_ID, "");
 	}
 	static String genId(){
 		unsigned int id = Util::random();

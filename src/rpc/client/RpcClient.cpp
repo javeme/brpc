@@ -9,7 +9,7 @@ namespace brpc{
 RpcClient::RpcClient(cstring url, RpcService* dispatcher, AuthChecker* authChecker,
 	cstring serializerType, unsigned int timeout)
 {
-	this->rpcInvoker = RpcInvokerFacatory::loadRpcInvoker(url, 
+	this->rpcInvoker = RpcInvokerFacatory::loadRpcInvoker(url,
 		dispatcher, authChecker, serializerType, timeout);
 
 	checkNullPtr(this->rpcInvoker);

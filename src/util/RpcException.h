@@ -58,7 +58,7 @@ public:
 class AmbiguityFunctionException : public ArgNotMatchedException
 {
 public:
-	AmbiguityFunctionException(cstring msg) 
+	AmbiguityFunctionException(cstring msg)
 		: ArgNotMatchedException(msg) {}
 
 	virtual ~AmbiguityFunctionException(void) {}

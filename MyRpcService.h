@@ -86,7 +86,7 @@ private:
 class MyRpcService : public RpcService
 {
 public:
-	MyRpcService(cstring name) : RpcService(name), 
+	MyRpcService(cstring name) : RpcService(name),
 		otherService("other"), subService("sub")
 	{
 		this->currentDir = "";
@@ -133,7 +133,7 @@ public:
 	}
 	bool playMusic(cstring name)
 	{
-		Thread* trd = new LambdaThread([&](){ 
+		Thread* trd = new LambdaThread([&](){
 			int counter = 0;
 			while(counter < 20){
 				onEventClick(counter++);
@@ -147,13 +147,13 @@ public:
 			path = currentDir + "/" + name;
 		return this->open("wmplayer", path);
 	}
-	String getCurrentDir() const { 
-		return currentDir; 
+	String getCurrentDir() const {
+		return currentDir;
 	}
-	void setCurrentDir(cstring val) { 
-		currentDir = val; 
+	void setCurrentDir(cstring val) {
+		currentDir = val;
 	}
-	String listCurrentDir() {		
+	String listCurrentDir() {
 		return execute("dir \"" + currentDir + "\"");
 	}
 	bool executeNoOutput(cstring cmd)
@@ -199,7 +199,7 @@ public:
 		print("}");
 		return 0;
 	}
-	
+
 	void onEventClick(int count)
 	{
 		ObjectList args;
@@ -258,15 +258,15 @@ private:
 		si.hStdError=hWrite;
 		si.wShowWindow=SW_SHOWNORMAL;
 		si.dwFlags=STARTF_USESTDHANDLES;
-		
+
 		PROCESS_INFORMATION pi;
 
 		BOOL hProcess = CreateProcessA(NULL,(char*)cmdLine,&sas,NULL,TRUE,0,NULL,NULL,&si,&pi);
-		if(!hProcess) 
-		{ 
-			CloseHandle(hRead); 
-			CloseHandle(hWrite); 
-			hRead = NULL; 
+		if(!hProcess)
+		{
+			CloseHandle(hRead);
+			CloseHandle(hWrite);
+			hRead = NULL;
 			hWrite = NULL;
 			return String::format("execute cmd \"%s\" failed", cmd);
 		}
@@ -291,7 +291,7 @@ private:
 				else if(WAIT_OBJECT_0 == result){
 					DWORD dwExitCode = 0;
 					(void)GetExitCodeProcess(pi.hProcess, &dwExitCode);
-					strOut.append(String::format("<exit code %d>", dwExitCode).c_str());				
+					strOut.append(String::format("<exit code %d>", dwExitCode).c_str());
 					break;
 				}
 				else if(WAIT_FAILED == result){

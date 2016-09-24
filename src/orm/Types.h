@@ -82,7 +82,7 @@ struct Converter<brpc::varchar<32>>
 		return Converter<cstring>::valueOf(obj);
 	}
 	static inline Object* toObject(const brpc::varchar<32>& val)
-	{		
+	{
 		return Converter<cstring>::toObject(val.value());
 	}
 };
@@ -97,7 +97,7 @@ struct Converter<brpc::varchar<int>>
 		return Converter<cstring>::valueOf(obj);
 	}
 	static inline Object* toObject(const brpc::varchar<int>& val)
-	{		
+	{
 		return Converter<varchar<int>>::toObject(val.value());
 	}
 };

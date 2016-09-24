@@ -24,7 +24,7 @@ public:
 };
 
 /*
-* RPC传输层处理器 
+* RPC传输层处理器
 * RPC传输层抽象接口(RpcConnection)
 *
 * @author Javeme
@@ -45,7 +45,7 @@ public:
 	virtual void setReceiveListener(RpcReceiveListener* listener);
 
 	virtual void setDataHookHandler(RpcDataHookHandler* hook);
-	
+
 	virtual bool isAlive() const=0;
 	virtual bool isInServer() const=0;
 

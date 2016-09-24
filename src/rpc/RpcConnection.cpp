@@ -5,13 +5,13 @@
 
 
 namespace brpc{
-	
+
 
 RpcConnection::RpcConnection(RpcService* dispatcher,
 	AuthChecker* authChecker, cstring serializerType)
-	: RpcInvoker(), 
-	dispatcher(dispatcher), 
-	authChecker(authChecker), 
+	: RpcInvoker(),
+	dispatcher(dispatcher),
+	authChecker(authChecker),
 	serializerType(serializerType)
 {
 	checkNullPtr(this->dispatcher);
@@ -34,7 +34,7 @@ Object* RpcConnection::call(cstring name, const ObjectList& args)
 
 Object* RpcConnection::onCall(cstring name, const ObjectList& args)
 {
-	return onCall("", name, args);	
+	return onCall("", name, args);
 }
 
 void RpcConnection::cast(cstring name, const ObjectList& args)
@@ -90,7 +90,7 @@ void RpcConnection::cast(cstring obj, cstring name, const ObjectList& args)
 	castMethod(headers, method);
 }
 
-void RpcConnection::sendEvent(const Headers& headers, 
+void RpcConnection::sendEvent(const Headers& headers,
 	cstring method, const ObjectList& args)
 {
 	RpcMethod req(method, const_cast<ObjectList*>(&args), false);
@@ -103,7 +103,7 @@ void RpcConnection::sendEvent(const Headers& headers,
 }
 
 
-bool RpcConnection::doCallResponse(const Headers& headers, 
+bool RpcConnection::doCallResponse(const Headers& headers,
 	const RpcMethod& method, Object* result, int status)
 {
 	Headers rp;//reponse headers
@@ -121,8 +121,8 @@ bool RpcConnection::doCallResponse(const Headers& headers,
 
 	bool success = false;
 	try{
-		castMethod(rp, RpcMethod(result, method.methodName, method.owner, 
-								 status, method.authToken));		
+		castMethod(rp, RpcMethod(result, method.methodName, method.owner,
+								 status, method.authToken));
 		success = true;
 	}catch (Exception& e){
 		success = onReturnCallException(e);
@@ -134,12 +134,12 @@ bool RpcConnection::doCall(const Headers& headers, RpcMethod& method)
 {
 	bool success = false;
 	if (!method.waitResult)
-		success = doCallResponse(headers, method, 
+		success = doCallResponse(headers, method,
 								 null, RpcMethod::STATUS_RESPONSE_PENDING);
 
-	ObjectList* args = dynamic_cast<ObjectList*>(method.args);	
+	ObjectList* args = dynamic_cast<ObjectList*>(method.args);
 	String methodName = method.getMethodNameWithVersion();
-	
+
 	int status = 0;
 	SmartPtr<Object> result = null;
 	try{
@@ -184,8 +184,8 @@ bool RpcConnection::doCall(const Headers& headers, RpcMethod& method)
 bool RpcConnection::doEvent(const Headers& headers, RpcMethod& method)
 {
 	bool success = false;
-	
-	ObjectList* args = dynamic_cast<ObjectList*>(method.args);	
+
+	ObjectList* args = dynamic_cast<ObjectList*>(method.args);
 	String methodName = method.getMethodNameWithVersion();
 	try{
 		if(args == null)
@@ -218,11 +218,11 @@ bool RpcConnection::invoke(const Headers& headers, const InputStream& input)
 	}catch (SerializeException& e)
 	{
 		String str = e.toString();
-		//@TODO(lzm): does it need to response if it's an event? 
+		//@TODO(lzm): does it need to response if it's an event?
 		bool r = doCallResponse(headers, method, &str, RpcMethod::STATUS_RESPONSE_ERROR);
 		bool s = onSerializeException(e);
 		return (r && s);
-	}	
+	}
 	return false;
 }
 
@@ -259,7 +259,7 @@ void RpcConnection::checkAuth(const RpcMethod& method)
 				cstring msg = success ? "logout success" : "logout failed";
 				throw LogoutException(msg);
 			}catch (LogoutException&){
-				throw;			
+				throw;
 			}catch (Exception& e){
 				throw AuthException(e.toString());
 			}
@@ -278,7 +278,7 @@ void RpcConnection::checkAuth(const RpcMethod& method)
 				String authToken = authChecker->login(*args);
 				throw LoginException(authToken, "login success");
 			}catch (LoginException&){
-				throw;	
+				throw;
 			}catch (Exception& e){
 				throw AuthException(e.toString());
 			}
@@ -333,7 +333,7 @@ RpcSerializeable* RpcConnection::getSerializer(cstring name)
 	return serializer;
 }
 
-void RpcConnection::notifyEvent(cstring event, Object* sender, 
+void RpcConnection::notifyEvent(cstring event, Object* sender,
 	const ObjectList& args)
 {
 	ObjectList argsWithEvent = args;

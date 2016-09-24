@@ -14,7 +14,7 @@ namespace brpc{
 
 ///////////////////////////////////////////////////////////////////////////
 //AmqpRpcConnAcceptor
-AmqpRpcConnAcceptor::AmqpRpcConnAcceptor(RpcServer* server) 
+AmqpRpcConnAcceptor::AmqpRpcConnAcceptor(RpcServer* server)
 	: RpcConnAcceptor(server), running(false)
 {
 	checkNullPtr(server);
@@ -68,7 +68,7 @@ void AmqpRpcConnAcceptor::waitConnection()
 
 		const std::string messageType = message.typeName();
 		const std::string peerId = message.appID();
-		
+
 		AMQP::Consumer::debug("received message " + messageType
 			+ " from " + peerId);
 
@@ -132,8 +132,8 @@ void AmqpRpcConnAcceptor::addConnection(String id,
 	checkNullPtr(server);
 	AmqpRpcConnection* conn = new AmqpRpcConnection(
 		server->getUrl(),
-		server->getDispatcher(), 
-		server->getAuthChecker(), 
+		server->getDispatcher(),
+		server->getAuthChecker(),
 		server->getSerializerType(),
 		server->getTimeout(),
 		channelFactory);
@@ -182,7 +182,7 @@ void AmqpRpcConnAcceptor::stop()
 }
 
 void AmqpRpcConnAcceptor::wait()
-{ 
+{
 	RpcConnAcceptor::wait();
 }
 

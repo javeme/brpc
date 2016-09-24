@@ -25,7 +25,7 @@ const cstring TAG_BOOL_TRUE = "true";
 const cstring TAG_BOOL_FALSE= "false";
 const cstring TAG_JSON_NULL = "null";
 
-REG_SERIALIZER("text/json", RpcMethodJsonSerializer) 
+REG_SERIALIZER("text/json", RpcMethodJsonSerializer)
 REG_SERIALIZER("application/json", RpcMethodJsonSerializer)
 
 Type2JsonSerializer::Type2JsonSerializer()
@@ -89,7 +89,7 @@ void Type2JsonSerializer::visit(TypeIterator* v)
 		if(visitable)
 			visitable->accept(this);
 		else
-			visit(&value->toString());		
+			visit(&value->toString());
 	}
 	else if(dynamic_cast<ObjectMap::Iterator*>(v))
 	{
@@ -111,7 +111,7 @@ void Type2JsonSerializer::visit(TypeIterator* v)
 		if(visitable)
 			visitable->accept(this);
 		else
-			visit(&itor->value->toString());	
+			visit(&itor->value->toString());
 	}
 	else
 	{
@@ -132,7 +132,7 @@ void Type2JsonSerializer::reset()
 void Type2JsonSerializer::removeLastEleseparator()
 {
 	unsigned int last = strBuilder.length()-1;
-	if (strBuilder.length()>0 
+	if (strBuilder.length()>0
 		&& strBuilder.substring(last)==TAG_ELE_SEPR)
 	{
 		strBuilder.deleteSub(last, last+strlen(TAG_ELE_SEPR));
@@ -155,7 +155,7 @@ bool Type2JsonSerializer::isControlCharacter(char ch)
 
 bool Type2JsonSerializer::containsControlCharacter(const char* str)
 {
-	while ( *str ) 
+	while ( *str )
 	{
 		if ( isControlCharacter( *(str++) ) )
 			return true;
@@ -204,9 +204,9 @@ String Type2JsonSerializer::stringToQuotedString(const char *str)
 			// Even though \/ is considered a legal escape in JSON, a bare
 			// slash is also legal, so I see no reason to escape it.
 			// (I hope I am not misunderstanding something.
-			// blep notes: actually escaping \/ may be useful in javascript to avoid </ 
+			// blep notes: actually escaping \/ may be useful in javascript to avoid </
 			// sequence.
-			// Should add a flag to allow this compatibility mode and prevent this 
+			// Should add a flag to allow this compatibility mode and prevent this
 			// sequence from occurring.
 		default:
 			if ( isControlCharacter( *c ) )
@@ -234,8 +234,8 @@ RpcMethodJsonSerializer::RpcMethodJsonSerializer()
 
 int RpcMethodJsonSerializer::write(OutputStream& output, const RpcMethod& method,
 	const String& encoding)
-{	
-	if (method.status == RpcMethod::STATUS_REQUEST 
+{
+	if (method.status == RpcMethod::STATUS_REQUEST
 		&& method.methodName == "")
 	{
 		return -1;
@@ -278,7 +278,7 @@ int RpcMethodJsonSerializer::read(RpcMethod& method, const InputStream& input,
 		//@TODO(lzm): don't delete this ptrs twice
 		(void)methodObjMap->remove("args", false);
 		(void)methodObjMap->remove("returnValue", false);
-		
+
 		delete methodObjMap;
 		methodObjMap = null;
 

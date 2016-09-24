@@ -9,7 +9,7 @@
 
 namespace brpc{
 
-P2pRpcConnAcceptor::P2pRpcConnAcceptor(RpcServer* server) 
+P2pRpcConnAcceptor::P2pRpcConnAcceptor(RpcServer* server)
 	: RpcConnAcceptor(server), running(false), pool(20)
 {
 	checkNullPtr(server);
@@ -40,7 +40,7 @@ void P2pRpcConnAcceptor::waitConnection()
 	paras.put("noDelay", "true");
 
 	ServerSocket serverSocket(CodeUtil::str2Int(port));
-	
+
 	this->running = true;
 	while(this->running)
 	{
@@ -67,8 +67,8 @@ void P2pRpcConnAcceptor::addConnection(RpcSocket* rpcSocket)
 	checkNullPtr(rpcSocket);
 	P2pRpcConnection* conn = new P2pRpcConnection(
 		server->getUrl(),
-		server->getDispatcher(), 
-		server->getAuthChecker(), 
+		server->getDispatcher(),
+		server->getAuthChecker(),
 		server->getSerializerType(),
 		server->getTimeout(),
 		rpcSocket);
@@ -84,7 +84,7 @@ void P2pRpcConnAcceptor::stop()
 }
 
 void P2pRpcConnAcceptor::wait()
-{ 
+{
 	RpcConnAcceptor::wait();
 	this->pool.stopAndWait();
 }

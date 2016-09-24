@@ -24,15 +24,15 @@ SmartPtr<HttpHeader> HttpParser::parse(const LinkedList<String>& lines)
 {
 	SmartPtr<HttpHeader> header = null;
 
-	String line = lines.get(0);	
+	String line = lines.get(0);
 	//Response
-	if (line.startWith(HTTP_NAME))//HTTP/1.0 200 OK 
+	if (line.startWith(HTTP_NAME))//HTTP/1.0 200 OK
 	{
 		auto list = line.splitWith(" ");
 		if(list.size() < 3)
 			throw HttpParseException("Invalid http response: "+line);
 		SmartPtr<HttpResponse> response = new HttpResponse();
-		header = response; 
+		header = response;
 		response->setVersion(list[0].splitWith("/")[1]);
 		response->setStatus(HttpResponse::str2status(list[1]));
 		response->setDescription(line.substring(line.find(list[2],list[0].length())));
@@ -50,7 +50,7 @@ SmartPtr<HttpHeader> HttpParser::parse(const LinkedList<String>& lines)
 		request->setUrlWithParas(list[1]);
 		request->setVersion(list[2].splitWith("/")[1]);
 	}
-	
+
 	//Entities
 	auto itor = const_cast<LinkedList<String>&>(lines).iterator();
 	while(itor->hasNext())
@@ -104,7 +104,7 @@ HashMap<String,String> HttpParser::parseCookies(const String& str)
 		position2=str.find(";",position1);
 		if(position2 <= position1)
 		{
-			end = true;			
+			end = true;
 		}
 
 		value=str.substring(position1+1,position2-position1-1);
@@ -125,14 +125,14 @@ String HttpParser::parseContentType(const String& type)
 		contentType="text/html";
 	else if(type.compare("text")==0||type.compare("TEXT")==0)
 		contentType="text/plain";
-	else if(type.compare("gif")==0||type.compare("GIF")==0) 
+	else if(type.compare("gif")==0||type.compare("GIF")==0)
 		contentType="image/gif";
 	else if(type.compare("jpeg")==0||type.compare("jpg")==0
-		||type.compare("JPEG")==0||type.compare("JPG")==0) 
+		||type.compare("JPEG")==0||type.compare("JPG")==0)
 		contentType="image/jpeg";
-	else if(type.compare("mp3")==0||type.compare("MP3")==0) 
+	else if(type.compare("mp3")==0||type.compare("MP3")==0)
 		contentType="audio/x-mpeg";
-	else if(type.compare("wma")==0||type.compare("WMA")==0) 
+	else if(type.compare("wma")==0||type.compare("WMA")==0)
 		contentType="audio/x-ms-wma";
 	else if(type.compare("mid")==0||type.compare("MID")==0)
 		contentType="audio/midi";
@@ -141,7 +141,7 @@ String HttpParser::parseContentType(const String& type)
 	else if(type.compare("gz")==0||type.compare("GZ")==0)
 		contentType="application/x-gzip";
 	else
-	{		
+	{
 		contentType="application/"+type;
 	}
 	return contentType;

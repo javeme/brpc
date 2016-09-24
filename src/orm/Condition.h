@@ -31,7 +31,7 @@ public:
 public:
 	virtual ConditionWrapper operator ==(cstring val);
 	virtual ConditionWrapper operator !=(cstring val);
-	
+
 	virtual ConditionWrapper operator ==(int val);
 	virtual ConditionWrapper operator !=(int val);
 	virtual ConditionWrapper operator >(int val);
@@ -83,7 +83,7 @@ public:
 	operator Condition& () const {
 		return *(Condition*)*this;
 	}
-	
+
 	virtual bool equals(const ConditionWrapper& other) const {
 		return this->operator==(other);
 	}

@@ -51,17 +51,17 @@ public:
 
         return (*m_fun)(valueOf<Arg1>(args[0]), valueOf<Arg2>(args[1]));
     }
-    virtual FuncType* getFuncAddress() const{ return m_fun; }                                 
-                                                                                             
-    virtual cstring retParaType() const{ return type2name(RetType); }                     
-                                                                                             
-    virtual List<cstring> paraTypes() const                                                     
-    {                                                                                          
-        List<cstring> types;                                                                 
-        ArgTypeGetter<ARGS_COUNT-1>::get(types);                                             
-        return types;                                                                          
-    }                                                                                     
-                                                
+    virtual FuncType* getFuncAddress() const{ return m_fun; }
+
+    virtual cstring retParaType() const{ return type2name(RetType); }
+
+    virtual List<cstring> paraTypes() const
+    {
+        List<cstring> types;
+        ArgTypeGetter<ARGS_COUNT-1>::get(types);
+        return types;
+    }
+
 private:
     FuncType* m_fun;
 
@@ -95,85 +95,85 @@ private:
         static void check(const ObjectList& args, int& match){}
     };
 
-private:                                                            
-    template<int INDEX>                                                
-    struct ArgTypeGetter{                                            
-        static void get(List<cstring>& types){                        
-            ArgTypeGetter<INDEX-1>::get(types);                        
-            types.push_back(type2name(argsType<INDEX>::Type));    
-        }                                                        
-    };                                                                
-    template<>                                                        
-    struct ArgTypeGetter<-1>{                                        
-        static void get(List<cstring>& types){}                    
-    };                                                                
+private:
+    template<int INDEX>
+    struct ArgTypeGetter{
+        static void get(List<cstring>& types){
+            ArgTypeGetter<INDEX-1>::get(types);
+            types.push_back(type2name(argsType<INDEX>::Type));
+        }
+    };
+    template<>
+    struct ArgTypeGetter<-1>{
+        static void get(List<cstring>& types){}
+    };
 };
 
 
-template <typename C, typename R> 
-class FunctionWrapper<R(C::*)()> { 
-public: 
+template <typename C, typename R>
+class FunctionWrapper<R(C::*)()> {
+public:
     typedef R RetType; typedef RetType (C::*FuncType)();
     typedef FunctionWrapper<R(C::*)()> SelfType;
-    FunctionWrapper(FuncType f) : m_fun(f){} 
-    virtual unsigned int argsSize() const{ return ARGS_COUNT; } 
-    virtual int matchArgsType(const ObjectList& args) const { 
+    FunctionWrapper(FuncType f) : m_fun(f){}
+    virtual unsigned int argsSize() const{ return ARGS_COUNT; }
+    virtual int matchArgsType(const ObjectList& args) const {
         return MatchArgsTypeHelper<ARGS_COUNT>::matchArgsType(args);
-    } 
-    RetType operator()(const ObjectList& args) { 
+    }
+    RetType operator()(const ObjectList& args) {
         if (args.size() < argsSize()) {
             throw ArgNotMatchedException(String::format(
                 "args size(%d) not matched size %d", args.size(), argsSize()));
-        } 
-        const static int CLS_INDEX = ArgsCounter::C; 
+        }
+        const static int CLS_INDEX = ArgsCounter::C;
         C* _this = valueOf<argsType<CLS_INDEX>::Type>(args[CLS_INDEX]);
-        checkNullPtr(_this); 
-        return (_this->*m_fun)(); 
+        checkNullPtr(_this);
+        return (_this->*m_fun)();
     }
-    virtual FuncType getFuncAddress() const{ return m_fun; } 
-    virtual cstring retParaType() const{ return type2name(RetType); } 
+    virtual FuncType getFuncAddress() const{ return m_fun; }
+    virtual cstring retParaType() const{ return type2name(RetType); }
     virtual vector<cstring> paraTypes() const {
         vector<cstring> types;
         ArgTypeGetter<ARGS_COUNT-1>::get(types);
         return types;
-    } 
-private: 
-    FuncType m_fun; 
-private: 
+    }
+private:
+    FuncType m_fun;
+private:
     struct ArgsCounter{ enum{C, COUNT}; }
     enum { ARGS_COUNT = ArgsCounter::COUNT}
 private:
-    struct None; 
+    struct None;
     template<int INDEX> struct argsType{ typedef None Type; }
     template<> struct argsType<ArgsCounter::C>{ typedef C* Type; }
     ;
-private: 
-    template<int INDEX> struct TypeChecker{ 
-        static void check(const ObjectList& args, int& match){ 
+private:
+    template<int INDEX> struct TypeChecker{
+        static void check(const ObjectList& args, int& match){
             TypeChecker<INDEX-1>::check(args, match);
             valueOf<argsType<INDEX>::Type>(args[INDEX]);
             match++;
-        } 
+        }
     };
     template<> struct TypeChecker<-1>{
         static void check(const ObjectList& args, int& match){}
     };
-private: 
-    template<int INDEX> struct ArgTypeGetter{ 
-        static void get(vector<cstring>& types){ 
+private:
+    template<int INDEX> struct ArgTypeGetter{
+        static void get(vector<cstring>& types){
             ArgTypeGetter<INDEX-1>::get(types);
             types.push_back(type2name(argsType<INDEX>::Type));
-        } 
+        }
     };
     template<> struct ArgTypeGetter<-1>{ static void get(vector<cstring>& types){} }
-private: 
-    template<int ARGS_SIZE> 
-    struct MatchArgsTypeHelper{ 
-        static int matchArgsType(const ObjectList& args){ 
+private:
+    template<int ARGS_SIZE>
+    struct MatchArgsTypeHelper{
+        static int matchArgsType(const ObjectList& args){
             int match = 0;
             try{ TypeChecker<ARGS_SIZE-1>::check(args, match); }catch (Exception& ){}
             return match/ARGS_SIZE;
-        } 
+        }
     }
     template<> struct MatchArgsTypeHelper<0>{
         static int matchArgsType(const ObjectList& args){

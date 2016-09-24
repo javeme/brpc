@@ -5,7 +5,7 @@
 
 namespace brpc{
 
-const cstring MAP_CLASS_METHOD = "Method";	
+const cstring MAP_CLASS_METHOD = "Method";
 
 BinaryReader::BinaryReader():inputStream(null)
 {
@@ -44,12 +44,12 @@ bool BinaryReader::readArray(ObjectList& list)
 {
 	int size = readSize();
 	for(int i=0; i<size; i++)
-	{	
+	{
 		Object* val = null;
 		if(!readValue(val))
-			return false;		
+			return false;
 		(void)list.add(val);
-	}	
+	}
 	return true;
 }
 
@@ -59,16 +59,16 @@ bool BinaryReader::readObject(ObjectMap& obj)
 	obj.setClassType(readString());
 	for(int i=0; i<size; i++)
 	{
-		//key		
-		String key = readString();	
+		//key
+		String key = readString();
 
-		//value		
+		//value
 		Object* val = null;
 		if(!readValue(val))
 			return false;
-		
+
 		(void)obj.put(key, val);
-	}	
+	}
 	return true;
 }
 
@@ -127,8 +127,8 @@ bool BinaryReader::parse(const InputStream& input, ObjectMap*& methodObjMap)
 	errorList.clear();
 
 	inputStream = const_cast<InputStream*>(&input);
-	
-	Object* val = null;	
+
+	Object* val = null;
 	if(readValue(val) && val != null){
 		methodObjMap = dynamic_cast<ObjectMap*>(val);
 		if(methodObjMap == null){

@@ -19,7 +19,7 @@ const static unsigned int BRPC_MAX_BODY_LEN = 1024 * 1024 * 4;//4M
 class RpcMethod : public Object
 {
 public:
-	enum{ 
+	enum{
 		STATUS_REQUEST		 = 10,
 		STATUS_REQUEST_LOGIN = 11,
 		STATUS_REQUEST_LOGOUT= 12,
@@ -32,15 +32,15 @@ public:
 		STATUS_RESPONSE_ERROR			= 30,
 		STATUS_RESPONSE_INVALID_METHOD	= 31,
 		STATUS_RESPONSE_INVALID_ARGS	= 32,
-		STATUS_RESPONSE_DENIED			= 33,	
+		STATUS_RESPONSE_DENIED			= 33,
 	};
 public:
 	RpcMethod();
-	RpcMethod(cstring name, ObjectList* args, 
+	RpcMethod(cstring name, ObjectList* args,
 		bool waitResult=true, cstring authToken="");
-	RpcMethod(cstring obj, cstring name, ObjectList* args, 
+	RpcMethod(cstring obj, cstring name, ObjectList* args,
 		bool waitResult=true, cstring authToken="");
-	RpcMethod(Object* returnValue, cstring name, cstring obj="", 
+	RpcMethod(Object* returnValue, cstring name, cstring obj="",
 		int status=STATUS_RESPONSE_OK, cstring authToken="");
 	virtual ~RpcMethod();
 
@@ -60,7 +60,7 @@ public:
 public:
 	virtual bool isAutoDelArgs() const { return autoDelArgs; }
 	virtual void setAutoDelArgs(bool val) { autoDelArgs = val; }
-	
+
 	virtual void writeTo(ObjectMap& map) const;
 	virtual void readFrom(const ObjectMap& map);
 public:
@@ -74,7 +74,7 @@ public:
 	Object* returnValue;
 
 	bool waitResult;
-	
+
 private:
 	bool autoDelArgs;
 };

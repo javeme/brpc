@@ -3,7 +3,7 @@
 
 
 namespace brpc{
-	
+
 class Number;
 class ObjectList;
 class ObjectMap;
@@ -39,7 +39,7 @@ class TypeIterator : public TypeVisitable
 public:
 	virtual ~TypeIterator(){}
 public:
-	virtual void accept(TypeVisiter* visitor){ 
+	virtual void accept(TypeVisiter* visitor){
 		checkNullPtr(visitor);
 		visitor->visit(this);
 	}

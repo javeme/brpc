@@ -42,7 +42,7 @@ namespace Json {
    };
 
 
-   class JSON_API Value 
+   class JSON_API Value
    {
 	   friend class ValueIteratorBase;
 # ifdef JSON_VALUE_USE_INTERNAL_MAP

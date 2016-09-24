@@ -65,14 +65,14 @@ public:
 	virtual void add(Model* model);
 	virtual int update(Model* model);
 	virtual int remove(Model* model);
-	
+
 	virtual bool createDatabase(cstring db);
 	virtual bool dropDatabase(cstring db);
 
 	virtual bool createTable(cstring table);
 	virtual bool createTable(Model* model);
 	virtual bool dropTable(cstring table);
-	
+
 	virtual void begin();
 	virtual void commit();
 	virtual void rollback();

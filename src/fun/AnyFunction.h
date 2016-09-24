@@ -16,8 +16,8 @@ public:
 	AnyFunction(){}
 	virtual ~AnyFunction(){}
 public:
-	virtual bool operator==(const AnyFunction& other) const 
-	{ 
+	virtual bool operator==(const AnyFunction& other) const
+	{
 		return this->equals(&other);
 	}
 public:

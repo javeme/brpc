@@ -23,7 +23,7 @@ protected:
 	virtual void addConnection(String id, AMQP::ChannelFactory* factory);
 	virtual void removeConnection(String id);
 	virtual AmqpRpcConnection* getConnection(String id);
-	
+
 	virtual void checkAlive(unsigned int timeout);
 
 private:

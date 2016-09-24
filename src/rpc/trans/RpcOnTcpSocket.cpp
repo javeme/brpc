@@ -9,7 +9,7 @@
 #include "Log.h"
 
 namespace brpc{
-	
+
 #define PATH_RPC_SERVICE "/rpcservice"
 
 RpcOnTcpSocket::RpcOnTcpSocket(void)
@@ -28,7 +28,7 @@ RpcOnTcpSocket::~RpcOnTcpSocket(void)
 {
 	try{
 		close();
-	}catch(Exception& e){			
+	}catch(Exception& e){
 		System::debugInfo("%s\n",e.toString().c_str());
 	}
 	delete this->recvThread;
@@ -47,7 +47,7 @@ void RpcOnTcpSocket::initSocket(const HashMap<String,String>& paras)
 	this->clientSocket->setNoDelay(noDelay=="true");
 
 	this->timeoutCount = 0;
-	
+
 	if(!isInServer())
 		startReceiveThread();
 }
@@ -108,7 +108,7 @@ void RpcOnTcpSocket::close() throw(IOException)
 		throwpe(Exception("null socket"));
 	}
 
-	stopReceiveThread(); //wait util next data or timeout 
+	stopReceiveThread(); //wait util next data or timeout
 	this->clientSocket->close();
 }
 
@@ -144,7 +144,7 @@ void RpcOnTcpSocket::startReceiveLoop()
 	}//end while
 	/*try{
 		m_pSocket->close();
-	}catch(Exception& e){			
+	}catch(Exception& e){
 		System::debugInfo("%s\n",e.toString().c_str());
 	}*/
 	if(this->hasError)

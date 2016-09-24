@@ -94,7 +94,7 @@ void Type2XmlSerializer::visit(ObjectMap* v)
 {
 	checkNullPtr(v);
 	//append(TAG_MAP_BEGIN);
-	const static String TAG_CLS = String(TAG_MAP_BEGIN).replace(">", 
+	const static String TAG_CLS = String(TAG_MAP_BEGIN).replace(">",
 		" class=\"%s\">");
 	String tag = String::format(TAG_CLS, escapeString(v->getClassType()).c_str());
 	append(tag);
@@ -147,7 +147,7 @@ void Type2XmlSerializer::visit(TypeIterator* v)
 			else
 				visit(&itor->value->toString());
 		}
-		append(TAG_VAL_END);	
+		append(TAG_VAL_END);
 		append(TAG_KV_END);
 	}
 	else
@@ -169,7 +169,7 @@ void Type2XmlSerializer::reset()
 void Type2XmlSerializer::removeLastEleseparator()
 {
 	unsigned int last = strBuilder.length()-1;
-	if (strBuilder.length()>0 
+	if (strBuilder.length()>0
 		&& strBuilder.substring(last)==TAG_ELE_SEPR)
 	{
 		strBuilder.deleteSub(last, last+strlen(TAG_ELE_SEPR));
@@ -218,7 +218,7 @@ String Type2XmlSerializer::escapeString(const char *str)
 		case ' ':
 			//result += "&nbsp;";
 			result += " ";
-			break;		
+			break;
 		default:
 			result += *c;
 			break;
@@ -235,8 +235,8 @@ RpcMethodXmlSerializer::RpcMethodXmlSerializer()
 
 int RpcMethodXmlSerializer::write(OutputStream& output, const RpcMethod& method,
 	const String& encoding)
-{	
-	if (method.status == RpcMethod::STATUS_REQUEST 
+{
+	if (method.status == RpcMethod::STATUS_REQUEST
 		&& method.methodName == "")
 	{
 		return -1;
@@ -279,7 +279,7 @@ int RpcMethodXmlSerializer::read(RpcMethod& method, const InputStream& input,
 		//@TODO(lzm): don't delete this ptrs twice
 		(void)methodObjMap->remove("args", false);
 		(void)methodObjMap->remove("returnValue", false);
-		
+
 		delete methodObjMap;
 		methodObjMap = null;
 

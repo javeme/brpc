@@ -22,11 +22,11 @@ private:
 * @author Javeme
 * @create 2014/7/13
 */
-class P2pRpcConnection : public RpcConnection, 
+class P2pRpcConnection : public RpcConnection,
 	public RpcReceiveListener
 {
 public:
-	P2pRpcConnection(cstring url, RpcService* dispatcher, 
+	P2pRpcConnection(cstring url, RpcService* dispatcher,
 		AuthChecker* authChecker, cstring serializerType,
 		unsigned int timeout=0,RpcSocket* rpcSocket=null);
 	virtual ~P2pRpcConnection();

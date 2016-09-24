@@ -12,7 +12,7 @@ public:
 	TString(cstring src , int len=-1):String(src, len){};
 	TString(const String &src):String(src){};
 public:
-	virtual void accept(TypeVisiter* visitor) 
+	virtual void accept(TypeVisiter* visitor)
 	{
 		checkNullPtr(visitor);
 		visitor->visit(this);

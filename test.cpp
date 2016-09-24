@@ -70,7 +70,7 @@ std::vector<std::string> testStringList(cstring str)
 	std::vector<std::string> list;
 	String str2(str);
 	auto l = str2.splitWith(",");
-	
+
 	for(int i=0; i<l.size(); i++)
 		list.push_back(l[i]);
 	return list;
@@ -296,7 +296,7 @@ struct brpc::Converter<TestClass*>
 };
 
 
-void testBaseType(FuncDispatcher& dispatcher) 
+void testBaseType(FuncDispatcher& dispatcher)
 {
 	dispatcher.registerFunction("add", add);
 	dispatcher.registerFunction("add", add);
@@ -367,18 +367,18 @@ void testBaseType(FuncDispatcher& dispatcher)
 	}
 }
 
-void testListType(FuncDispatcher& dispatcher) 
+void testListType(FuncDispatcher& dispatcher)
 {
 	dispatcher.regFunc(testIntList);
 	dispatcher.regFunc(testStringList);
-	dispatcher.regFunc(testList2String);	
+	dispatcher.regFunc(testList2String);
 
 	try{
 		ObjectList args;
 		args.addValue(2);
 		args.addValue(4);
 		Object* result = dispatcher.call("testIntList", args);
-		delete result;		
+		delete result;
 	}catch (Exception& e){
 		e.printStackTrace();
 	}
@@ -387,7 +387,7 @@ void testListType(FuncDispatcher& dispatcher)
 		ObjectList args;
 		args.addValue("123,hello,blue,china");
 		Object* result = dispatcher.call("testStringList", args);
-		delete result;		
+		delete result;
 	}catch (Exception& e){
 		e.printStackTrace();
 	}
@@ -406,16 +406,16 @@ void testListType(FuncDispatcher& dispatcher)
 	}
 }
 
-void testMapType(FuncDispatcher& dispatcher) 
+void testMapType(FuncDispatcher& dispatcher)
 {
 	dispatcher.regFunc(testString2Map);
-	dispatcher.regFunc(testMap2String);	
+	dispatcher.regFunc(testMap2String);
 
 	try{
 		ObjectList args;
 		args.addValue("hj:27,bluemei:25,pp:28");
 		Object* result = dispatcher.call("testString2Map", args);
-		delete result;		
+		delete result;
 	}catch (Exception& e){
 		e.printStackTrace();
 	}
@@ -456,7 +456,7 @@ void testObjectType(FuncDispatcher& dispatcher)
 
 		//this will lead to memory leaks
 		//result = dispatcher.call("testReturnUserPtr", args);
-		//delete result;	
+		//delete result;
 	}catch (Exception& e){
 		e.printStackTrace();
 	}
@@ -480,11 +480,11 @@ void testObjectType(FuncDispatcher& dispatcher)
 	}
 }
 
-void testNamespace(FuncDispatcher& dispatcher) 
+void testNamespace(FuncDispatcher& dispatcher)
 {
 	testns::TestNS *tester2 = new testns::TestNS();
 	dispatcher.regVar(tester2);
-	
+
 	auto testNS = &testns::TestNS::testNS;
 	dispatcher.regFunc(testNS);
 	dispatcher.regFunc(&testns::TestNS::testNS);
@@ -497,10 +497,10 @@ void testNamespace(FuncDispatcher& dispatcher)
 		delete result;
 	}catch (Exception& e){
 		e.printStackTrace();
-	}	
+	}
 }
 
-void testClassFunc(FuncDispatcher& dispatcher) 
+void testClassFunc(FuncDispatcher& dispatcher)
 {
 	TestClass *tester = new TestClass(18);
 	dispatcher.regVar(tester);
@@ -512,7 +512,7 @@ void testClassFunc(FuncDispatcher& dispatcher)
 	dispatcher.regFunc(showAge);
 
 	auto getAge = &TestClass::getAge;
-	//dispatcher.regFunc(getAge);//error C2440: “初始化”: 无法从“int (__thiscall TestClass::* )(void) const”转换为“int”	
+	//dispatcher.regFunc(getAge);//error C2440: “初始化”: 无法从“int (__thiscall TestClass::* )(void) const”转换为“int”
 
 	try{
 		ObjectList args;
@@ -537,7 +537,7 @@ void testClassFunc(FuncDispatcher& dispatcher)
 void testDispatcher()
 {
 	FuncDispatcher dispatcher;
-	
+
 	printf("testBaseType======================\n");
 	testBaseType(dispatcher);
 
@@ -552,7 +552,7 @@ void testDispatcher()
 
 	printf("testNamespace=====================\n");
 	testNamespace(dispatcher);
-	
+
 	printf("testClassFunc=====================\n");
 	testClassFunc(dispatcher);
 }
@@ -573,7 +573,7 @@ void testJson()
 	args->add(arg1);
 	args->add(arg2);
 	args->addValue(3.14);
-	
+
 	ObjectMap struc;
 	struc.put("list1",args);
 	//struc.put("list2",&args);
@@ -623,7 +623,7 @@ void testDbUser()
 
 	// Condition
 	ConditionWrapper cond = (user.name.query() == "mike") || (user.name.query() == "mike3");
-	cond = (user.name.query() == "mike") 
+	cond = (user.name.query() == "mike")
 		&& (
 		  ((user.age.query() > 1) && (user.age.query() <= 100))
 		   ||
@@ -664,7 +664,7 @@ void testDbUser()
 	brpc::DatabaseConnection db("mysql://127.0.0.1:3306/test"
 		"?username=root&password=0315&charset=utf8");
 	brpc::Session session(&db);
-	
+
 	cstring fields[] = {user.name.fieldName(), user.age.fieldName()};
 	size_t len = sizeof(fields) / sizeof(cstring);
 	sql = session.query<UserModel>(fields, len).toSQL();
@@ -717,7 +717,7 @@ void testDbUser()
 	printf("query.Result(group): %s\n\n", rs->toString().c_str());
 
 	session.remove(&user);
-	
+
 	try {
 		session.update(&user);
 	} catch (Exception& e) {
@@ -778,7 +778,7 @@ int main2(int argc, char* argv[])
 	cstring s0=CODE2STRING(CLS_PF_OF_ARGS(0));
 	cstring s1=CODE2STRING(COLUME(name, varchar<32>));
 	cstring s2=CODE2STRING(FUNCTION_C(avg, age));
-	
+
 	BRpcUtil::setBrpcDebug(true);
 
 	try {

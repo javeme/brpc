@@ -34,7 +34,7 @@ FUN_AND_PFUN_OF_ARGS(
 /*
 //#define FORA0(f)    f(0,)
 //#define FORA1(f)    f(1,FORA0(f))
-#define FORA0(f)    
+#define FORA0(f)
 #define FORA1(f)    f##1
 #define FORA2(f)    f(2,FORA1(f))
 #define FORA3(f)    f(3,FORA2(f))
@@ -69,7 +69,7 @@ FUN_AND_PFUN_OF_ARGS(
         VA_ARGS(              JOIN(FORA, n)(    _INDEX_ARGS)),                \
         VA_ARGS(              JOIN(FORA, n)(     _ARG_TYPES)),                \
         VA_ARGS(              JOIN(FORA, n)( _VALUE_OF_ARGS))                 \
-        )                                                         
+        )
 
 #define PFUNC_OF_ARGS(n)                                                      \
     FUN_OF_ARGS(                                                              \
@@ -80,7 +80,7 @@ FUN_AND_PFUN_OF_ARGS(
         VA_ARGS(              JOIN(FORA, n)(    _INDEX_ARGS)),                \
         VA_ARGS(              JOIN(FORA, n)(     _ARG_TYPES)),                \
         VA_ARGS(              JOIN(FORA, n)( _VALUE_OF_ARGS))                 \
-        )    
+        )
 
 #define CLS_PF_OF_ARGS(n)                                                     \
     CLS_FUN_OF_ARGS(                                                          \

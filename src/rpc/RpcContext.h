@@ -15,7 +15,7 @@ class RpcContext : public HashMap<String, Object*>
 {
 public:
 	RpcContext(RpcInvoker& invoker):invoker(invoker){}
-	virtual ~RpcContext(){}	
+	virtual ~RpcContext(){}
 public:
 	RpcInvoker& getInvoker(){ return invoker; }
 protected:

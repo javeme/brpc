@@ -8,7 +8,7 @@
 
 
 namespace brpc{
-	
+
 REG_SERIALIZER("application/brpc.bin", RpcMethodBinarySerializer)
 
 Type2BinarySerializer::Type2BinarySerializer(OutputStream& output)
@@ -74,7 +74,7 @@ void Type2BinarySerializer::visit(TypeIterator* v)
 {
 	if(dynamic_cast<ObjectList::Iterator*>(v))
 	{
-		Object* value = dynamic_cast<ObjectList::Iterator*>(v)->value;		
+		Object* value = dynamic_cast<ObjectList::Iterator*>(v)->value;
 		if(value == null){
 			append(TAG_NULL);
 		}
@@ -89,7 +89,7 @@ void Type2BinarySerializer::visit(TypeIterator* v)
 	else if(dynamic_cast<ObjectMap::Iterator*>(v))
 	{
 		ObjectMap::Iterator* itor = dynamic_cast<ObjectMap::Iterator*>(v);
-	
+
 		//key
 		append(TAG_STR_BEGIN);
 		append(itor->key);
@@ -138,8 +138,8 @@ RpcMethodBinarySerializer::RpcMethodBinarySerializer()
 
 int RpcMethodBinarySerializer::write(OutputStream& output, const RpcMethod& method,
 	const String& encoding)
-{	
-	if (method.status == RpcMethod::STATUS_REQUEST 
+{
+	if (method.status == RpcMethod::STATUS_REQUEST
 		&& method.methodName == "")
 	{
 		return -1;
@@ -173,7 +173,7 @@ int RpcMethodBinarySerializer::read(RpcMethod& method, const InputStream& input,
 		//@TODO(lzm): don't delete this ptrs twice
 		(void)methodObjMap->remove("args", false);
 		(void)methodObjMap->remove("returnValue", false);
-		
+
 		delete methodObjMap;
 		methodObjMap = null;
 

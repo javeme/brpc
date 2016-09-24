@@ -10,7 +10,7 @@ namespace brpc{
 #define HTTP_SERVER_NAME "bhttpd"
 
 #define KEY_HTTP_VERSION	"version"
-	
+
 class HttpHeader : public Object
 {
 public:
@@ -60,7 +60,7 @@ public:
 
 	dword getContentLength() const { return contentLen; }
 	void setContentLength(dword val) { contentLen = val; }
-	
+
 	cstring getContentType() const;
 	void setContentType(cstring val);
 	String getContentTypeAndCharset() const;
@@ -68,7 +68,7 @@ public:
 	cstring getCharset() const { return charset; }
 	void setCharset(cstring val) { charset = val; }
 public:
-	String geEntity(const String& key, const String& default)const;	
+	String geEntity(const String& key, const String& default)const;
 	void setEntity(const String& key, const String& val);
 	unsigned int getEntrySize() const { return entities.size(); }
 	bool contain(const String& key) const { return entities.contain(key); }
@@ -83,7 +83,7 @@ public:
 	String getContentEncoding() const;
 	void setContentEncoding(const String& val);
 
-	String getConnection() const; // close/keepalive 
+	String getConnection() const; // close/keepalive
 	dword getKeepAlive() const;
 	void setKeepAlive(dword sec=20);
 
@@ -110,7 +110,7 @@ class HttpRequest : public HttpHeader
 {
 public:
 	enum RequestType{//method
-		HTTP_GET=0, HTTP_POST, HTTP_PUT, HTTP_DELETE, 
+		HTTP_GET=0, HTTP_POST, HTTP_PUT, HTTP_DELETE,
 		HTTP_HEAD, HTTP_TRACE, HTTP_OPTIONS,
 		REQUEST_TYPE_COUNT
 	};
@@ -126,7 +126,7 @@ public:
 	virtual void readFrom(InputStream& input) throw(Exception);
 
 	virtual void writeCookiesTo(OutputStream& output) throw(Exception);
-	virtual void readCookiesFrom(InputStream& input) throw(Exception);	
+	virtual void readCookiesFrom(InputStream& input) throw(Exception);
 public:
 	RequestType getRequestType() const { return requestType; }
 	void setRequestType(RequestType val) { requestType = val; }
@@ -143,13 +143,13 @@ public:
 	virtual String getUrlWithParas() const;
 	virtual void setUrlWithParas(const String& url);
 public:
-	String getAccept() const;	//"text/html, image/*"
+	String getAccept() const; //"text/html, image/*"
 	void setAccept(const String& val);
 
-	String getAcceptCharset() const;	//"iso8859-5"
+	String getAcceptCharset() const; //"iso8859-5"
 	void setAcceptCharset(const String& val);
 
-	String getAcceptEncoding() const;	//"gzip, compress"
+	String getAcceptEncoding() const; //"gzip, compress"
 	void setAcceptEncoding(const String& val);
 
 	String getUserAgent() const;

@@ -13,7 +13,7 @@ struct returner;
 template<>
 struct returner<true>{
 	template<typename T>
-	inline static Object* invoke(T& f,const ObjectList& args){ 
+	inline static Object* invoke(T& f,const ObjectList& args){
 		(void)f(args);
 		return null;
 	}
@@ -22,8 +22,8 @@ struct returner<true>{
 template<>
 struct returner<false>{
 	template<typename T>
-	inline static Object* invoke(T& f,const ObjectList& args){ 
-		return brpc::toObject(f(args)); 
+	inline static Object* invoke(T& f,const ObjectList& args){
+		return brpc::toObject(f(args));
 	}
 };
 
@@ -78,7 +78,7 @@ public:
 	{
 		return m_fw.argsSize();
 	}
-	
+
 	virtual byte* address() const
 	{
 		union{decltype(m_fw.getFuncAddress()) funcAddress; byte* address;} addr;
@@ -86,7 +86,7 @@ public:
 		return addr.address;//reinterpret_cast<byte*>(m_fw.getFuncAddress())
 	}
 
-	virtual bool equals(const AnyFunction* other) const 
+	virtual bool equals(const AnyFunction* other) const
 	{
 		auto otherFun = dynamic_cast<const SelfType*>(other);
 		if(otherFun == null)
@@ -111,9 +111,9 @@ public:
 		String name = fullName();
 		return String::format("%s %s(%s)", retPara, name.c_str(), strParas.c_str());
 	}
-	
-	virtual String fullName() const 
-	{ 
+
+	virtual String fullName() const
+	{
 		if(m_fw.isClassFunc())
 			return String::format("%s.%s",m_fw.getClassName(), name());
 		else

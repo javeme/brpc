@@ -8,7 +8,7 @@ class VarContext : public Object
 {
 public:
 	VarContext(){}
-	virtual ~VarContext(void){}	
+	virtual ~VarContext(void){}
 public:
 	virtual bool registerVar(cstring name, Object* var) = 0;
 	virtual bool unregisterVar(cstring name) = 0;

@@ -141,7 +141,7 @@ void AmqpRpcConnection::publish(const DataPackage& output, const String& replyMe
 
 	//TODO: remove this lock after we support multi thread
 	ScopedLock sl(((AMQP::IOCPChannelFactory*)channelFactory)->getLock());
-	
+
 	String exchange = this->topic;
 	String routingKey = this->topic + "." + peerId;
 	String msgType = "@cast";

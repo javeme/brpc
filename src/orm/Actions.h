@@ -129,7 +129,7 @@ public:
 		StringBuilder sql(32 + keys.length() + values.length());
 		// insert into
 		sql.append("insert into ");
-		sql.append(table());		
+		sql.append(table());
 		// keys
 		sql.append(" (");
 		sql.append(keys.toString());
@@ -161,7 +161,7 @@ public:
 		while (iter->hasNext())
 		{
 			auto column = iter->next().value;
-			
+
 			setters.append(column->query()->toSQL());
 			setters.append("=");
 			setters.append(column->columnValue()->toSQL());
@@ -189,7 +189,7 @@ public:
 	}
 protected:
 	FiledValues m_pairs;
-	ConditionWrapper m_condition; 
+	ConditionWrapper m_condition;
 };
 
 class Deleter : public CURD

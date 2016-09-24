@@ -7,7 +7,7 @@
 
 namespace brpc{
 
-P2pRpcConnection::P2pRpcConnection(cstring url, RpcService* dispatcher, 
+P2pRpcConnection::P2pRpcConnection(cstring url, RpcService* dispatcher,
 	AuthChecker* authChecker, cstring serializerType,
 	unsigned int timeout, RpcSocket* sock)
 	: url(url), rpcSocket(sock), timeout(timeout),
@@ -115,7 +115,7 @@ DataPackage P2pRpcConnection::onSendSynch(const DataPackage& output)
 bool P2pRpcConnection::onSerializeException(SerializeException& e)
 {
 	ErrorHandler::handle(e);
-	return false;	
+	return false;
 }
 
 bool P2pRpcConnection::onReturnCallException(Exception& e)

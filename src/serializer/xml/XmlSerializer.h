@@ -37,7 +37,7 @@ public:
 	DECLARE_DCLASS(RpcMethodXmlSerializer);
 	RpcMethodXmlSerializer();
 public:
-	virtual int write(OutputStream& output, const RpcMethod& methodconst, 
+	virtual int write(OutputStream& output, const RpcMethod& methodconst,
 		const String& encoding="");
 	virtual int read(RpcMethod& method, const InputStream& input,
 		const String& encoding="");

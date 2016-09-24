@@ -14,7 +14,7 @@ namespace brpc{
 * @author Javeme
 * @create 2014/7/13
 */
-class AmqpRpcConnection : public RpcConnection, 
+class AmqpRpcConnection : public RpcConnection,
 	public RpcReceiveListener
 {
 public:
@@ -33,7 +33,7 @@ public:
 
 	String getPeerId() const { return peerId; }
 	void setPeerId(const String& val) { peerId = val; }
-	
+
 	virtual bool checkConnected();
 
 	virtual void updateAliveTime();

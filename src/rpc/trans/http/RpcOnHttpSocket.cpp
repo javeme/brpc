@@ -9,7 +9,7 @@
 #include "Log.h"
 
 namespace brpc{
-	
+
 #define PATH_RPC_SERVICE "/rpcservice"
 
 RpcOnHttpSocket::RpcOnHttpSocket(void)
@@ -41,7 +41,7 @@ void RpcOnHttpSocket::send(const DataPackage& package) throw(IOException)
 	bool isResponse = this->isInServer();
 	if (isResponse){
 		header = SmartPtr<HttpResponse>(new HttpResponse(package.headers));
-		//header->addCookie("sessionId", "abcd-2234-dddd-cccc-bbbb-aaaa");		
+		//header->addCookie("sessionId", "abcd-2234-dddd-cccc-bbbb-aaaa");
 	}
 	else{
 		SmartPtr<HttpRequest> request = new HttpRequest(package.headers);
@@ -55,7 +55,7 @@ void RpcOnHttpSocket::send(const DataPackage& package) throw(IOException)
 	ByteBuffer headerBuf(header->getEntrySize()*20);
 	header->writeTo(headerBuf);
 	sock.writeEnoughBytes((const char*)headerBuf.array(),headerBuf.size());//Header
-	
+
 	//发送数据
 	sock.writeEnoughBytes((const char*)output.array(),output.size());//Data
 	//通知数据钩子
@@ -69,7 +69,7 @@ void RpcOnHttpSocket::receive() throw(RpcException)
 	}
 	ClientSocket& sock = *this->clientSocket;
 
-	//读头部	
+	//读头部
 	LinkedList<String> lines;
 	unsigned int len = 0;
 	String line;
@@ -139,7 +139,7 @@ void RpcOnHttpSocket::receive() throw(RpcException)
 
 	/*Log::getLogger()->debug(String::format(
 		">>>>>>>>>>received: headers==%s, body==%s",
-		package.headers.toString().c_str(), 
+		package.headers.toString().c_str(),
 		String((cstring)package.body.array(), package.body.size()).c_str()));*/
 
 	//通知数据钩子

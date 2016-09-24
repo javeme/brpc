@@ -7,19 +7,19 @@
 #include "RpcInvokerFacatory.h"
 
 namespace brpc{
-	
 
-RpcInvoker* RpcInvokerFacatory::loadRpcInvoker(String url, RpcService* dispatcher, 
+
+RpcInvoker* RpcInvokerFacatory::loadRpcInvoker(String url, RpcService* dispatcher,
 	AuthChecker* authChecker, cstring serializerType, unsigned int timeout)
 {
 	if (url.startWith("amqp://"))
 	{
-		return new AmqpRpcConnection(url, dispatcher, authChecker, 
+		return new AmqpRpcConnection(url, dispatcher, authChecker,
 			serializerType, timeout);
 	}
 	else
 	{
-		return new P2pRpcConnection(url, dispatcher, authChecker, 
+		return new P2pRpcConnection(url, dispatcher, authChecker,
 			serializerType, timeout);
 	}
 }

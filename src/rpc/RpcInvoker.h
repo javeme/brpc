@@ -15,7 +15,7 @@ class RpcInvoker : public virtual Object
 {
 public:
 	RpcInvoker(){}
-	virtual ~RpcInvoker(){}	
+	virtual ~RpcInvoker(){}
 
 	/****************************for client******************************/
 public:

@@ -16,7 +16,7 @@ FiledValues Model::updates(bool mustUpdated) const
 		const FieldInfo* fldInfo = flds[i];
 		cstring name = fldInfo->name();
 		const void* attr = this->getAttributeAddr(name);
-		// convert into any of TypeColumn<?>* 
+		// convert into any of TypeColumn<?>*
 		// TODO: how to deal with that the attr is not a TypeColumn?
 		FieldBase* value = dynamic_cast<FieldBase*>((TypeColumn<int>*)attr);
 		bool updated = value->setted() && value->modified();
@@ -37,7 +37,7 @@ void Model::clean() const
 		const FieldInfo* fldInfo = flds[i];
 		cstring name = fldInfo->name();
 		const void* attr = this->getAttributeAddr(name);
-		// convert into any of TypeColumn<?>* 
+		// convert into any of TypeColumn<?>*
 		// TODO: how to deal with that the attr is not a TypeColumn?
 		FieldBase* value = dynamic_cast<FieldBase*>((TypeColumn<int>*)attr);
 		bool updated = value->setted() && value->modified();
@@ -61,7 +61,7 @@ void Model::fromDatabase(ResultSet* result)
 		cstring name = fldInfo->name();
 
 		const void* attr = this->getAttributeAddr(name);
-		// convert into any of TypeColumn<?>* 
+		// convert into any of TypeColumn<?>*
 		// TODO: how to deal with that the attr is not a TypeColumn?
 		FieldBase* value = dynamic_cast<FieldBase*>((TypeColumn<int>*)attr);
 		Column* col = dynamic_cast<Column*>(value);
@@ -208,7 +208,7 @@ bool Session::createTable(Model* model)
 		if (column->isNotNull()) {
 			sql.append(" not null");
 		}
-		// default 
+		// default
 		if (!column->defaultValue().empty()) {
 			sql.append(" default ");
 			sql.append(column->defaultValue());

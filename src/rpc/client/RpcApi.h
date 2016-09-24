@@ -27,7 +27,7 @@ public:
 	virtual std::vector<String> listServices();
 	virtual std::vector<String> listEextendServices();
 
-	virtual String signatureOf(cstring method);	
+	virtual String signatureOf(cstring method);
 	virtual String typeOfVar(cstring var);
 public:
 	virtual bool subscribe(cstring event, cstring method);

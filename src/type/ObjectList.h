@@ -21,12 +21,12 @@ public:
 	ObjectList& operator=(const ObjectList& other);
 public:
 	template<typename Type>
-	void addValue(const Type& val){ 
+	void addValue(const Type& val){
 		this->add(brpc::toObject(val));
 	}
 
 	template<typename Type>
-	bool getValue(unsigned int index, Type& val)const{ 
+	bool getValue(unsigned int index, Type& val)const{
 		Object* obj = null;
 		if (this->get(index, obj))
 		{
@@ -36,7 +36,7 @@ public:
 		return false;
 	}
 
-	unsigned int addValue(cstring val){ 
+	unsigned int addValue(cstring val){
 		return this->add(toObject(val));
 	}
 

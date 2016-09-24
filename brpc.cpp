@@ -32,7 +32,7 @@ void testMyRpcApi()
 	cstring url = "http://127.0.0.1"; // jmtp://127.0.0.1
 	cstring name = "test", password = "123456";
 	MyRpcApi myApi(url, name, password);
-	
+
 	myApi.subscribe("nova.onclick", "callback.onclick");
 
 	String sss = myApi.ping();
@@ -50,7 +50,7 @@ void testMyRpcApi()
 	bool sucess = myApi.playMusic("F:/¸èÇú/¾­µäÒôÀÖ/Beyond-¹â»ÔËêÔÂ.mp3");
 	/*String result = myApi.execute("ping baidu.com");
 	result = myApi.execute("notepad test-notepad.txt");*/
-	
+
 	MySubRpcApi* sub = (MySubRpcApi*)myApi.getSubService("sub");
 	int len = sub->print("hello, sub rpc-api");
 
@@ -61,19 +61,19 @@ int run(int argc, char* argv[])
 {
 	Log* logger = Log::getLogger();
 	cstring usage = "usage: brpc server|client [options...]\n";
-	
+
 	if (argc > 1)
 	{
-		String arg1 = argv[1];		
+		String arg1 = argv[1];
 		if (arg1 == "server")
 		{
 			logger->info("brpc server starting...");
 
 			MyRpcService dispatcher("nova");
 			DefaultAuthChecker checker("test", "123456");
-			//RpcServer server("http://0.0.0.0", &checker, "text/json");
-			RpcServer server("amqp://guest:guest@127.0.0.1:5672/?self=node-1",
-				&checker, "text/json");			
+			cstring url = "http://0.0.0.0";
+			//String url = "amqp://guest:guest@127.0.0.1:5672/?self=node-1";
+			RpcServer server(url, &checker, "text/json");
 			printf("server start...\n");
 			server.start(&dispatcher);
 			server.wait();
@@ -82,8 +82,8 @@ int run(int argc, char* argv[])
 		{
 			logger->info("brpc client starting...");
 
-			//cstring url = "http://127.0.0.1";//http://192.168.1.131
-			cstring url = "amqp://guest:guest@127.0.0.1:5672/"\
+			cstring url = "http://127.0.0.1";//http://192.168.1.131
+			//cstring url = "amqp://guest:guest@127.0.0.1:5672/"\
 				"?self=node-1&destination=node-1&topic=rpc";
 			RpcService dispatcher;
 			DefaultAuthChecker checker("", "");
@@ -121,12 +121,12 @@ int run(int argc, char* argv[])
 				loginArgs.addValue("test");
 				loginArgs.addValue("123456");
 				String msg = client.login(loginArgs);
-								
+
 				Object* result = client.call(method, args);
 				String rs = String::format(">>>>> call method %s(%s): \n"
 					"=====\n"
 					"%s\n"
-					"=====\n", 
+					"=====\n",
 					method.toString().c_str(),
 					args.toString().c_str(),
 					result ? result->toString().c_str() : "<null>");
@@ -138,8 +138,8 @@ int run(int argc, char* argv[])
 			}
 			else
 			{
-				printf(usage);	
-				printf("please input a method name.\n");		
+				printf(usage);
+				printf("please input a method name.\n");
 			}
 		}
 		else if(arg1 == "api-test")
@@ -159,9 +159,9 @@ int main(int argc, char* argv[])
 {
 	//_CrtSetBreakAlloc(9373);
 
+	System::instance().init();
 	BRpcUtil::setBrpcDebug(true);
-	//main2(argc, argv);
-	
+
 	String name = "brpc";
 	if (argc > 1){
 		name += "-";

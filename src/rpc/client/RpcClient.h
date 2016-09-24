@@ -15,7 +15,7 @@ namespace brpc{
 class RpcClient : public RpcInvoker
 {
 public:
-	RpcClient(cstring url, RpcService* dispatcher, AuthChecker* authChecker, 
+	RpcClient(cstring url, RpcService* dispatcher, AuthChecker* authChecker,
 		cstring serializerType="text/json", unsigned int timeout=0);
 	virtual ~RpcClient();
 

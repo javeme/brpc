@@ -39,7 +39,7 @@ void RpcOnJmtpSocket::send(const DataPackage& package) throw(IOException)
 		//发送头部
 		//sock.writeShort(BYTE_ORDER(len));//LEN(short) 按小端发送
 		//static word count=0;
-		//sock.writeShort(BYTE_ORDER(count++));//CTR		
+		//sock.writeShort(BYTE_ORDER(count++));//CTR
 		JmtpHeader header(package.headers);
 		if(!package.headers.contain(KEY_CONTENT_LEN))
 			header.setContentLength(len);
@@ -49,13 +49,13 @@ void RpcOnJmtpSocket::send(const DataPackage& package) throw(IOException)
 		sock.writeEnoughBytes((const char*)headerBuffer.array(),
 			headerBuffer.size());//Header
 
-		//发送数据	
+		//发送数据
 		sock.writeEnoughBytes((const char*)output.array(),output.size());//Data
 		//发送尾部
 		sock.writeByte(JMTP_TAIL);//Tail
 
 		//通知数据钩子
-		notifyHookSent(toString(),package);		
+		notifyHookSent(toString(),package);
 	}
 	else
 		System::debugInfo("send null data\n");
@@ -119,7 +119,7 @@ void RpcOnJmtpSocket::receive() throw(RpcException)
 	{
 		throwpe(IOException("not matched the tail"));
 	}
-	
+
 	//通知数据钩子
 	notifyHookReceived(toString(),package);
 	//通知收到数据

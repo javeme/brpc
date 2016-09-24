@@ -261,7 +261,7 @@ struct Converter<brpc::TypeField<Type>>
         return Converter<Type>::valueOf(obj);
     }
     static inline Object* toObject(const brpc::TypeField<Type>& val)
-    {        
+    {
         return Converter<Type>::toObject(val.value());
     }
 };

@@ -3,7 +3,7 @@
 #include "ObjectList.h"
 
 namespace brpc{
-	
+
 ObjectList::ObjectList() :autoDelete(true)
 {
 }
@@ -13,8 +13,9 @@ ObjectList::~ObjectList()
 	destroy(autoDelete);
 }
 
-ObjectList& ObjectList::operator=( const ObjectList& other )
+ObjectList& ObjectList::operator=(const ObjectList& other)
 {
+	//TODO: it change the default behavior to set autoDelete=false!
 	autoDelete = false;
 	Vector<Object*>::operator=(other);
 	return *this;
@@ -24,7 +25,7 @@ bool ObjectList::remove(unsigned int index, bool del)
 {
 	Object* obj = null;
 	bool success = Vector::remove(index, obj);
-	
+
 	if(success && del)
 		delete obj;
 

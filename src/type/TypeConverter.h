@@ -36,7 +36,7 @@ class TypeNotMatchedException : public BadCastException
 public:
 	TypeNotMatchedException(cstring msg) : BadCastException(msg){}
 
-	TypeNotMatchedException(cstring val, cstring from, cstring to) 
+	TypeNotMatchedException(cstring val, cstring from, cstring to)
 		: BadCastException(String::format("%s(%s)", from, val), to){}
 
 	virtual ~TypeNotMatchedException(void){}

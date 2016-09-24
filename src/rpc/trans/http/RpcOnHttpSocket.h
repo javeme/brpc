@@ -6,7 +6,7 @@
 
 namespace brpc{
 
-//http socket 
+//http socket
 class RpcOnHttpSocket : public RpcOnTcpSocket
 {
 public:

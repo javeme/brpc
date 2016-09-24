@@ -4,7 +4,7 @@
 #include "RpcSerializeable.h"
 
 namespace brpc{
-	
+
 const byte TAG_INT_BEGIN = 'i';
 const byte TAG_FLT_BEGIN = 'f';
 const byte TAG_STR_BEGIN = 's';
