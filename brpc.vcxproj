@@ -91,7 +91,7 @@
     <ClInclude Include="src\fun\FunctionWrapper.h" />
     <ClInclude Include="src\fun\AnyFunction.h" />
     <ClInclude Include="src\fun\TemplateFunction.h" />
-    <ClInclude Include="src\orm\Colume.h" />
+    <ClInclude Include="src\orm\Column.h" />
     <ClInclude Include="src\orm\Condition.h" />
     <ClInclude Include="src\orm\Connection.h" />
     <ClInclude Include="src\orm\Driver.h" />
@@ -163,7 +163,7 @@
     <ClCompile Include="src\auth\AuthException.cpp" />
     <ClCompile Include="src\auth\DefaultAuthChecker.cpp" />
     <ClCompile Include="src\fun\FuncDispatcher.cpp" />
-    <ClCompile Include="src\orm\Colume.cpp" />
+    <ClCompile Include="src\orm\Column.cpp" />
     <ClCompile Include="src\orm\Condition.cpp" />
     <ClCompile Include="src\orm\Driver.cpp" />
     <ClCompile Include="src\orm\drivers\mysql\MySQLConnection.cpp" />

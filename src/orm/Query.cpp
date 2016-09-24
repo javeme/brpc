@@ -46,7 +46,7 @@ Query& Query::query(cstring field)
 	return *this;
 }
 
-Query& Query::query(const Colume& field)
+Query& Query::query(const Column& field)
 {
 	return this->query(field.query()->toSQL());
 }
@@ -62,14 +62,14 @@ Query& Query::filter(const ConditionWrapper& condition)
 	return *this;
 }
 
-Query& Query::filter(const Colume& field)
+Query& Query::filter(const Column& field)
 {
-	return this->filter(field.query() == field.columeValue());
+	return this->filter(field.query() == field.columnValue());
 }
 
 Query& Query::filterById(Model& model)
 {
-	return this->filter(model.id().query() == model.id().columeValue());
+	return this->filter(model.id().query() == model.id().columnValue());
 }
 
 Query& Query::groupBy(cstring field)
@@ -78,7 +78,7 @@ Query& Query::groupBy(cstring field)
 	return *this;
 }
 
-Query& Query::groupBy(const Colume& field)
+Query& Query::groupBy(const Column& field)
 {
 	return this->groupBy(field.query()->toSQL());
 }
@@ -95,7 +95,7 @@ Query& Query::orderBy(cstring field, bool desc/*=false*/)
 	return *this;
 }
 
-Query& Query::orderBy(const Colume& field, bool desc/*=false*/)
+Query& Query::orderBy(const Column& field, bool desc/*=false*/)
 {
 	return this->orderBy(field.query()->toSQL(), desc);
 }
@@ -178,6 +178,7 @@ String Query::toSQL() const
 QueryResult Query::all()
 {
 	checkNullPtr(m_connection);
+	// TODO: should we use session->query()?
 	ScopePointer<ResultSet> result = m_connection->query(this->toSQL());
 	// parse result
 	return Model::fromDatabase(result, m_tableClass);

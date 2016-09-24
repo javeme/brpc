@@ -1,7 +1,7 @@
 #pragma once
 #include "blib.h"
 #include "Condition.h"
-#include "Colume.h"
+#include "Column.h"
 
 
 namespace brpc{
@@ -86,7 +86,7 @@ protected:
 };
 
 
-typedef HashMap<String, Colume*> FiledValues;
+typedef HashMap<String, Column*> FiledValues;
 
 
 class Inserter : public CURD
@@ -105,12 +105,12 @@ public:
 		auto iter = const_cast<FiledValues&>(m_pairs).iterator();
 		while (iter->hasNext())
 		{
-			auto colume = iter->next().value;
+			auto column = iter->next().value;
 
-			keys.append(colume->query()->toSQL());
+			keys.append(column->query()->toSQL());
 			keys.append(",");
 
-			values.append(colume->columeValue()->toSQL());
+			values.append(column->columnValue()->toSQL());
 			values.append(",");
 		}
 		const_cast<FiledValues&>(m_pairs).releaseIterator(iter);
@@ -160,11 +160,11 @@ public:
 		auto iter = const_cast<FiledValues&>(m_pairs).iterator();
 		while (iter->hasNext())
 		{
-			auto colume = iter->next().value;
+			auto column = iter->next().value;
 			
-			setters.append(colume->query()->toSQL());
+			setters.append(column->query()->toSQL());
 			setters.append("=");
-			setters.append(colume->columeValue()->toSQL());
+			setters.append(column->columnValue()->toSQL());
 			setters.append(",");
 		}
 		const_cast<FiledValues&>(m_pairs).releaseIterator(iter);

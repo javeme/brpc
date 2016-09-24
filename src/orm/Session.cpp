@@ -16,12 +16,12 @@ FiledValues Model::updates(bool mustUpdated) const
 		const FieldInfo* fldInfo = flds[i];
 		cstring name = fldInfo->name();
 		const void* attr = this->getAttributeAddr(name);
-		// convert into any of TypeColume<?>* 
-		// TODO: how to deal with that the attr is not a TypeColume?
-		FieldBase* value = dynamic_cast<FieldBase*>((TypeColume<int>*)attr);
+		// convert into any of TypeColumn<?>* 
+		// TODO: how to deal with that the attr is not a TypeColumn?
+		FieldBase* value = dynamic_cast<FieldBase*>((TypeColumn<int>*)attr);
 		bool updated = value->setted() && value->modified();
 		if((mustUpdated && updated) || !mustUpdated) {
-			Colume* col = dynamic_cast<Colume*>(value);
+			Column* col = dynamic_cast<Column*>(value);
 			checkNullPtr(col);
 			updates.put(col->field(), col);
 		}
@@ -37,9 +37,9 @@ void Model::clean() const
 		const FieldInfo* fldInfo = flds[i];
 		cstring name = fldInfo->name();
 		const void* attr = this->getAttributeAddr(name);
-		// convert into any of TypeColume<?>* 
-		// TODO: how to deal with that the attr is not a TypeColume?
-		FieldBase* value = dynamic_cast<FieldBase*>((TypeColume<int>*)attr);
+		// convert into any of TypeColumn<?>* 
+		// TODO: how to deal with that the attr is not a TypeColumn?
+		FieldBase* value = dynamic_cast<FieldBase*>((TypeColumn<int>*)attr);
 		bool updated = value->setted() && value->modified();
 		if(updated) {
 			value->setModified(false);
@@ -61,12 +61,12 @@ void Model::fromDatabase(ResultSet* result)
 		cstring name = fldInfo->name();
 
 		const void* attr = this->getAttributeAddr(name);
-		// convert into any of TypeColume<?>* 
-		// TODO: how to deal with that the attr is not a TypeColume?
-		FieldBase* value = dynamic_cast<FieldBase*>((TypeColume<int>*)attr);
-		Colume* col = dynamic_cast<Colume*>(value);
+		// convert into any of TypeColumn<?>* 
+		// TODO: how to deal with that the attr is not a TypeColumn?
+		FieldBase* value = dynamic_cast<FieldBase*>((TypeColumn<int>*)attr);
+		Column* col = dynamic_cast<Column*>(value);
 		checkNullPtr(col);
-		String colname = col->columeName();
+		String colname = col->columnName();
 
 		if (result->columnIndex(colname) != -1)
 		{
@@ -139,10 +139,10 @@ int Session::update(Model* model)
 {
 	checkNullPtr(model);
 	FiledValues kvs = model->updates();
-	Colume& id = model->id();
-	Colume* col = null;
+	Column& id = model->id();
+	Column* col = null;
 	kvs.remove(id.field(), col);
-	ConditionWrapper cond = (id.query() == id.columeValue());
+	ConditionWrapper cond = (id.query() == id.columnValue());
 	int ret = m_connection->excute(Updater(model->getTableName(), kvs, cond));
 	// TODO: refresh the model?
 	model->clean();
@@ -152,8 +152,8 @@ int Session::update(Model* model)
 int Session::remove(Model* model)
 {
 	checkNullPtr(model);
-	Colume& id = model->id();
-	ConditionWrapper cond = (id.query() == id.columeValue());
+	Column& id = model->id();
+	ConditionWrapper cond = (id.query() == id.columnValue());
 	int ret = m_connection->excute(Deleter(model->getTableName(), cond));
 	model->clean();
 	return ret;
@@ -191,27 +191,27 @@ bool Session::createTable(Model* model)
 	auto iter = cols.iterator();
 	while (iter->hasNext())
 	{
-		auto colume = iter->next().value;
+		auto column = iter->next().value;
 
-		if (!colume->isNeedStore())
+		if (!column->isNeedStore())
 			continue;
 		// field name
-		sql.append(colume->columeName());
+		sql.append(column->columnName());
 		// field type
 		sql.append(" ");
-		sql.append(colume->columeType());
+		sql.append(column->columnType());
 		// primary key
-		if (colume->isPrimary()) {
+		if (column->isPrimary()) {
 			sql.append(" primary key");
 		}
 		// not null
-		if (colume->isNotNull()) {
+		if (column->isNotNull()) {
 			sql.append(" not null");
 		}
 		// default 
-		if (!colume->defaultValue().empty()) {
+		if (!column->defaultValue().empty()) {
 			sql.append(" default ");
-			sql.append(colume->defaultValue());
+			sql.append(column->defaultValue());
 		}
 		// TODO: unique key / forgin key ...
 		sql.append(",");

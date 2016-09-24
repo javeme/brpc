@@ -1,7 +1,7 @@
 #pragma once
 #include "blib.h"
 #include "Query.h"
-#include "Colume.h"
+#include "Column.h"
 
 
 namespace brpc{
@@ -19,7 +19,7 @@ public:
 	virtual void clean() const;
 	virtual void fromDatabase(ResultSet* result);
 
-	virtual Colume& id() = 0;
+	virtual Column& id() = 0;
 public:
 	virtual String getTableName() const;
 

@@ -264,9 +264,6 @@
     <ClInclude Include="src\type\TypeConverter.h">
       <Filter>src\type</Filter>
     </ClInclude>
-    <ClInclude Include="src\orm\Colume.h">
-      <Filter>src\orm</Filter>
-    </ClInclude>
     <ClInclude Include="src\orm\Condition.h">
       <Filter>src\orm</Filter>
     </ClInclude>
@@ -308,6 +305,9 @@
     </ClInclude>
     <ClInclude Include="src\rpc\amqp\IOCPLogHandler.h">
       <Filter>src\rpc\amqp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\orm\Column.h">
+      <Filter>src\orm</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -431,9 +431,6 @@
     <ClCompile Include="src\rpc\trans\PollDataThreadPool.cpp">
       <Filter>src\rpc\trans</Filter>
     </ClCompile>
-    <ClCompile Include="src\orm\Colume.cpp">
-      <Filter>src\orm</Filter>
-    </ClCompile>
     <ClCompile Include="src\orm\Condition.cpp">
       <Filter>src\orm</Filter>
     </ClCompile>
@@ -463,6 +460,9 @@
     </ClCompile>
     <ClCompile Include="src\rpc\amqp\AmqpRpcConnection.cpp">
       <Filter>src\rpc\amqp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\orm\Column.cpp">
+      <Filter>src\orm</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -8,7 +8,7 @@
 namespace brpc{
 
 class Model;
-class Colume;
+class Column;
 typedef  ArrayList<Pair<String, bool>> OrderBy;
 
 
@@ -56,19 +56,19 @@ public:
 		bool distinct=false);
 
 	virtual Query& query(cstring field);
-	virtual Query& query(const Colume& field);
+	virtual Query& query(const Column& field);
 
 	virtual Query& filter(const ConditionWrapper& condition);
-	virtual Query& filter(const Colume& field);
+	virtual Query& filter(const Column& field);
 	virtual Query& filterById(Model& model);
 
 	virtual Query& groupBy(cstring field);
-	virtual Query& groupBy(const Colume& field);
+	virtual Query& groupBy(const Column& field);
 
 	virtual Query& having(const ConditionWrapper& condition);
 
 	virtual Query& orderBy(cstring field, bool desc=false);
-	virtual Query& orderBy(const Colume& field, bool desc=false);
+	virtual Query& orderBy(const Column& field, bool desc=false);
 
 	virtual Query& limit(unsigned int num);
 	virtual Query& offset(unsigned int index);
@@ -93,7 +93,7 @@ private:
 	ConditionWrapper m_where;  // where
 	ArrayList<String> m_groupBy;  // group by
 	ConditionWrapper m_having;  // having
-	ArrayList<Pair<String, bool>> m_orderBy;  // order by
+	OrderBy m_orderBy;  // order by
 	unsigned int m_limit;  // limit
 	unsigned int m_offset;  // offset
 

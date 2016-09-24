@@ -1,7 +1,7 @@
 #pragma once
 #include "blib.h"
 #include "Condition.h"
-#include "Colume.h"
+#include "Column.h"
 
 
 namespace brpc{
@@ -12,21 +12,21 @@ class SqlFunctions : public Object
 public:
 	static ConditionWrapper count();
 	static ConditionWrapper count(cstring col);
-	static ConditionWrapper count(const Colume& col);
+	static ConditionWrapper count(const Column& col);
 
 	static ConditionWrapper sum(cstring col);
-	static ConditionWrapper sum(const Colume& col);
+	static ConditionWrapper sum(const Column& col);
 
 	static ConditionWrapper avg(cstring col);
-	static ConditionWrapper avg(const Colume& col);
+	static ConditionWrapper avg(const Column& col);
 
 	#undef min
 	static ConditionWrapper min(cstring col);
-	static ConditionWrapper min(const Colume& col);
+	static ConditionWrapper min(const Column& col);
 
 	#undef max
 	static ConditionWrapper max(cstring col);
-	static ConditionWrapper max(const Colume& col);
+	static ConditionWrapper max(const Column& col);
 
 	static ConditionWrapper date();
 	static ConditionWrapper time();

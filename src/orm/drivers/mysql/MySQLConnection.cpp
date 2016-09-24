@@ -207,7 +207,7 @@ Object* MySQLResultSet::getObject(uint32 columnIndex)
 	switch(fieldType)
 	{
 	case MYSQL_TYPE_BIT:
-		return new Boolean(CodeUtil::str2Int(val));
+		return new Boolean(CodeUtil::str2Int(val) != 0);
 	case MYSQL_TYPE_TINY:
 		return new Char(CodeUtil::str2Int(val));
 	case MYSQL_TYPE_SHORT:
@@ -218,7 +218,7 @@ Object* MySQLResultSet::getObject(uint32 columnIndex)
 	case MYSQL_TYPE_LONGLONG:
 		return new Long(::_atoi64(val));		
 	case MYSQL_TYPE_FLOAT:
-		return new Float(CodeUtil::str2Float(val));
+		return new Float((float)CodeUtil::str2Float(val));
 	case MYSQL_TYPE_DOUBLE:
 		return new Double(CodeUtil::str2Float(val));
 	case MYSQL_TYPE_VAR_STRING:

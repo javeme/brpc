@@ -584,7 +584,7 @@ void testJson()
 }
 
 
-#include "Colume.h"
+#include "Column.h"
 #include "orm/Session.h"
 #include "orm/Functions.h"
 
