@@ -17,7 +17,7 @@ public:
 	ServerSocket(int nPort);
 	~ServerSocket();
 protected:
-	socket_t sockS;		//¼àÌıÌ×½Ó×Ö
+	socket_t m_socket;//¼àÌıÌ×½Ó×Ö
 private:
 	unsigned short m_sPort;
 	bool m_bClose;

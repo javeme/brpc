@@ -52,7 +52,7 @@ public:
 
 	void push(const EleType& val)
 	{	// insert value in priority order
-		Key priority=keyGetter(val);
+		Key priority=m_keyGetter(val);
 		SPQueue* spq=getPriorityQueue(priority);
 		if(spq!=nullptr){
 			if(spq->empty())
@@ -90,7 +90,7 @@ protected:
 protected:
 	std::priority_queue<Key> m_inerQueue;
 	std::map<Key,SPQueue> m_priorityMap;
-	KeyGetter keyGetter;
+	KeyGetter m_keyGetter;
 };
 
 }//end of namespace bluemei

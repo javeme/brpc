@@ -105,10 +105,10 @@ public:
 	template<typename T>
 	bool registerType(){
 		auto k=getTypeInfo<T>();
-		if(!typeMap.contain(k))
+		if(!m_typeMap.contain(k))
 		{
 			auto v=new ConvObject<T>();
-			return typeMap.put(k,v);
+			return m_typeMap.put(k,v);
 		}
 		return false;
 	}
@@ -123,7 +123,7 @@ public:
 	Target* cast(Object* p){
 		if (p==nullptr)
 			return nullptr;
-		auto conver=typeMap.get(getObjectTypeInfo(p));
+		auto conver=m_typeMap.get(getObjectTypeInfo(p));
 		if(conver==nullptr)
 			return nullptr;
 		//return static_cast<Target*>((*conver)->cast(p));//Target*为char*之类的时候会报错
@@ -135,7 +135,7 @@ public:
 	Target* dcast(Object* p){
 		if (p==nullptr)
 			return nullptr;	
-		auto conver=typeMap.get(getObjectTypeInfo(p));
+		auto conver=m_typeMap.get(getObjectTypeInfo(p));
 		if(conver==nullptr)
 			return nullptr;
 		return dynamic_cast<Target*>((*conver)->cast(p));
@@ -148,13 +148,13 @@ public:
 		TypeInfo t = getTypeInfo(p);
 		if (t==nullptr)//p is not an Object*, return true(We think it's a simple type)
 			return true;
-		auto conver=typeMap.get(t);
+		auto conver=m_typeMap.get(t);
 		if (conver==nullptr)
 			throwpe(NotFoundException(String("not registered type: ") + t->name()));
 		return (*conver)->isItselfAddr((Object*)p);
 	}
 protected:
-	HashMap<TypeInfo,Conver*> typeMap;
+	HashMap<TypeInfo,Conver*> m_typeMap;
 };
 
 template<bool T>

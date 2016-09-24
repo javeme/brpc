@@ -14,6 +14,7 @@
 
 #include "bluemeiLib.h"
 #include "Object.h"
+//TODO: to support linux like OS
 #include <windows.h>
 
 namespace bluemei{
@@ -31,7 +32,7 @@ typedef unsigned long SIZE_T, *PSIZE_T;
 class StackWalkerInternal;  // forward
 class BLUEMEILIB_API StackWalker : public Object
 {
-public:	
+public:
   StackWalker(
     int options = OptionsAll, // 'int' is by design, to combine the enum-flags
     LPCSTR szSymPath = NULL, 
@@ -44,15 +45,15 @@ public:
 private:
 	StackWalker(const StackWalker& other){}
 	StackWalker& operator=(const StackWalker& other){return *this;}
-	/*StackWalker& operator=(const StackWalker& other){
-	this->m_hProcess=other.m_hProcess;
-	this->m_dwProcessId=other.m_dwProcessId;
-	this->m_modulesLoaded=other.m_modulesLoaded;
-	this->m_szSymPath=other.m_szSymPath;
+		/*StackWalker& operator=(const StackWalker& other){
+		this->m_hProcess=other.m_hProcess;
+		this->m_dwProcessId=other.m_dwProcessId;
+		this->m_modulesLoaded=other.m_modulesLoaded;
+		this->m_szSymPath=other.m_szSymPath;
 
-	this->m_options=other.m_options;
-	this->m_sw=other.m_sw->Clone(this);
-  }*/
+		this->m_options=other.m_options;
+		this->m_sw=other.m_sw->Clone(this);
+	  }*/
 public:
   typedef enum StackWalkOptions
   {

@@ -13,16 +13,16 @@ public:
 	virtual ~CriticalLock(void);
 public:
 	CriticalLock(const CriticalLock& other){
-		waitCount=0;
-		::InitializeCriticalSection(&critialSection);
+		m_waitCount=0;
+		::InitializeCriticalSection(&m_critialSection);
 		this->operator=(other);
 	};
 	CriticalLock& operator=(const CriticalLock& other){
 		return *this;
 	};
 private:
-	CRITICAL_SECTION critialSection;
-	volatile unsigned int waitCount;//等待的线程数
+	CRITICAL_SECTION m_critialSection;
+	volatile unsigned int m_waitCount;//等待的线程数
 public:
 	virtual void getLock();
 	virtual void releaseLock();

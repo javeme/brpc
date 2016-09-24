@@ -2,6 +2,7 @@
 #define SmartPtrManager_H
 #include "bluemeiLib.h"
 #include "Object.h"
+#include "MutexLock.h"
 #include "TypeManager.h"
 
 #include <malloc.h>
@@ -43,6 +44,7 @@ struct ArrayDestructorStruct
 #else
 #define ptrTrace(...)
 #endif
+
 //three types of a SmartPtr that can be. it be UNKNOW when it is created.
 //if a SmartPtr object is iner another object that managed by GC, the type of SmartPtr is MANAGED
 //else, a SmartPtr is managed by user self, type is USER
@@ -50,39 +52,16 @@ struct ArrayDestructorStruct
 #define PTR_USER	1
 #define PTR_MANAGED	2
 
-#ifdef WIN32
+
 class BLUEMEILIB_API GlobalMutexLock : public Object
 {
 public:
 	GlobalMutexLock();
-	~GlobalMutexLock();
+	virtual ~GlobalMutexLock();
+private:
+	static MutexLock s_globalMutex;
 };
-#else
 
-class BLUEMEILIB_API GlobalMutexLock : public Object
-{
-protected:
-	static pthread_mutex_t mutex;
-public:
-	GlobalMutexLock()
-	{
-		static bool inited=false;
-		if(!inited)
-		{
-			pthread_mutexattr_t attr;
-			pthread_mutexattr_init(&attr);
-			pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
-			pthread_mutex_init (&mutex,&attr);
-			inited=true;
-		}
-		pthread_mutex_lock (&mutex);
-	}
-	~GlobalMutexLock()
-	{
-		pthread_mutex_unlock(&mutex);		
-	}
-};
-#endif
 
 class BLUEMEILIB_API LinkNode : public Object
 {

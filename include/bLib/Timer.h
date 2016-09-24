@@ -35,12 +35,12 @@ class BLUEMEILIB_API Waiter : public Object
 public:
 	typedef std::function<bool()> WaiterCallback;
 	Waiter(const WaiterCallback& condition, unsigned int timeout=0)
-		: condition(condition), timeout(timeout) {}
+		: m_condition(condition), m_timeout(timeout) {}
 public:
 	virtual bool wait(unsigned int interval=1000);
 private:
-	unsigned int timeout;
-	WaiterCallback condition;
+	unsigned int m_timeout;
+	WaiterCallback m_condition;
 };
 
 }//end of namespace bluemei

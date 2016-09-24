@@ -19,7 +19,7 @@ public:
 	ResourceLock(const ResourceLock& other);
 	ResourceLock& operator=(const ResourceLock& other);
 private:
-	HANDLE semaphoreHandle;
+	HANDLE m_semaphore;
 	volatile unsigned int waitCount;//等待的线程数(跨进程时如何保证waitCount共享???)
 protected:
 	virtual void init(unsigned int count,unsigned int maxCount,cstring name=nullptr);

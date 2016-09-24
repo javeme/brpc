@@ -3,7 +3,6 @@
 
 namespace bluemei{
 
-
 class BLUEMEILIB_API ThreadException : public Exception
 {
 public:

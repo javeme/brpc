@@ -7,6 +7,13 @@
 
 namespace bluemei{
 
+#ifdef WIN32
+	typedef HANDLE mutex_t;
+	typedef struct { volatile unsigned int counter; } atomic_t;
+#else
+	typedef pthread_mutex_t mutex_t;
+#endif
+
 class BLUEMEILIB_API MutexLock : public UniqueLock
 {
 public:
@@ -17,8 +24,8 @@ private:
 	MutexLock& operator=(const MutexLock& other);
 private:
 	friend class ResourceLock;
-	HANDLE mutex;
-	volatile unsigned int waitCount;//等待的线程数(跨进程时无效)
+	mutex_t m_mutex;
+	atomic_t m_waitCount;//等待的线程数(跨进程时无效)
 public:
 	virtual void getLock();
 	virtual void releaseLock();

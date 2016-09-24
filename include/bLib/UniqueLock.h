@@ -19,17 +19,17 @@ public:
 class BLUEMEILIB_API ScopedLock : Object
 {
 public:
-	explicit ScopedLock(UniqueLock& m): mutex(m)
+	explicit ScopedLock(UniqueLock& m): m_mutex(m)
 	{
-		mutex.getLock();
+		m_mutex.getLock();
 	}
-	~ScopedLock()
+	virtual ~ScopedLock()
 	{
-		mutex.releaseLock();
+		m_mutex.releaseLock();
 	}
 
 private:
-	UniqueLock& mutex;
+	UniqueLock& m_mutex;
 
 private:
 	ScopedLock();

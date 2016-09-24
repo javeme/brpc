@@ -70,7 +70,8 @@ protected:
 	typedef className Self;																	   \
 	static Class* thisClass(){																   \
 		static Class* cls = Class::registerClass(_T2STR(className),							   \
-												 Self::createObject,__super::thisClass());	   \
+												 Self::createObject,						   \
+												 __super::thisClass());						   \
 		return cls;																			   \
 	}																						   \
 	static Object* createObject(){ return new Self();}										   \

@@ -47,8 +47,8 @@ protected:
 	IOCPEventHandle* m_pIOCPEventHandler;
 	IOCompletionPort m_oIOCompletionPort;
 
-	ServerSocket listenSocket;
-	HashMap<socket_t,socket_t> clientSockets;
+	ServerSocket m_listenSocket;
+	HashMap<socket_t,socket_t> m_clientSockets;
 
 	int m_nTimeout;
 private:

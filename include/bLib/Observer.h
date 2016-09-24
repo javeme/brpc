@@ -21,63 +21,63 @@ class Observable : public Object
 {
 public:
 	Observable(){
-		this->changed=false;
+		this->m_changed=false;
 	}
 	virtual ~Observable(){
 		unregisterAllObserver();
 	}
 public:
 	virtual void registerObserver(Observer<MessageType>* pObserver){
-		if(obs.getLocate(pObserver)<0)
-			obs.addToLast(pObserver);
+		if(m_obs.getLocate(pObserver)<0)
+			m_obs.addToLast(pObserver);
 	}
 	virtual void unregisterObserver(Observer<MessageType>* pObserver){
-		obs.remove(pObserver);
+		m_obs.remove(pObserver);
 	}
 	virtual void unregisterAllObserver()
 	{
-		obs.clear();
+		m_obs.clear();
 	}
 
 	virtual void notifyObservers(Exception& e, Object* pFrom)
 	{
-		if(!changed) 
+		if(!m_changed) 
 			return;
 		clearChanged();
 
-		for(int i=0; i<obs.size(); i++)
-			obs.get(i)->onNotifyException(e,pFrom);
+		for(int i=0; i<m_obs.size(); i++)
+			m_obs.get(i)->onNotifyException(e,pFrom);
 	}
 	virtual void notifyObservers(MessageType* pMessage, Object* pFrom)
 	{
-		if(!changed) 
+		if(!m_changed) 
 			return;
 		clearChanged();
 
-		for(int i=0; i<obs.size(); i++)
-			obs.get(i)->onNotify(pMessage,pFrom);
+		for(int i=0; i<m_obs.size(); i++)
+			m_obs.get(i)->onNotify(pMessage,pFrom);
 	}
 
 	virtual void setChanged()
 	{
-		changed = true;
+		m_changed = true;
 	}
 	virtual void clearChanged()
 	{
-		changed = false;
+		m_changed = false;
 	}
 	virtual bool hasChanged()
 	{
-		return changed;
+		return m_changed;
 	}
 
 	virtual int countObservers()
 	{
-		return obs.size();
+		return m_obs.size();
 	}
 protected:
-	LinkedList<Observer<MessageType>*> obs;
-	bool changed;
+	LinkedList<Observer<MessageType>*> m_obs;
+	bool m_changed;
 };
 
 }//end of namespace bluemei

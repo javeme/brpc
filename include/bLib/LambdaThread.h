@@ -1,7 +1,7 @@
 #pragma once
 #include "bluemeiLib.h"
-#include <functional>
 #include "Thread.h"
+#include <functional>
 
 namespace bluemei{
 

@@ -14,10 +14,10 @@ public:
 	SimpleCfgFile(const string& path);
 	~SimpleCfgFile(void);
 private:
-	PropertiesMap propertiesMap;
-	string filePath;	
-	string content;
-	bool isChanged;
+	PropertiesMap m_propertiesMap;
+	string m_filePath;	
+	string m_content;
+	bool m_isChanged;
 public:
 	void readPropertyFromFile(const string& path);
 public:	

@@ -1,4 +1,5 @@
 #pragma once
+#include "bluemeiLib.h"
 #include "Thread.h"
 #include "Date.h"
 #include "PriorityQueue.h"
@@ -38,8 +39,6 @@ public:
 		m_arg2=arg2;
 		m_object=object;
 		m_timestamp=Date::getCurrentTime().getTotalMillSecond();
-		//static decltype(m_timestamp) count=0;
-		//m_timestamp=count++;
 	}
 	virtual void release(){
 		delete m_object;

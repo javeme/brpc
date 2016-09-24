@@ -40,9 +40,10 @@ protected:
 	bool m_bDestroy;
 protected:
 	void idleCollect();
-	virtual void mark(SmartPtr<void>* ptr);
+	virtual unsigned int mark(SmartPtr<void>* ptr);
 
-	void addGarbage(ObjectWrapper* pWrap, vector<WrapperPointer>& garbageList, vector<WrapperPointer>& garbageQueue);
+	void addGarbage(ObjectWrapper* pWrap, vector<WrapperPointer>& garbageList,
+		vector<WrapperPointer>& garbageQueue);
 
 	void startGcThread();
 	void destroyGcThread();

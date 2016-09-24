@@ -48,7 +48,7 @@ private:
 	String m_strPath;
 	FILE *m_pFile;
 	size_t m_nBufferSize,m_nUsedBufLength;
-	char *buffer;
+	char *m_buffer;
 	bool m_bCloseAble;
 };
 
