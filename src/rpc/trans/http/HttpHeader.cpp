@@ -47,7 +47,7 @@ void HttpHeader::writeEntitiesTo(OutputStream& output) throw(Exception)
 	if (!contain(KEY_CONTENT_LEN))
 		setEntity(KEY_CONTENT_LEN, CodeUtil::int2Str(contentLen));
 	
-	auto itor = entities.iterator();
+	auto itor = this->entities.iterator();
 	while(itor->hasNext())
 	{
 		auto entry = itor->next();
@@ -57,7 +57,7 @@ void HttpHeader::writeEntitiesTo(OutputStream& output) throw(Exception)
 		output.writeBytes((byte*)entry.value.c_str(), entry.value.length());
 		writeCrlfTo(output);
 	}
-	entities.releaseIterator(itor);
+	this->entities.releaseIterator(itor);
 
 	//cookies
 	this->writeCookiesTo(output);
@@ -114,7 +114,7 @@ String HttpHeader::getContentTypeAndCharset() const
 
 HashMap<String,String> HttpHeader::getHeaders() const
 {
-	HashMap<String,String> headers = entities;
+	HashMap<String,String> headers = this->entities;
 	headers.put(KEY_HTTP_VERSION, version);
 	headers.put(KEY_CONTENT_TYPE, getContentTypeAndCharset());
 	headers.put(KEY_CONTENT_LEN, CodeUtil::int2Str(contentLen));
@@ -123,8 +123,9 @@ HashMap<String,String> HttpHeader::getHeaders() const
 
 void HttpHeader::update()
 {
-	setContentLength(CodeUtil::str2Int(entities.getDefault(KEY_CONTENT_LEN, "0")));
-	setContentType(entities.getDefault(KEY_CONTENT_TYPE, ""));
+	setContentLength(CodeUtil::str2Int(
+		this->entities.getDefault(KEY_CONTENT_LEN, "0")));
+	setContentType(this->entities.getDefault(KEY_CONTENT_TYPE, ""));
 }
 
 String HttpHeader::geEntity(const String& key, const String& default)const

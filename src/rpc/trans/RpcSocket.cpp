@@ -7,44 +7,44 @@ namespace brpc{
 
 RpcSocket::RpcSocket()
 {
-	m_bWaitData=false;
-	dataListener=nullptr;
+	this->isWaitingData=false;
+	this->dataListener=nullptr;
 
-	dataHookHandler=nullptr;
+	this->dataHookHandler=nullptr;
 
-	timeout = 0;
+	this->timeout=0;
 }
 
 RpcSocket::~RpcSocket()
 {
-	dataListener=nullptr;
+	this->dataListener=nullptr;
 
-	dataHookHandler=nullptr;
+	this->dataHookHandler=nullptr;
 }
 
-void RpcSocket::setReceiveListener( RpcReceiveListener* listener )
+void RpcSocket::setReceiveListener(RpcReceiveListener* listener)
 {
-	dataListener=listener;
+	this->dataListener=listener;
 }
 
-void RpcSocket::setDataHookHandler( RpcDataHookHandler* hook )
+void RpcSocket::setDataHookHandler(RpcDataHookHandler* hook)
 {
-	dataHookHandler=hook;
+	this->dataHookHandler=hook;
 }
 
 bool RpcSocket::notifyReceive(DataPackage& input)
 {
-	if (dataListener!=nullptr)
+	if (this->dataListener!=nullptr)
 	{
-		if (m_bWaitData && input.getId()==m_idWaitData)
+		if (this->isWaitingData && input.getId()==this->idOfWaitData)
 		{
-			m_recvPacketList.addToLast(input);
-			m_waitLock.signal();
+			this->recvPacketList.addToLast(input);
+			this->waitLock.signal();
 			return true;
 		}
 		else
 		{
-			return dataListener->onReceive(input);
+			return this->dataListener->onReceive(input);
 		}
 	}
 	else
@@ -54,58 +54,58 @@ bool RpcSocket::notifyReceive(DataPackage& input)
 
 bool RpcSocket::notifyException(Exception& e)
 {
-	if (dataListener!=nullptr)
+	if (this->dataListener!=nullptr)
 	{
-		return dataListener->onException(e);
+		return this->dataListener->onException(e);
 	}
 	return false;
 }
 
 DataPackage RpcSocket::sendSynch(const DataPackage& output)
 {
-	m_bWaitData=true;
-	m_idWaitData=output.getId();
-	m_recvPacketList.clear();
+	this->isWaitingData=true;
+	this->idOfWaitData=output.getId();
+	this->recvPacketList.clear();
 
 	this->send(output);
 	unsigned int timeout = this->timeout * 3;
 	if(timeout == 0)
 		timeout = INFINITE;
-	if(!m_waitLock.wait(timeout))
+	if(!this->waitLock.wait(timeout))
 		throwpe(TimeoutException(timeout));
 
 	DataPackage result;
-	m_recvPacketList.removeFirstElement(result);
+	this->recvPacketList.removeFirstElement(result);
 
-	m_bWaitData=false;
+	this->isWaitingData=false;
 	return result;
 }
 
 void RpcSocket::notifyHookReceived(cstring name,const DataPackage& data,long time)
 {
-	if (dataHookHandler!=nullptr)
+	if (this->dataHookHandler!=nullptr)
 	{
 		if(time<=0)
 			time=(long)Date::getCurrentTime().getTotalMillSecond();
-		return dataHookHandler->onReceived(name,data,time);
+		return this->dataHookHandler->onReceived(name,data,time);
 	}
 }
 
 void RpcSocket::notifyHookSent(cstring name,const DataPackage& data,long time)
 {
-	if (dataHookHandler!=nullptr)
+	if (this->dataHookHandler!=nullptr)
 	{
 		if(time<=0)
 			time=(long)Date::getCurrentTime().getTotalMillSecond();
-		return dataHookHandler->onSent(name,data,time);
+		return this->dataHookHandler->onSent(name,data,time);
 	}
 }
 
 void RpcSocket::notifyHookError(cstring name, cstring error)
 {
-	if (dataHookHandler!=nullptr)
+	if (this->dataHookHandler!=nullptr)
 	{
-		return dataHookHandler->onError(name,error,dataListener);
+		return this->dataHookHandler->onError(name,error,dataListener);
 	}
 }
 

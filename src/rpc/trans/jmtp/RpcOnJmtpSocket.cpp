@@ -26,12 +26,12 @@ RpcOnJmtpSocket::~RpcOnJmtpSocket(void)
 //send: header data tail
 void RpcOnJmtpSocket::send(const DataPackage& package) throw(IOException)
 {
-	ScopedLock lock(m_sendLock);
+	ScopedLock lock(this->sendLock);
 
-	if (m_pSocket==null){
+	if (this->clientSocket==null){
 		throwpe(Exception("null socket"));
 	}
-	ClientSocket& sock = *m_pSocket;
+	ClientSocket& sock = *this->clientSocket;
 
 	const ByteBuffer& output = package.body;
 	unsigned int len=output.size();
@@ -64,10 +64,10 @@ void RpcOnJmtpSocket::send(const DataPackage& package) throw(IOException)
 //接收数据
 void RpcOnJmtpSocket::receive() throw(RpcException)
 {
-	if(m_pSocket==null){
+	if(this->clientSocket==null){
 		throwpe(IOException("null socket"));
 	}
-	ClientSocket& sock = *m_pSocket;
+	ClientSocket& sock = *this->clientSocket;
 
 	//读头部
 	//word len=BYTE_ORDER(sock.readShort());

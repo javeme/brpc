@@ -31,15 +31,15 @@ public:
 protected:
 	virtual void initSocket(const HashMap<String,String>& paras);
 protected:
-	ClientSocket* m_pSocket;
+	ClientSocket* clientSocket;
 
-	Thread* m_pRecvThread;
-	bool m_bRecving;
-	bool m_bError;
-	bool m_bInServer;
+	Thread* recvThread;
+	volatile bool recving;
+	volatile bool hasError;
+	bool inServer;  // is this in server side
 
-	int m_nTimeoutCount;
-	const static int m_nMaxTimeoutCount = 10;
+	volatile int timeoutCount;
+	const static int maxTimeoutCount = 10;
 };
 
 }//end of namespace brpc

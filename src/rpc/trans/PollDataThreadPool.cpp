@@ -17,32 +17,32 @@ public:
 			throwpe(Exception("Not supported Socket except RpcOnTcpSocket"));
 	}
 public:
-	virtual void stop() 
+	virtual void stop()
 	{
 		this->socket->stopReceiveLoop();
 	}
 
-	virtual void setId( int id ) 
+	virtual void setId(int id)
 	{
 		;
 	}
 
-	virtual void taskStarted() 
+	virtual void taskStarted()
 	{
 		;
 	}
 
-	virtual int getId() 
+	virtual int getId()
 	{
 		return 0;
 	}
 
-	virtual void taskFinished() 
+	virtual void taskFinished()
 	{
 		delete this;
 	}
 
-	virtual bool isRunning() 
+	virtual bool isRunning()
 	{
 		return this->socket->isRecving();
 	}

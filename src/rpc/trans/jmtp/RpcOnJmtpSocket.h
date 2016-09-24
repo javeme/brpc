@@ -18,7 +18,7 @@ public:
 public:
 	virtual void sendResponse(JmtpHeader::Status status, const String& pkgId);
 protected:
-	CriticalLock m_sendLock;
+	CriticalLock sendLock;
 };
 
 

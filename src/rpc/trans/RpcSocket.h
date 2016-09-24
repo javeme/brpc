@@ -59,13 +59,12 @@ protected:
 	virtual void notifyHookError(cstring name, cstring error);
 protected:
 	RpcReceiveListener* dataListener;
-
 	RpcDataHookHandler* dataHookHandler;
 
-	LinkedList<DataPackage> m_recvPacketList;
-	bool m_bWaitData;
-	String m_idWaitData;
-	SyncLock m_waitLock;
+	LinkedList<DataPackage> recvPacketList;
+	bool isWaitingData;
+	String idOfWaitData;
+	SyncLock waitLock;
 	unsigned int timeout;
 };
 
