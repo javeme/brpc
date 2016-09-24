@@ -61,11 +61,14 @@ protected:
 	RpcReceiveListener* dataListener;
 	RpcDataHookHandler* dataHookHandler;
 
-	LinkedList<DataPackage> recvPacketList;
+	DataPackage recvPacket;
 	bool isWaitingData;
 	String idOfWaitData;
 	SyncLock waitLock;
+
 	unsigned int timeout;
+protected:
+	MutexLock sendLock;
 };
 
 }//end of namespace brpc

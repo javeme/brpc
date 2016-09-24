@@ -17,8 +17,6 @@ public:
 	virtual void receive() throw(RpcException);
 public:
 	virtual void sendResponse(JmtpHeader::Status status, const String& pkgId);
-protected:
-	CriticalLock sendLock;
 };
 
 

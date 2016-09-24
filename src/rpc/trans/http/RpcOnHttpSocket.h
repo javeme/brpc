@@ -17,8 +17,6 @@ public:
 	virtual void receive() throw(RpcException);
 public:
 	virtual void sendResponse(HttpResponse::Status status, const String& pkgId);
-protected:
-	CriticalLock sendLock;
 };
 
 }//end of namespace brpc

@@ -34,12 +34,20 @@ void RpcSocket::setDataHookHandler(RpcDataHookHandler* hook)
 
 bool RpcSocket::notifyReceive(DataPackage& input)
 {
+	ScopedLock lock(this->sendLock);
+
 	if (this->dataListener!=nullptr)
 	{
 		if (this->isWaitingData && input.getId()==this->idOfWaitData)
 		{
-			this->recvPacketList.addToLast(input);
-			this->waitLock.signal();
+			this->recvPacket = input;
+			// to ensure that:
+			// 1.if there is no waiter, we don't signal
+			// 2.if there is a waiter, we send a signal
+			// so, we use notify() instead of signal()
+			// signal() may lead to send mult signals but
+			// no consumer(such as all consumers timeout)
+			this->waitLock.notify();
 			return true;
 		}
 		else
@@ -63,19 +71,30 @@ bool RpcSocket::notifyException(Exception& e)
 
 DataPackage RpcSocket::sendSynch(const DataPackage& output)
 {
+	ScopedLock lock(this->sendLock);
+
 	this->isWaitingData=true;
 	this->idOfWaitData=output.getId();
-	this->recvPacketList.clear();
 
 	this->send(output);
 	unsigned int timeout = this->timeout * 3;
 	if(timeout == 0)
 		timeout = INFINITE;
-	if(!this->waitLock.wait(timeout))
+	if(!this->waitLock.wait(this->sendLock, timeout))
 		throwpe(TimeoutException(timeout));
 
-	DataPackage result;
-	this->recvPacketList.removeFirstElement(result);
+	DataPackage& result = this->recvPacket;
+	if(result.getId() != output.getId()) {
+		// if another thread send a request, idOfWaitData may changed
+		// TODO: should we support multi-thread to send? if so, we should
+		// add a map instead of idOfWaitData, like map<id, object(lock, value)>
+		// when a response reached:
+		//   map(id).value=response;
+		//   map(id).lock.notify();
+		String msg = "Unexpected response received, there may be another "\
+			"thread sending a request? if so please use async-send instead!";
+		throwpe(RpcException(msg));
+	}
 
 	this->isWaitingData=false;
 	return result;
