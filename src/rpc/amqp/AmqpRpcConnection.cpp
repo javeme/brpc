@@ -58,10 +58,15 @@ void AmqpRpcConnection::onSend(const DataPackage& output)
 brpc::DataPackage AmqpRpcConnection::onSendSynch(const DataPackage& output)
 {
 	String replyMe = "replyTo-" + Util::uuid4();
+	// publish callback
 	RequestCallback request = [&]() {
 		this->publish(output, replyMe);
 	};
 	// do request and wait for reply
+	// NOTE: because we should declare the queue(or exchange) and bind
+	// the queue to the exchange, so call the consume() before the
+	// publish(), in the consume() we will call the callback method,
+	// that's publish(), and wait for a reply.
 	DataPackage result;
 	this->consume(result, replyMe, request);
 	return result;
@@ -133,6 +138,9 @@ void AmqpRpcConnection::publish(const DataPackage& output, const String& replyMe
 {
 	channelFactory = this->channelFactory;
 	checkNullPtr(channelFactory);
+
+	//TODO: remove this lock after we support multi thread
+	ScopedLock sl(((AMQP::IOCPChannelFactory*)channelFactory)->getLock());
 	
 	String exchange = this->topic;
 	String routingKey = this->topic + "." + peerId;
@@ -193,8 +201,13 @@ void AmqpRpcConnection::consume(DataPackage& input, const String& queue,
 	checkNullPtr(channelFactory);
 
 	volatile int status = 0;
+	String peerAppId = this->peerId;
 	String error;
 	String exchange = queue;
+
+	//TODO: remove this lock after we support multi thread
+	UniqueLock& lock(((AMQP::IOCPChannelFactory*)channelFactory)->getLock());
+	lock.getLock();
 
 	ScopePointer<AMQP::Consumer> consumer = new AMQP::Consumer(
 		channelFactory->connection(),
@@ -202,16 +215,22 @@ void AmqpRpcConnection::consume(DataPackage& input, const String& queue,
 	consumer->setDeleteExchange(true);
 	consumer->setDeleteQueue(true);
 
-	consumer->bindExchange(exchange, AMQP::direct).onSuccess([&](){
-		//do request when consumer is ready!
-		request();
+	AMQP::Monitor monitor(consumer);
+	consumer->bindExchange(exchange, AMQP::direct).onSuccess([&, monitor](){
+		//do request(publish) when consumer is ready!
+		if(monitor.valid())
+			request();
 	});
 
-	consumer->subscribe([&](const AMQP::Message &message, uint64_t deliveryTag,
-		bool redelivered) {
+	consumer->subscribe([&, monitor](const AMQP::Message &message,
+		uint64_t deliveryTag, bool redelivered) {
 
 		std::string messageType = message.typeName();
 		AMQP::Consumer::debug("received message: " + messageType);
+
+		if(!monitor.valid())
+			return;
+
 		try{
 			if(!message.hasAppID())
 			{
@@ -220,11 +239,11 @@ void AmqpRpcConnection::consume(DataPackage& input, const String& queue,
 			}
 			else if(messageType == "@reply")
 			{
-				if(this->peerId != message.appID()) {
+				if(peerAppId != message.appID()) {
 					BRpcUtil::debug(
 						"Warning: unexpected app-id '%s'(expected '%s')\n",
 						message.appID().c_str(),
-						this->peerId.c_str());
+						peerAppId.c_str());
 				}
 				parseMessage(input, message);
 				status = 1;
@@ -239,13 +258,15 @@ void AmqpRpcConnection::consume(DataPackage& input, const String& queue,
 
 		consumer->channel()->ack(deliveryTag);
 		if(status == 0)
-			status = 2;
+			status = -1;
 	});
+
+	lock.releaseLock();
 
 	//wait for reply
 	Waiter waiter([&](){ return status != 0; }, this->timeout);
 	waiter.wait();
-	if(status != 1)
+	if(status < 0)
 		throw RpcException(error);
 }
 
