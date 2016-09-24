@@ -35,7 +35,7 @@ void FuncDispatcher::unregisterFunction(cstring funcName)
 
 void FuncDispatcher::clearAllFunction()
 {
-	for (auto itor = m_funcMap.begin(); itor != m_funcMap.end(); /*++itor*/) {	
+	for (auto itor = m_funcMap.begin(); itor != m_funcMap.end(); /*++itor*/) {
 		FuncList& funcList = itor->second;	
 
 		for(auto itor2 = funcList.begin(); itor2 != funcList.end(); ++itor2) {
@@ -44,12 +44,13 @@ void FuncDispatcher::clearAllFunction()
 		itor = m_funcMap.erase(itor);
 	}
 	
-	DispatcherList& ed = extendDispatchers;
-	auto i = ed.iterator();
-	while(i->hasNext()) {
-		i->next()->clearAllFunction();
+	DispatcherList& ed = m_extendDispatchers;
+	for (auto itor = ed.begin(); itor != ed.end(); ++itor) {
+		FuncDispatcher* dispatcher = (*itor);
+		if(dispatcher) {
+			dispatcher->clearAllFunction();
+		}
 	}
-	ed.releaseIterator(i);
 }
 
 AnyFunction* FuncDispatcher::matchedFunction(cstring name, const ObjectList& args)
@@ -107,14 +108,13 @@ AnyFunction* FuncDispatcher::matchedAllFunction(cstring name,
 		return fun;
 	}
 	else{
-		DispatcherList& ed = const_cast<DispatcherList&>(extendDispatchers);
-		auto i = ed.iterator();
-		while(i->hasNext()) {
-			fun = i->next()->matchedAllFunction(name, args);
+		DispatcherList& ed = m_extendDispatchers;
+		for (auto itor = ed.begin(); itor != ed.end(); ++itor) {
+			FuncDispatcher* dispatcher = (*itor);
+			fun = dispatcher->matchedAllFunction(name, args);
 			if (fun != null)
 				break;
 		}
-		ed.releaseIterator(i);
 
 		return fun;
 	}
@@ -243,14 +243,13 @@ Object* FuncDispatcher::getVarFromAll(cstring name) const
 	if(itor == m_objMap.end()) {
 		//throwpe(NotFoundException(name));
 		Object* var = null;
-		DispatcherList& ed = const_cast<DispatcherList&>(extendDispatchers);
-		auto i = ed.iterator();
-		while(i->hasNext()) {
-			var = i->next()->getVarFromAll(name);
+		auto& ed = m_extendDispatchers;
+		for (auto i = ed.begin(); i != ed.end(); ++i) {
+			FuncDispatcher* dispatcher = (*i);
+			var = dispatcher->getVarFromAll(name);
 			if (var != null)
 				break;
 		}
-		ed.releaseIterator(i);
 
 		return var;
 	}
@@ -264,12 +263,11 @@ void FuncDispatcher::clearAllVar()
 		itor = m_objMap.erase(itor);
 	}
 
-	DispatcherList& ed = extendDispatchers;
-	auto i = ed.iterator();
-	while(i->hasNext()) {
-		i->next()->clearAllVar();
+	DispatcherList& ed = m_extendDispatchers;
+	for (auto itor = ed.begin(); itor != ed.end(); ++itor) {
+		FuncDispatcher* dispatcher = (*itor);
+		dispatcher->clearAllVar();
 	}
-	ed.releaseIterator(i);
 }
 
 String FuncDispatcher::functionsAsString() const
@@ -308,12 +306,26 @@ String FuncDispatcher::toString() const
 
 bool FuncDispatcher::extend(FuncDispatcher* dispatcher)
 {
-	return extendDispatchers.insert(0, dispatcher);
+	checkNullPtr(dispatcher);
+
+	auto itor = std::find(m_extendDispatchers.begin(),
+		m_extendDispatchers.end(), dispatcher);
+	if(itor == m_extendDispatchers.end()){
+		m_extendDispatchers.push_back(dispatcher);
+		return true;
+	}
+	return false;
 }
 
 bool FuncDispatcher::exclude(FuncDispatcher* dispatcher)
 {
-	return extendDispatchers.remove(dispatcher) >= 0;
+	auto itor = std::find(m_extendDispatchers.begin(),
+		m_extendDispatchers.end(), dispatcher);
+	if(itor != m_extendDispatchers.end()){
+		m_extendDispatchers.erase(itor);
+		return true;
+	}
+	return false;
 }
 
 

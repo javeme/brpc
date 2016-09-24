@@ -18,6 +18,7 @@ class FuncDispatcher : public VarContext
 	typedef List<AnyFunction*> FuncList;
 	typedef Map<std::string, FuncList> FuncMap;
 	typedef Map<std::string, Object*> ObjMap;
+	typedef List<FuncDispatcher*> DispatcherList;
 public:
 	FuncDispatcher(cstring name="dispatcher") : m_name(name){}
 	virtual ~FuncDispatcher();
@@ -53,7 +54,7 @@ public:
 		union{Func funcAddress; byte* address;} addr;
 		addr.funcAddress = func;
 
-		FuncList& funcList = itor->second;		
+		FuncList& funcList = itor->second;	
 		for(auto itor = funcList.begin(); itor != funcList.end(); )
 		{
 			if(addr.address == (*itor)->address())
@@ -103,8 +104,7 @@ private:
 	ObjMap m_objMap;
 	String m_name;
 
-	typedef LinkedList<FuncDispatcher*> DispatcherList;
-	DispatcherList extendDispatchers;
+	DispatcherList m_extendDispatchers;
 };
 
 }//end of namespace brpc
