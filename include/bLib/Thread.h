@@ -17,7 +17,7 @@ namespace bluemei{
 class BLUEMEILIB_API Thread : public Runnable
 {
 public:
-	Thread(void* pUserParameter=NULL);;	
+	Thread(void* pUserParameter=NULL);;
 	Thread(Runnable* pTarget,void* pUserParameter=NULL);
 	virtual ~Thread();
 private:
@@ -38,9 +38,9 @@ public:
 	bool isRunning() const;
 	unsigned int getThreadId() const;
 	static unsigned int currentThreadId();
-public: 
+public:
 	int callBackStartThread();
-protected: 
+protected:
 	virtual void init();
 	virtual void destroy();
 protected:

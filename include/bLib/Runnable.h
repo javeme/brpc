@@ -1,5 +1,5 @@
-#ifndef _Runnable_h_ 
-#define _Runnable_h_ 
+#ifndef _Runnable_h_
+#define _Runnable_h_
 
 #include "bluemeiLib.h"
 #include "Object.h"

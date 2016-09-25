@@ -28,31 +28,31 @@ typedef uint32		dword;
 */
 class BLUEMEILIB_API CodeUtil : public Util
 {
-public:	
+public:
 	static int bytesToInt(byte *buf);
 	static short bytesToShort(byte *buf);
 	static float bytesToFloat(byte *buf);
 	static double bytesToDouble(byte *buf);
-	
+
 	static void intToBytes(byte* buf, int value);
 	static void shortToBytes(byte* buf, short value);
-	static void floatToBytes(byte* buf, float f);	
+	static void floatToBytes(byte* buf, float f);
 	static void doubleToBytes(byte* buf, double f);
 
 	template<typename Type>
 	static Type bytesToBigInt(byte *buf, bool bigEndian=false);
 	template<typename Type>
 	static void bigIntToBytes(byte *buf, Type value, bool bigEndian=false);
-public:	
+public:
 	//static char* gbkToUtf8(const char *strGBK);
-	//static void utf8ToGbk(string& szstr); 
+	//static void utf8ToGbk(string& szstr);
 
 	static int gbkToUtf8(string& strUtf8,const char *strGBK);
 	static int utf8ToGbk(string& strGbk,const char* strUtf8);
 
 	static int utf8ToUnicode(wstring& strUnicode,const char *strUtf8);//返回字节数(unicode字符串长度的2倍)
 	static int unicodeToUtf8(string& strUtf8,const wstring& strUnicode);
-	
+
 	static int gbkToUnicode(wstring& strUnicode,const char *strGBK);
 	static int gb2312ToUnicode(wstring& result,const char *strGb2312);
 	static int unicodeToGbk(string& result,const wstring& uStr);
@@ -64,7 +64,7 @@ public:
 public:
 	static string base64Encode(const unsigned char* src, int srcLen);
 	static string base64Decode(const char* str);
-public:	
+public:
 	static unsigned char char2hexChar(unsigned char x);
 	static bool isAlpha(int c);
 	static bool isNumber(int c);
@@ -75,7 +75,7 @@ public:
 
 	static string urlEncode(const char* src);
 	static string urlDecode(const char* src);
-public:	
+public:
 	static String bytesToHexString(const byte buffer[], int len);
 };
 
@@ -85,7 +85,7 @@ Type bluemei::CodeUtil::bytesToBigInt(byte *buf, bool bigEndian)
 	Type value = 0;
 	const int size = sizeof(value);
 	const int64 BIG_INT_MASK = 0xff;
-	
+
 	int shift = 0;
 	for(int i=0; i<size; i++)
 	{

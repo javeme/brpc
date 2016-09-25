@@ -113,7 +113,6 @@ public:
 			values.append(column->columnValue()->toSQL());
 			values.append(",");
 		}
-		const_cast<FiledValues&>(m_pairs).releaseIterator(iter);
 
 		if (keys.length() > 0)
 			keys.pop();// remove ','
@@ -167,7 +166,6 @@ public:
 			setters.append(column->columnValue()->toSQL());
 			setters.append(",");
 		}
-		const_cast<FiledValues&>(m_pairs).releaseIterator(iter);
 
 		if (setters.length() > 0)
 			setters.pop();// remove ','

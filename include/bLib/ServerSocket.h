@@ -1,8 +1,8 @@
-#ifndef _ServerSocket_h_ 
-#define _ServerSocket_h_ 
+#ifndef _ServerSocket_h_
+#define _ServerSocket_h_
 
 #include <winsock2.h>
-#include <string>  
+#include <string>
 
 #include "bluemeiLib.h"
 #include "ClientSocket.h"

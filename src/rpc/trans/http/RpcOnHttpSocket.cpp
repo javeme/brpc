@@ -74,8 +74,8 @@ void RpcOnHttpSocket::receive() throw(RpcException)
 	unsigned int len = 0;
 	String line;
 	//read util empty line
-	while(len = (line = sock.readLine()).length() > 0){
-		if(len == sock.LINE_BUFFER_SIZE){
+	while((len = (line = sock.readLine()).length()) > 0){
+		if(len >= (unsigned int)sock.LINE_BUFFER_SIZE){
 			String err = "The length of a line is too big";
 			sendResponse(HttpResponse::RequestEntityTooLarge, "<response-error>");
 			throwpe(HttpBadRequestException(err));

@@ -20,7 +20,7 @@ class BLUEMEILIB_API TypeException : public RuntimeException
 public:
 	TypeException(cstring msg);
 	TypeException(cstring instance, cstring cls);
-	virtual ~TypeException(void){};		
+	virtual ~TypeException(void){};
 public:
 	virtual String name()const;
 };
@@ -31,7 +31,7 @@ class BLUEMEILIB_API BadCastException : public RuntimeException
 public:
 	BadCastException(cstring str);
 	BadCastException(cstring from, cstring to);
-	virtual ~BadCastException(void){};		
+	virtual ~BadCastException(void){};
 public:
 	virtual String name()const;
 };
@@ -112,7 +112,7 @@ public:
 class BLUEMEILIB_API OutOfMemoryException : public RuntimeException
 {
 public:
-	OutOfMemoryException(long long size);	
+	OutOfMemoryException(long long size);
 	virtual ~OutOfMemoryException(void){};
 public:
 	virtual String name()const;
@@ -122,7 +122,7 @@ class BLUEMEILIB_API TimeoutException : public RuntimeException
 {
 public:
 	TimeoutException(long long time);
-	virtual ~TimeoutException(void){};		
+	virtual ~TimeoutException(void){};
 public:
 	virtual String name()const;
 };
@@ -131,7 +131,7 @@ class BLUEMEILIB_API InvalidArgException : public RuntimeException
 {
 public:
 	InvalidArgException(cstring str):RuntimeException(str){};
-	virtual ~InvalidArgException(void){};		
+	virtual ~InvalidArgException(void){};
 public:
 	virtual String name()const
 	{

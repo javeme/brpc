@@ -42,7 +42,7 @@ void SimpleMemoryPool<T>::destroy()
 	{
 		delete i->next();
 	}
-	m_listOriginalObject.releaseIterator(i);
+	//delete i.detach();
 	m_listOriginalObject.clear();
 	m_listObject.clear();
 }
@@ -59,7 +59,7 @@ bool SimpleMemoryPool<T>::changeMaxSize( unsigned int maxSize)
 	unsigned int currentSize=m_listOriginalObject.size();
 	if(maxSize<currentSize)
 		return false;
-	
+
 	m_nMaxSize=maxSize;
 	return true;
 }

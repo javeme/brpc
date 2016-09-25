@@ -5,7 +5,7 @@
 #include "BString.h"
 #include "ArrayList.h"
 #include "CodeUtil.h"
- 
+
 namespace bluemei{
 
 #define PATH_SEPARATOR "/"
@@ -31,7 +31,7 @@ public:
 
 	static bool isfile(const String& path);
 	static bool isdir(const String& path);
-		
+
 	static ArrayList<String> list(const String& path);
 	static bool remove(const String& path);
 	static bool rename(const String& from, const String& to);

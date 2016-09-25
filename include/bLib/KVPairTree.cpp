@@ -29,7 +29,7 @@ template<typename Key,typename Value>
 KVPairTree<Key,Value>& KVPairTree<Key,Value>::item(const Key& k)
 {
 	for(unsigned int i=0; i<m_valueList.size(); i++)
-	{	
+	{
 		if(k==m_valueList[i].name())
 			return m_valueList[i];
 	}
@@ -50,15 +50,15 @@ KVPairTree<Key,Value> KVPairTree<Key, Value>::removeItem(unsigned int index)
 template<typename Key,typename Value>
 KVPairTree<Key,Value> KVPairTree<Key, Value>::removeItem(const Key& k)
 {
-	for(auto iter = m_valueList.begin(); iter != m_valueList.end(); ) 
+	for(auto iter = m_valueList.begin(); iter != m_valueList.end(); )
 	{
 		auto& item=*iter;
-		if(k==item.name()) 
-		{ 
+		if(k==item.name())
+		{
 			KVPairTree<Key,Value> prop=item;
 			iter=m_valueList.erase(iter);
 			return prop;
-		} 
+		}
 		else
 			++iter;
 	}
@@ -71,7 +71,7 @@ template<typename Key,typename Value>
 bool KVPairTree<Key, Value>::contain( const Key& k ) const
 {
 	for(unsigned int i=0; i<m_valueList.size(); i++)
-	{	
+	{
 		if(k==m_valueList[i].name())
 			return true;
 	}

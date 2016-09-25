@@ -19,7 +19,7 @@ public:
 	void setBigEndian(bool val);
 public:
 	virtual unsigned int write(const byte buf[],unsigned int len){
-		return put(buf,len); 
+		return put(buf,len);
 	}
 
 	virtual unsigned int write(byte b){

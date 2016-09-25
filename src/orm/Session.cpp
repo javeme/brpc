@@ -219,8 +219,6 @@ bool Session::createTable(Model* model)
 	if (cols.size() > 0)
 		sql.pop();// remove ','
 
-	cols.releaseIterator(iter);
-
 	sql.append(")");
 	return this->createTable(sql.toString());
 }

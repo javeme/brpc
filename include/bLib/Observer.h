@@ -2,7 +2,7 @@
 #define Observer_H_H
 #include "Object.h"
 #include "Exception.h"
-#include "LinkedList.cpp"
+#include "LinkedList.h"
 
 namespace bluemei{
 
@@ -41,7 +41,7 @@ public:
 
 	virtual void notifyObservers(Exception& e, Object* pFrom)
 	{
-		if(!m_changed) 
+		if(!m_changed)
 			return;
 		clearChanged();
 
@@ -50,7 +50,7 @@ public:
 	}
 	virtual void notifyObservers(MessageType* pMessage, Object* pFrom)
 	{
-		if(!m_changed) 
+		if(!m_changed)
 			return;
 		clearChanged();
 

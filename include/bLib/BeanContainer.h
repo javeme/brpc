@@ -30,7 +30,7 @@ public:
 	virtual Object* get(const string& key)const;
 	virtual Object* remove(const string& key);
 	virtual bool remove(Object* pBean);
-	
+
 	virtual int size() const{ return m_beanMap.size(); };
 
 	virtual void clear(bool autoRelease=true);

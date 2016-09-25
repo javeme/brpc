@@ -23,7 +23,7 @@ public:
 	virtual T& get(unsigned int i)const;
 	virtual T& getLast()const;
 	virtual T& getFirst()const;
-	
+
 	virtual unsigned int find(const T& v,unsigned int i=0);//查找元素位置
 
 	virtual void set(unsigned int i,const T& v);//设置指定位置的元素值
@@ -34,13 +34,13 @@ public:
 	virtual unsigned int removeLast(unsigned int n);//删除n个元素,返回剩下元素数量
 
 	virtual void clear();
-	
+
 	virtual unsigned int size() const;
 	virtual void resize(unsigned int size,float capacityFactor=1.2f);
 	virtual void resetCapacity(unsigned int capacity);
 
 	virtual void copy(const ArrayList<T>& list, unsigned int to, unsigned int num);
-	
+
 	const T& operator[](int pos)const { return get(pos); }
 	T& operator[](int pos) { return get(pos); }
 
@@ -57,8 +57,8 @@ protected:
 
 
 template< class T >
-ArrayList<T>::ArrayList(unsigned int size,float capacityFactor) 
-{ 
+ArrayList<T>::ArrayList(unsigned int size,float capacityFactor)
+{
 	unsigned int capacity=8;
 	if(size>capacity)
 	{
@@ -91,7 +91,7 @@ ArrayList<T>::ArrayList(ArrayList<T>&& other)
 {
 	m_pData=nullptr;
 	m_nSize=m_nCapacity=0;
-	this->operator=(move(other));	
+	this->operator=(move(other));
 }
 
 template< class T >
@@ -169,10 +169,10 @@ unsigned int ArrayList<T>::add( const T& v )
 	//checkBound(m_nCurrent);
 	if(m_nSize>=m_nCapacity)
 	{
-		resetCapacity((unsigned int)(1.5*m_nSize));		
+		resetCapacity((unsigned int)(1.5*m_nSize));
 	}
 	m_pData[m_nSize++]=v;
-	return m_nSize-1; 
+	return m_nSize-1;
 }
 
 template< class T >
@@ -242,7 +242,7 @@ public:
 	{
 		String type=typeid(T).name();
 		bool isPoiner=type.contain("*");//T是否为指针类型
-		
+
 		for(unsigned int i=0;i<count;i++)//适用于基本数据类型及class类型的"清零"
 		{
 			if(isPoiner)//指针
@@ -318,9 +318,9 @@ void ArrayList<T>::release()
 }
 
 template< class T >
-unsigned int ArrayList<T>::size() const 
-{ 
-	return m_nSize; 
+unsigned int ArrayList<T>::size() const
+{
+	return m_nSize;
 }
 
 template< class T >

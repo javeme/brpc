@@ -13,12 +13,12 @@ class KVPairTree : public Object
 public:
 	KVPairTree();
 	//单值构造
-	KVPairTree(const Key& k,const Value& v=Value()){		
+	KVPairTree(const Key& k,const Value& v=Value()){
 		clear();
 		setSinglePair(k,v);
 	}
 	//多值构造
-	KVPairTree(List<KVPairTree>& list){				
+	KVPairTree(List<KVPairTree>& list){
 		clear();
 		m_bSingleValue=false;
 		m_valueList=list;

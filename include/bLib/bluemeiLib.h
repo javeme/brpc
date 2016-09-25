@@ -32,7 +32,7 @@
 #define BLUEMEILIB_TEMPLATE BLUEMEILIB_API
 #else
 #define BLUEMEILIB_API __declspec(dllimport)
-#define BLUEMEILIB_TEMPLATE 
+#define BLUEMEILIB_TEMPLATE
 #endif // BLUEMEILIB_EXPORTS
 
 #endif // WIN32

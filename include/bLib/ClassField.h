@@ -11,7 +11,7 @@ class BLUEMEILIB_API FieldInfo : public Object
 {
 public:
 	typedef const type_info& TypeInfo;
-    FieldInfo() {} 
+    FieldInfo() {}
 	virtual ~FieldInfo() {}
 public:
 	virtual cstring name() const = 0;
@@ -50,15 +50,15 @@ public:
 	typedef Var(Cls::*Offset);
 
     FieldType(const std::string& name, Offset offset, bool isPublic=true)
-		: m_name(name), m_type(typeid(Var)), m_offset(offset), m_isPublic(isPublic) {} 
+		: m_name(name), m_type(typeid(Var)), m_offset(offset), m_isPublic(isPublic) {}
 	virtual ~FieldType() {}
 public:
 	virtual cstring name() const { return m_name.c_str(); }
 	virtual TypeInfo typeInfo() const { return m_type; }
-	  
+
 	virtual bool isPublic() const { return m_isPublic; }
 	virtual void setPublic(bool val) { m_isPublic = val; }
-	
+
 	virtual void setValue(Object& obj, Object* val) const
 	{
 		Cls* inst = dynamic_cast<Cls*>(&obj);
@@ -113,7 +113,7 @@ public:
 //field value
 template <typename T/*, T deftVal=T()*/>
 class BLUEMEILIB_TEMPLATE Field : public FieldBase
-{ 
+{
 public:
 	Field() : /*m_value(deftVal),*/ m_setted(false), m_modified(false) {}
     Field(const T& val) : m_value(val), m_setted(true), m_modified(false) {}
@@ -128,11 +128,11 @@ public:
 public:
 	T value() const { return m_value; }
 	operator T() const { return value(); }
-    //const Field& fieldType() const { return *m_fieldType; } 
+    //const Field& fieldType() const { return *m_fieldType; }
 
     virtual bool modified() const { return m_modified; }
     virtual void setModified(bool state) { m_modified = state; }
-	
+
 	virtual bool setted() const { return m_setted; }
 	virtual void setSetted(bool state) { m_setted = state; }
 
@@ -155,14 +155,14 @@ template <typename Type>
 struct Converter<Field<Type>>
 {
 	static inline Field<Type> valueOf(Object* obj)
-	{		
+	{
 		Field<Type>* fld = dynamic_cast<Field<Type>*>(obj);
 		if(fld)
 			return fld->value();
 		return Converter<Type>::valueOf(obj);
 	}
 	static inline Object* toObject(const Field<Type>& val)
-	{		
+	{
 		return Converter<Type>::toObject(val.value());
 	}
 };

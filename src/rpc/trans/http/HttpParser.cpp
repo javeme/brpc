@@ -63,7 +63,6 @@ SmartPtr<HttpHeader> HttpParser::parse(const LinkedList<String>& lines)
 		String val = line.getRightSub(line.length() - offset -1);
 		header->setEntity(key.trim(), val.trim());
 	}
-	const_cast<LinkedList<String>&>(lines).releaseIterator(itor);
 
 	header->update();
 	return header;

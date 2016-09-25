@@ -4,7 +4,7 @@
 #include "Object.h"
 
 namespace bluemei{
-		
+
 //×Ö·û´®»¯
 #define _T2STR(type) #type
 
@@ -72,11 +72,11 @@ template <>
 struct dynamic_caster<NullType, true>
 {
 	static NullType toType(Object* obj)
-	{		
+	{
 		return null;
 	}
 	static Object* toObject(NullType val)
-	{		
+	{
 		return null;
 	}
 };
@@ -99,7 +99,7 @@ struct is_convertible
 	struct No { short v; };
 	static Yes canConvert(const To&);
 	static No canConvert(...);
-	
+
 	//if int returns long: int() == 0 ==> Object*, but long() !=> Object*
 	static long isIntFrom(int&);
 	//else returns itself

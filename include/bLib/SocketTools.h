@@ -1,5 +1,5 @@
-#ifndef _SocketTools_h_ 
-#define _SocketTools_h_ 
+#ifndef _SocketTools_h_
+#define _SocketTools_h_
 
 #include "bluemeiLib.h"
 #include "CodeUtil.h"

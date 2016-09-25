@@ -1,6 +1,6 @@
 #pragma once
 #include "Object.h"
-#include "LinkedList.cpp"
+#include "LinkedList.h"
 #include "CriticalLock.h"
 
 namespace bluemei{

@@ -1,5 +1,5 @@
-#ifndef _Log_h_ 
-#define _Log_h_ 
+#ifndef _Log_h_
+#define _Log_h_
 
 #include "File.h"
 #include "CriticalLock.h"
@@ -36,7 +36,7 @@ public:
 	virtual ~Log();
 public:
 	static Log* getLogger(const String& name="");
-public:	
+public:
 	virtual void log(LogLevel level, const String& msg, const LogCtx& ctx=s_nullCtx);
 
 	void fatal(const String& str, const LogCtx& ctx=s_nullCtx)
@@ -71,12 +71,12 @@ public:
 	{
 		return log(LOG_TRACE, str, ctx);
 	}
-		
+
 	String name() const { return m_name; }
 
 	LogLevel getLevel() const { return m_level; }
 	void setLevel(LogLevel val) { m_level = val; }
-	
+
 	void setLevel(const String& val);
 	String getLevelDscr() const;
 

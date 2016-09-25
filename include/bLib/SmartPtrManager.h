@@ -11,7 +11,7 @@
 #ifdef WIN32
 //#include <windows.h> //do not include windows.h, this may cause starnge compile time error
 #ifndef _DLL//MTd调用_msize()时出现错误: HEAP[]: Invalid address specified to RtlValidateHeap( 02160000, 05C6C8C8 )
-#error To use the util library, please compile the project with "Multithread DLL (/MD)" or "Multithread Debug DLL (/MDd)" 
+#error To use the util library, please compile the project with "Multithread DLL (/MD)" or "Multithread Debug DLL (/MDd)"
 #endif
 #endif
 
@@ -34,8 +34,8 @@ struct DestructorStruct
 template <typename T>
 struct ArrayDestructorStruct
 {
-	static void destroy(void* obj) { 
-		delete[] static_cast<T*>(obj); 
+	static void destroy(void* obj) {
+		delete[] static_cast<T*>(obj);
 	}
 };
 
@@ -104,7 +104,7 @@ public:
 
 class ObjectWrapper;
 /**
- * struct WrapperPointer is a simple struct contains a ObjectWrapper pointer. We want put a ObjectWrapper* into a 
+ * struct WrapperPointer is a simple struct contains a ObjectWrapper pointer. We want put a ObjectWrapper* into a
  * STL set, but the compiler doesn't allow us to define a operator < for a pointer. We must encapsulate the pointer
  * as a struct, then overload the operator < for the struct
  */
@@ -133,7 +133,7 @@ class BLUEMEILIB_API WrapperManager : public Object
 {
 #ifdef _MSC_VER
 #pragma warning(push)
-#pragma warning( disable : 4251) 
+#pragma warning( disable : 4251)
 #endif
 	typedef std::set<WrapperPointer> WrapperSet;
 	WrapperSet wrappers;
@@ -141,7 +141,7 @@ class BLUEMEILIB_API WrapperManager : public Object
 #pragma warning(pop)
 #endif
 /**
-	return an element of ObjectWrapper list, where pTarget should 
+	return an element of ObjectWrapper list, where pTarget should
 	be insert after.
 	return pos, where pos->pTarget <= pTarget < (pos+1)->pTarget
 	<B> NOTE: not used now. use STL set to store wrapper objects.
@@ -159,10 +159,10 @@ public:
 	bool isEmbeddedPtr(void *pSmartPtr);
 	void destroy();
 public:
-	
+
 	/**
 	if target has already exist in the list, just return the old Wrapper.
-	this allow to cast a derived-type point to a base-type point. 
+	this allow to cast a derived-type point to a base-type point.
 	this make multi-inheritance enabled
 	else create a new Wrapper
 	If a new Wrapper is create and returned, the new Wrapper has reference count 1

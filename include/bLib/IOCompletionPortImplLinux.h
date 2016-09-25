@@ -19,14 +19,14 @@ namespace bluemei{
 
 enum IOCPEventType
 {
-	EVENT_IN  = EPOLLIN,			//表示对应的文件描述符可以读； 
-	EVENT_OUT = EPOLLOUT,			//表示对应的文件描述符可以写； 
-	EVENT_PRI = EPOLLPRI,			//表示对应的文件描述符有紧急的数据可读 
-	EVENT_ERR = EPOLLERR,			//表示对应的文件描述符发生错误； 
-	EVENT_HUP = EPOLLHUP,			//表示对应的文件描述符被挂断； 
+	EVENT_IN  = EPOLLIN,			//表示对应的文件描述符可以读；
+	EVENT_OUT = EPOLLOUT,			//表示对应的文件描述符可以写；
+	EVENT_PRI = EPOLLPRI,			//表示对应的文件描述符有紧急的数据可读
+	EVENT_ERR = EPOLLERR,			//表示对应的文件描述符发生错误；
+	EVENT_HUP = EPOLLHUP,			//表示对应的文件描述符被挂断；
 
-	EVENT_LT  = EPOLLLT,			//表示对应的文件描述符有事件发生； 
-	EVENT_ET  = EPOLLET,			//表示对应的文件描述符有事件发生； 
+	EVENT_LT  = EPOLLLT,			//表示对应的文件描述符有事件发生；
+	EVENT_ET  = EPOLLET,			//表示对应的文件描述符有事件发生；
 
 	EVENT_READ		= EVENT_IN,
 	EVENT_WRITE		= EVENT_OUT,

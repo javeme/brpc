@@ -44,7 +44,7 @@ REG_TYPE(float);
 REG_TYPE(double);
 
 template<typename Type>
-void memClear(Type* buffer,unsigned int count){//BLUEMEILIB_TEMPLATE 
+void memClear(Type* buffer,unsigned int count){//BLUEMEILIB_TEMPLATE
 	memset(buffer,0,clearTypeSize<Type>::typeSize*count);
 }
 
@@ -106,7 +106,7 @@ DataBuffer<Type>& DataBuffer<Type>::operator=(DataBuffer<Type>&& other)
 		if(m_buffer!=nullptr)
 			delete[] m_buffer;
 		this->m_buffer = other.m_buffer;
-		
+
 		other.m_nCapacity = 2;
 		other.m_buffer = new Type[other.m_nCapacity];
 		memClear(other.m_buffer,other.m_nCapacity);

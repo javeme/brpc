@@ -4,7 +4,7 @@
 
 namespace bluemei{
 
-template<class T> 
+template<class T>
 class BLUEMEILIB_TEMPLATE hashCode{
 public:
 	hashCode(const T& t){
@@ -24,10 +24,10 @@ public:
 		//default BKDR Hash Function
 		return hashStringBKDR(str);
 	}
-	//BKDR Hash Function 
+	//BKDR Hash Function
 	unsigned int hashStringBKDR(const char *str)
 	{
-		unsigned int seed = 131; // 31 131 1313 13131 131313 etc.. 
+		unsigned int seed = 131; // 31 131 1313 13131 131313 etc..
 		unsigned int hash = 0;
 
 		while (*str)

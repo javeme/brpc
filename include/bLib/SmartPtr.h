@@ -9,12 +9,12 @@
 *你可以自由使用这部分代码，但请保留这段声明,无论你是否修改了该代码。
 ************************************************************************/
 /************************************************************************
- *NOTE: if this file is compile into a DLL with MSVC, it must be linked 
+ *NOTE: if this file is compile into a DLL with MSVC, it must be linked
  *with `Multi-thread DLL runtime library /MD', so it can use the same local
  *heap with the main program. otherwise, GC will fail to get the size of
  *a heap block
- *Your own application that use the DLL must use same character set with 
- *the DLL, e.g. MCBS, otherwise, there will be little memory leak of the 
+ *Your own application that use the DLL must use same character set with
+ *the DLL, e.g. MCBS, otherwise, there will be little memory leak of the
  *DLL itself, but not the collector.
  ***********************************************************************/
 
@@ -22,7 +22,7 @@
 #define __SMARTPTR_H__
 
 /*
-Characters   
+Characters
 1. reference based and ciruit immunity.
 2. determinative deconstructed and no-determinative deconstruct
 3. polymorph supported. assign a derived-type point to a base-type point is possible
@@ -32,7 +32,7 @@ Characters
 7. use just like a raw point
 8. new operator is leave not overloaded. you can overload it as you want
 9. cross platform, Both Windows and Linux are supported
-10. multi-inheritance supported 
+10. multi-inheritance supported
 11. run-time Array boundary check
 //6. use in both single thread or multi thread model
 
@@ -45,10 +45,10 @@ constraints
    be caution, you'd better don't use this SmartPtr. or I can add another more function to support
    external reference.
 6. when you are define a point, use the most derived type if it is possible.
-   such as, class B derived from A. 
+   such as, class B derived from A.
    <I>class B:A{}<I>
-   use 
-   <I>SmartPtr<B> p = new B;<I> 
+   use
+   <I>SmartPtr<B> p = new B;<I>
    but not
    <I>SmartPtr<A> p = new B;<I>
    if it is possible, though this cause no error.
@@ -62,7 +62,7 @@ namespace bluemei{
 
 //////////////////////////////////////////////////////////////////////
 //class SmartPtr
-template<typename T> 
+template<typename T>
 class SmartPtr : public LinkNode
 {
 public:
@@ -77,7 +77,7 @@ public:
 		m_targetObj = pObj;
 		m_reserved = 0;
 	}
-		
+
 	virtual ~SmartPtr(void)
 	{
 		GlobalMutexLock l;
@@ -100,7 +100,7 @@ public:
 		m_targetObj = ptr.m_targetObj;
 		m_reserved = ptr.m_reserved;
 	}
-	
+
 	SmartPtr<T>& operator=(const SmartPtr<T> &ptr)
 	{
 		GlobalMutexLock l;
@@ -156,13 +156,13 @@ public:
 
 	template<typename S>
 	const SmartPtr<S> staticCast() const { return static_cast<S*>(getTarget()); }
-		
+
 	template<typename S>
 	SmartPtr<S> dynamicCast(){ return dynamic_cast<S*>(getTarget()); }
 
 	template<typename S>
 	const SmartPtr<S> dynamicCast() const { return dynamic_cast<S*>(getTarget()); }
-	
+
 	/*template<typename S, typename V>
 	friend SmartPtr<S> ptr_static_cast(SmartPtr<V> ptr);
 
@@ -192,7 +192,7 @@ protected:
 
 //////////////////////////////////////////////////////////////////////
 //class ArrayPtr
-template<typename T> 
+template<typename T>
 class ArrayPtr : public SmartPtr<T>
 {
 public:

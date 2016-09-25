@@ -26,7 +26,7 @@ private:
 	bool m_bIsPasv,m_bIsGoOn;
 private:
 	void initTranMode();
-public:	
+public:
 	void setPasv(bool isPasv);
 	void setAddress(const char *ip,int port);
 	bool connectServer(const char *username,const char *password);

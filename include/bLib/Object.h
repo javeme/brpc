@@ -21,11 +21,11 @@ public:
 	#define __super SuperObj
 	DECLARE_DCLASS(Object);
 	#undef __super*/
-	static const Class* thisClass(); 
-	static Object* createObject(); 
-	virtual Object* clone()const; 
-	virtual const Class* getThisClass() const; 
-	virtual void setAttribute(cstring name, Object* val); 
+	static const Class* thisClass();
+	static Object* createObject();
+	virtual Object* clone()const;
+	virtual const Class* getThisClass() const;
+	virtual void setAttribute(cstring name, Object* val);
 	virtual Object* getAttribute(cstring name) const;
 	virtual const void* getAttributeAddr(cstring name) const;
 public:

@@ -4,7 +4,7 @@
 #include "bluemeiLib.h"
 #include "IOException.h"
 #include "Object.h"
- 
+
 namespace bluemei{
 
 #define BUFFER_SIZE 1024

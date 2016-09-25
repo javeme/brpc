@@ -1,7 +1,7 @@
 #pragma once
 #include "Object.h"
 
-#if defined(WIN32) 
+#if defined(WIN32)
 	#include "IOCompletionPortImplWin32.h"
 #else
 	#include "IOCompletionPortImplLinux.h"

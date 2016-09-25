@@ -7,7 +7,7 @@ namespace bluemei{
 #ifdef WIN32
 #include <windows.h>
 #include <winbase.h> //QueryPerformanceFrequency defined in this file
-	
+
 #define USECOND_PER_SECOND (1000*1000) //Ã¿ÃëµÄÎ¢ÃëÊý
 
 class BLUEMEILIB_API AccurateTimeTicker : public Object
@@ -40,7 +40,7 @@ public:
 	}
 };
 
-#else 
+#else
 /* Linux */
 #include <sys/time.h> // struct timeval
 class AccurateTimeTicker : public Object

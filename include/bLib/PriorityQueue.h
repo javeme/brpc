@@ -12,11 +12,11 @@ template<class EleType,class KeyGetter>
 class BLUEMEILIB_TEMPLATE PriorityQueue : public Object
 {
 	typedef int Key;
-	typedef std::queue<EleType> SPQueue;//same Priority Queue	
+	typedef std::queue<EleType> SPQueue;//same Priority Queue
 public:
 	PriorityQueue(){};
 	virtual ~PriorityQueue(){};
-public:	
+public:
 	bool empty() const
 	{	// test if queue is empty
 		return (size()==0);

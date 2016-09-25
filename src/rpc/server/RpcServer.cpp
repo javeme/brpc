@@ -81,7 +81,6 @@ void RpcServer::destroy()
 		RpcConnection* conn = itor->next();
 		delete conn;
 	}
-	connList.releaseIterator(itor);
 	connList.clear();
 }
 
@@ -97,7 +96,6 @@ void RpcServer::onEvent(cstring event, Object* sender, const ObjectList& args)
 			conn->notifyEvent(event, sender, args);
 		}
 	}
-	connList.releaseIterator(itor);
 }
 
 //hook the data and log it

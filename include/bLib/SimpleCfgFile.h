@@ -15,13 +15,13 @@ public:
 	~SimpleCfgFile(void);
 private:
 	PropertiesMap m_propertiesMap;
-	string m_filePath;	
+	string m_filePath;
 	string m_content;
 	bool m_isChanged;
 public:
 	void readPropertyFromFile(const string& path);
-public:	
-	bool getProperty(const string& key,string& value);//获取配置属性		
+public:
+	bool getProperty(const string& key,string& value);//获取配置属性
 	bool setProperty(const string& key,const string& value);//设置配置属性
 	bool removeProperty(const string& key);
 	void saveProperty();

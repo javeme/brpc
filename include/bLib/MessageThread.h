@@ -99,7 +99,7 @@ protected:
 	virtual void onMessage(Message* msg);
 protected:
 	struct GetKey{
-		int operator()(const Message* ele)const{			
+		int operator()(const Message* ele)const{
 			return ele->getPriority();//×î´ó¶Ñ
 		}
 	};

@@ -57,7 +57,6 @@ void HttpHeader::writeEntitiesTo(OutputStream& output) throw(Exception)
 		output.writeBytes((byte*)entry.value.c_str(), entry.value.length());
 		writeCrlfTo(output);
 	}
-	this->entities.releaseIterator(itor);
 
 	//cookies
 	this->writeCookiesTo(output);
@@ -356,7 +355,6 @@ void HttpRequest::writeCookiesTo( OutputStream& output ) throw(Exception)
 			cookies.append(_c(entry.value.value));
 			cookies.append(";");
 		}
-		this->cookies.releaseIterator(itor);
 
 		output.writeBytes((byte*)cookieTag.c_str(), cookieTag.length());
 		output.writeBytes((byte*)cookies.toString().c_str(), cookies.length());
@@ -385,7 +383,6 @@ String HttpRequest::getParametersAsString() const
 		sb.append("=");
 		sb.append(CodeUtil::urlEncodeComponent(entry.value));
 	}
-	parameters.releaseIterator(itor);
 
 	return sb.toString();
 }
@@ -553,7 +550,6 @@ void HttpResponse::writeCookiesTo( OutputStream& output ) throw(Exception)
 		output.writeBytes((byte*)cookieString.c_str(), cookieString.length());
 		writeCrlfTo(output);
 	}
-	this->cookies.releaseIterator(itor);
 }
 
 void HttpResponse::readCookiesFrom( InputStream& input ) throw(Exception)

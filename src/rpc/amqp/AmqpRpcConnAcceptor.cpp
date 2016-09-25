@@ -172,7 +172,6 @@ void AmqpRpcConnAcceptor::checkAlive(unsigned int timeout)
 		if(ms > timeout)
 			conn->setAlive(false);
 	}
-	this->connections.releaseIterator(itor);
 }
 
 void AmqpRpcConnAcceptor::stop()

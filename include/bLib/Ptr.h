@@ -10,7 +10,7 @@ class BLUEMEILIB_API PointerReference : virtual public Object
 public:
 	PointerReference(void);
 	virtual ~PointerReference(void);
-private:	
+private:
 	PointerReference(const PointerReference&);
 	PointerReference&  operator=(const PointerReference&);
 public:
@@ -21,7 +21,7 @@ protected:
 };
 
 
-template<typename T> 
+template<typename T>
 class BLUEMEILIB_TEMPLATE Pointer : public Object
 {
 public:
@@ -65,7 +65,7 @@ protected:
 
 
 //Wrapper for PointerReference
-template<typename T> 
+template<typename T>
 class BLUEMEILIB_TEMPLATE RefPointer : public Pointer<T>
 {
 public:
@@ -95,12 +95,12 @@ public:
 };
 
 
-template<typename T> 
+template<typename T>
 class BLUEMEILIB_TEMPLATE ScopePointer : public Pointer<T>
 {
 public:
 	ScopePointer(T* target=null) : Pointer(target) {}
-		
+
 	virtual ~ScopePointer(void)
 	{
 		delete m_target;

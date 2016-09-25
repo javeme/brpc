@@ -6,17 +6,17 @@
 
 namespace bluemei{
 
-template<class K,class V> 
+template<class K,class V>
 class BLUEMEILIB_TEMPLATE Entry : public Object
 {
 	template<class K,class V> friend class HashMap;
 public:
 	Entry(){ hash=0; next=nullptr; }
-	Entry(const K& k,const V& v,unsigned int h=0,Entry<K,V>* next=nullptr){ 
-		key=k; 
+	Entry(const K& k,const V& v,unsigned int h=0,Entry<K,V>* next=nullptr){
+		key=k;
 		value=v;
 		this->hashcode=h;
-		this->next=next; 
+		this->next=next;
 	}
 	virtual ~Entry(){ delete next; }
 public:
@@ -36,7 +36,7 @@ protected:
 	Entry<K,V>* next;
 };
 
-template<class K,class V> 
+template<class K,class V>
 class BLUEMEILIB_TEMPLATE IMap : public Object
 {
 public:
@@ -47,14 +47,14 @@ public:
 	virtual bool contain(const K& key)const=0;
 	virtual unsigned int size() const=0;
 
-	virtual Iterator<Entry<K,V>>* iterator()=0;
+	virtual RefPointer<Iterator<Entry<K,V>>> iterator()=0;
 	virtual void releaseIterator(Iterator<Entry<K,V>>* itor)=0;
 
 	virtual IMap& merge(const IMap& other, bool overwrite=true)
 	{
-		auto i = const_cast<IMap&>(other).iterator();
+		auto i=const_cast<IMap&>(other).iterator();
 		while(i->hasNext()) {
-			Entry<K,V> entry = i->next();
+			Entry<K,V> entry=i->next();
 			if(!(this->contain(entry.key) && !overwrite))
 				(void)put(entry.key, entry.value);
 		}
@@ -62,13 +62,13 @@ public:
 		return *this;
 	}
 public:
-	static unsigned int indexFor( unsigned int hash, unsigned length ){
+	static unsigned int indexFor(unsigned int hash, unsigned length){
 		return hash%length;
-		//return hash & (length-1);		
+		//return hash & (length-1);
 	}
 };
 
-template<class K,class V> 
+template<class K,class V>
 class BLUEMEILIB_TEMPLATE HashMap : public IMap<K,V>
 {
 	typedef Entry<K,V> HashEntry;
@@ -96,63 +96,63 @@ public:
 		this->operator=(other);
 	}
 	HashMap& operator=(const HashMap& other)
-	{ 
-		if(this != &other)
+	{
+		if(this!=&other)
 		{
 			this->clear();
-			/*this->m_nSize = other.m_nSize;
-			this->m_fLoadFactor = other.m_fLoadFactor;
-			this->m_nThreshold = other.m_nThreshold;
-			this->m_nMaxSize = other.m_nMaxSize;
+			/*this->m_nSize=other.m_nSize;
+			this->m_fLoadFactor=other.m_fLoadFactor;
+			this->m_nThreshold=other.m_nThreshold;
+			this->m_nMaxSize=other.m_nMaxSize;
 
-			this->m_entryTable = ArrayList<HashEntry*>(this->m_nMaxSize,1.0);
+			this->m_entryTable=ArrayList<HashEntry*>(this->m_nMaxSize,1.0);
 			initListNull(this->m_entryTable);
 			other.transfer(this->m_entryTable);*/
-			this->m_nSize = 0;
-			this->m_fLoadFactor = other.m_fLoadFactor;
-			this->m_nThreshold = other.m_nThreshold;
-			this->m_nMaxSize = other.m_nMaxSize;
+			this->m_nSize=0;
+			this->m_fLoadFactor=other.m_fLoadFactor;
+			this->m_nThreshold=other.m_nThreshold;
+			this->m_nMaxSize=other.m_nMaxSize;
 
-			this->m_entryTable = ArrayList<HashEntry*>(this->m_nMaxSize,1.0);
+			this->m_entryTable=ArrayList<HashEntry*>(this->m_nMaxSize,1.0);
 			initListNull(this->m_entryTable);
 			this->merge(other);
 		}
-		return *this; 
+		return *this;
 	}
 	HashMap(HashMap&& other)
 	{
-		*this = std::move(other);
+		*this=std::move(other);
 	}
 	HashMap& operator=(HashMap&& other)
 	{
 		if(this!=&other)
 		{
-			this->m_nSize = other.m_nSize;
-			this->m_fLoadFactor = other.m_fLoadFactor;
-			this->m_nThreshold = other.m_nThreshold;
-			this->m_nMaxSize = other.m_nMaxSize;
-			this->m_entryTable = std::move(other.m_entryTable);
+			this->m_nSize=other.m_nSize;
+			this->m_fLoadFactor=other.m_fLoadFactor;
+			this->m_nThreshold=other.m_nThreshold;
+			this->m_nMaxSize=other.m_nMaxSize;
+			this->m_entryTable=std::move(other.m_entryTable);
 
-			other.m_nMaxSize = 16;
+			other.m_nMaxSize=16;
 			other.m_fLoadFactor=0.84f;
 			other.m_nSize=0;
 			other.m_nThreshold=(unsigned int)(other.m_nMaxSize*other.m_fLoadFactor);
-			other.m_entryTable = ArrayList<HashEntry*>(other.m_nMaxSize,1);
+			other.m_entryTable=ArrayList<HashEntry*>(other.m_nMaxSize,1);
 			initListNull(other.m_entryTable);
 		}
 		return *this;
 	}
 
-	const V& operator[](const K& key)const 
-	{ 
-		V* v = get(key);
+	const V& operator[](const K& key)const
+	{
+		V* v=get(key);
 		if (v == null)
-			throwpe(NotFoundException("key " + (String)Value2String<K>(key)));		
-		return *v; 
+			throwpe(NotFoundException("key " + (String)Value2String<K>(key)));
+		return *v;
 	}
 	V& operator[](const K& key)
-	{ 
-		V* v = get(key);
+	{
+		V* v=get(key);
 		if (v == null) {
 			if(put(key, V()) && (v=get(key)))
 				return *v;
@@ -171,17 +171,12 @@ public:
 	virtual bool contain(const K& key)const;
 	virtual unsigned int size() const;
 	virtual String toString()const;
-	
-	virtual Iterator<HashEntry>* iterator();
-	virtual void releaseIterator(Iterator<HashEntry>* itor);
+
+	virtual RefPointer<Iterator<Entry<K,V>>> iterator();
 protected:
-	void addEntry(const K& k,const V& v,unsigned int h, unsigned int index) {
-		HashEntry* next=m_entryTable[index];
-		m_entryTable[index]=new HashEntry(k,v,h,next);
-		m_nSize++;
-		if (m_nSize >= m_nThreshold)
-			resize(2*m_nMaxSize);//未考虑溢出
-	}
+	virtual void releaseIterator(Iterator<HashEntry>* itor);
+
+	void addEntry(const K& k,const V& v,unsigned int h, unsigned int index);
 	void resize(unsigned int newCapacity);
 	void transfer(ArrayList<HashEntry*>& newTable)const;
 protected:
@@ -204,10 +199,12 @@ public:
 			currentIndex=-1;
 			currentEntry=nullptr;
 		}
-		virtual ~HashMapIterator(){}
+		virtual ~HashMapIterator(){
+			m_hashMapRef.releaseIterator(this);
+		}
 		virtual bool hasNext(){
-			unsigned int index = currentIndex;
-			HashEntry* entry = currentEntry;
+			unsigned int index=currentIndex;
+			HashEntry* entry=currentEntry;
 			return findNext(index, entry);
 		}
 		virtual HashEntry next(){
@@ -216,109 +213,59 @@ public:
 
 			return HashEntry(currentEntry->key,currentEntry->value);
 		}
-		virtual bool remove(){
-			if(currentEntry==nullptr || currentIndex<0)
-			{
-				//throwpe(NullPointerException("current entry is null"));
-				return false;
-			}
-			else
-			{
-				HashEntry* toDelete=currentEntry;
-				HashEntry*& first=m_hashMapRef.m_entryTable[currentIndex];
-				if(first==nullptr){
-					throwpe(NullPointerException("first entry is null"));
-				}
-				else if(first==currentEntry){//当前元素为首个元素
-					first=currentEntry->dettachNext();
-					currentIndex--;
-					currentEntry=nullptr;
-				}
-				else{
-					HashEntry* prev=first;
-					while(prev->next!=currentEntry)
-					{
-						prev=prev->next;
-					}
-					if(prev==nullptr)
-						throwpe(NullPointerException("previous entry is null"));
-					prev->next=currentEntry->dettachNext();
-					currentEntry=prev;
-				}
-
-				delete toDelete;
-				m_hashMapRef.m_nSize--;
-				return true;
-			}
-		}
+		virtual bool remove();
 	protected:
-		bool findNext(unsigned int& index, HashEntry*& entry)
-		{
-			unsigned int size = m_hashMapRef.m_entryTable.size();
-			while(index+1<=size)
-			{
-				//next ele in table
-				if(entry==nullptr)
-				{
-					index++;
-					if(index<size){
-						entry=m_hashMapRef.m_entryTable[index];
-						if(entry!=nullptr){
-							return true;
-						}
-					}
-				}
-				//next ele in entry
-				if(entry!=nullptr)
-				{
-					if(entry->next!=nullptr){
-						entry = entry->next;
-						return true;
-					}
-					else{
-						entry=nullptr;
-					}
-				}
-			}
-
-			return false;
-		}
+		bool findNext(unsigned int& index, HashEntry*& entry);
 	private:
 		unsigned int currentIndex;
 		HashEntry* currentEntry;
 	};
+public:
+	friend HashMapIterator;
 };
 
+
 template<class K,class V>
-void HashMap<K, V>::resize( unsigned int newCapacity )
+void HashMap<K, V>::addEntry(const K& k,const V& v,unsigned int h,
+	unsigned int index)
+{
+	HashEntry* next=m_entryTable[index];
+	m_entryTable[index]=new HashEntry(k,v,h,next);
+	m_nSize++;
+	if (m_nSize >= m_nThreshold)
+		resize(2*m_nMaxSize);//未考虑溢出
+}
+
+template<class K,class V>
+void HashMap<K, V>::resize(unsigned int newCapacity)
 {
 	ArrayList<HashEntry*> newTable(newCapacity,1.0);
 	initListNull(newTable);
 	transfer(newTable);
-	m_entryTable = move(newTable);
-	m_nMaxSize = newCapacity;
-	m_nThreshold = (unsigned int)(m_nMaxSize * m_fLoadFactor);
+	m_entryTable=move(newTable);
+	m_nMaxSize=newCapacity;
+	m_nThreshold=(unsigned int)(m_nMaxSize * m_fLoadFactor);
 }
 
 template<class K,class V>
-void HashMap<K, V>::transfer( ArrayList<HashEntry*>& newTable )const
+void HashMap<K, V>::transfer(ArrayList<HashEntry*>& newTable)const
 {
-	const ArrayList<HashEntry*>& src = m_entryTable;
-	unsigned int newCapacity = newTable.size();
+	const ArrayList<HashEntry*>& src=m_entryTable;
+	unsigned int newCapacity=newTable.size();
 	unsigned int oldSize=src.size();
-	for (unsigned int j = 0; j < oldSize; j++) {
-		HashEntry* entry = src[j];
+	for (unsigned int j=0; j < oldSize; j++) {
+		HashEntry* entry=src[j];
 		if (entry != null) {
-			//src[j] = null;
+			//src[j]=null;
 			do {
 				//保存src节点链的下一个节点
-				HashEntry* next = entry->next;
+				HashEntry* next=entry->next;
 				//将entry搭链到新表中去
-				unsigned int i = indexFor(entry->hashcode, newCapacity);
-				entry->next = newTable[i];
-				newTable[i] = entry;
+				unsigned int i=indexFor(entry->hashcode, newCapacity);
+				entry->next=newTable[i];
+				newTable[i]=entry;
 				//下一个src节点链的节点
-				entry = next;
+				entry=next;
 			} while (entry != null);
 		}
 	}
@@ -327,14 +274,14 @@ void HashMap<K, V>::transfer( ArrayList<HashEntry*>& newTable )const
 template<class K,class V>
 void HashMap<K, V>::initListNull(ArrayList<HashEntry*>& list)
 {
-	for (unsigned int i = 0; i < list.size(); i++) 
+	for (unsigned int i=0; i < list.size(); i++)
 	{
-		list[i] = null;
+		list[i]=null;
 	}
 }
 
 template<class K,class V>
-bool HashMap<K, V>::put( const K& k,const V& v )
+bool HashMap<K, V>::put(const K& k,const V& v)
 {
 	if(m_nSize>=m_nMaxSize)
 		return false;
@@ -353,9 +300,9 @@ bool HashMap<K, V>::put( const K& k,const V& v )
 }
 
 template<class K,class V>
-V* HashMap<K, V>::get( const K& key ) const
+V* HashMap<K, V>::get(const K& key) const
 {
-	unsigned int index=indexFor(hashCode<K>(key),m_nMaxSize);		
+	unsigned int index=indexFor(hashCode<K>(key),m_nMaxSize);
 	for(HashEntry* entry=m_entryTable[index]; entry!=nullptr; entry=entry->next)
 	{
 		if(key==entry->key){
@@ -366,7 +313,7 @@ V* HashMap<K, V>::get( const K& key ) const
 }
 
 template<class K,class V>
-bool HashMap<K, V>::get( const K& k,V& v ) const
+bool HashMap<K, V>::get(const K& k,V& v) const
 {
 	const V* pValue=get(k);
 	if(pValue==nullptr){
@@ -388,7 +335,7 @@ V HashMap<K, V>::getDefault(const K& key,const V& defaultVal) const
 }
 
 template<class K,class V>
-bool HashMap<K, V>::remove( const K& key,V& v )
+bool HashMap<K, V>::remove(const K& key,V& v)
 {
 	unsigned int index=indexFor(hashCode<K>(key),m_nMaxSize);
 	HashEntry* previous=nullptr;
@@ -410,7 +357,7 @@ bool HashMap<K, V>::remove( const K& key,V& v )
 }
 
 template<class K,class V>
-void HashMap<K, V>::clear() 
+void HashMap<K, V>::clear()
 {
 	//释放table
 	for(unsigned int i=0;i<m_entryTable.size();i++)
@@ -446,19 +393,19 @@ String HashMap<K, V>::toString() const
 }
 
 template<class K,class V>
-Iterator<Entry<K,V>>* HashMap<K, V>::iterator()
+RefPointer<Iterator<Entry<K,V>>> HashMap<K, V>::iterator()
 {
 	return new HashMap::HashMapIterator(*this);
 }
 
 template<class K,class V>
-void HashMap<K, V>::releaseIterator( Iterator<Entry<K,V>>* itor )
+void HashMap<K, V>::releaseIterator(Iterator<Entry<K,V>>* itor)
 {
-	delete itor;
+	//delete itor;
 }
 
 template<class K,class V>
-bool HashMap<K, V>::contain( const K& key )const
+bool HashMap<K, V>::contain(const K& key)const
 {
 	return get(key)!=nullptr;
 }
@@ -468,6 +415,81 @@ unsigned int HashMap<K, V>::size() const
 {
 	return m_nSize;
 }
+
+///////////////////////////////////////////////////////////////////
+//class HashMap::HashMapIterator
+template<class K, class V>
+bool HashMap<K, V>::HashMapIterator::remove()
+{
+	if(currentEntry==nullptr || currentIndex<0)
+	{
+		//throwpe(NullPointerException("current entry is null"));
+		return false;
+	}
+	else
+	{
+		HashEntry* toDelete=currentEntry;
+		HashEntry*& first=m_hashMapRef.m_entryTable[currentIndex];
+		if(first==nullptr){
+			throwpe(NullPointerException("first entry is null"));
+		}
+		else if(first==currentEntry){//当前元素为首个元素
+			first=currentEntry->dettachNext();
+			currentIndex--;
+			currentEntry=nullptr;
+		}
+		else{
+			HashEntry* prev=first;
+			while(prev->next!=currentEntry)
+			{
+				prev=prev->next;
+			}
+			if(prev==nullptr)
+				throwpe(NullPointerException("previous entry is null"));
+			prev->next=currentEntry->dettachNext();
+			currentEntry=prev;
+		}
+
+		delete toDelete;
+		m_hashMapRef.m_nSize--;
+		return true;
+	}
+}
+
+template<class K, class V>
+bool HashMap<K, V>::HashMapIterator::findNext(unsigned int& index,
+	Entry<K, V>*& entry)
+{
+	unsigned int size=m_hashMapRef.m_entryTable.size();
+	while(index+1<=size)
+	{
+		//next ele in table
+		if(entry==nullptr)
+		{
+			index++;
+			if(index<size){
+				entry=m_hashMapRef.m_entryTable[index];
+				if(entry!=nullptr){
+					return true;
+				}
+			}
+		}
+		//next ele in entry
+		if(entry!=nullptr)
+		{
+			if(entry->next!=nullptr){
+				entry=entry->next;
+				return true;
+			}
+			else{
+				entry=nullptr;
+			}
+		}
+	}
+
+	return false;
+}
+
 
 template class BLUEMEILIB_API HashMap<String,int>;
 template class BLUEMEILIB_API HashMap<String,Object*>;

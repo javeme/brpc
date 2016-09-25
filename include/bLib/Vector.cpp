@@ -36,11 +36,11 @@ bool Vector<T>::remove(unsigned int pos,T& value)
 {
 	if(pos<0||pos>=m_dataArray.size())
 		return false;
-	std::vector <T> ::iterator iter = m_dataArray.begin(); 
+	std::vector <T> ::iterator iter = m_dataArray.begin();
 	advance(iter,pos);
 	value=*iter;
 	m_dataArray.erase(iter);
-	return true;	
+	return true;
 }
 
 template <class T>
@@ -86,12 +86,12 @@ template <class T>
 bool Vector<T>::remove(const T& ele)
 {
 	std::vector<T>::iterator iter = find(m_dataArray.begin(), m_dataArray.end(), ele);
-	if (iter != m_dataArray.end()) 
+	if (iter != m_dataArray.end())
 	{
 		m_dataArray.erase(iter);
 		return true;
 	}
-	return false;	
+	return false;
 }
 
 template <class T>

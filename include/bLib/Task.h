@@ -1,7 +1,7 @@
 /*
 package test.bluemei.task;
 
-public interface Task extends Runnable{	
+public interface Task extends Runnable{
 	public void beforeTask();
 	public void taskFinish();
 	public int getId();

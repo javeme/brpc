@@ -1,6 +1,6 @@
 #pragma once
 #include "WorkThread.h"
-#include "LinkedList.cpp"
+#include "LinkedList.h"
 #include <queue>
 using std::queue;
 #define Queue queue

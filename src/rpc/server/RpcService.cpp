@@ -183,7 +183,6 @@ std::vector<String> RpcService::listServices()
 		//services.push_back(String::format("%s.%s", name(), i->next().key.c_str()));
 		services.push_back(i->next().key);
 	}
-	subServices.releaseIterator(i);
 
 	return services;
 }
@@ -197,7 +196,6 @@ std::vector<String> RpcService::listEextendServices()
 		//extend-service name
 		services.push_back(i->next().key);
 	}
-	extendServices.releaseIterator(i);
 
 	return services;
 }

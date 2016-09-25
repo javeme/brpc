@@ -177,7 +177,6 @@ void AmqpRpcConnection::publish(const DataPackage& output, const String& replyMe
 		auto item = itor->next();
 		headers.set(item.key, item.value.c_str());
 	}
-	const_cast<DataPackage&>(output).headers.releaseIterator(itor);
 
 	envelope.setTypeName(msgType);
 	envelope.setAppID(id);

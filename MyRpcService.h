@@ -135,7 +135,7 @@ public:
 	{
 		Thread* trd = new LambdaThread([&](){
 			int counter = 0;
-			while(counter < 20){
+			while(counter < 10){
 				onEventClick(counter++);
 				LambdaThread::sleep(1000*5);
 			}

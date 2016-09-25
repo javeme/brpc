@@ -1,6 +1,6 @@
 #pragma once
 #include "HashMap.h"
-#include "LinkedList.cpp"
+#include "LinkedList.h"
 
 namespace bluemei{
 
@@ -23,11 +23,8 @@ public:
 
 public:
 	typedef Entry<K,LinkedList<V>> MVEntry;
-	virtual Iterator<MVEntry>* iterator(){
+	virtual RefPointer<Iterator<MVEntry>> iterator(){
 		return m_hashMap.iterator();
-	}
-	virtual void releaseIterator(Iterator<MVEntry>* itor){
-		return m_hashMap.releaseIterator(itor);
 	}
 
 protected:
@@ -67,7 +64,7 @@ bool MultiValueHashMap<K, V>::remove( const K& key,V& v )
 }
 
 template<class K,class V>
-void MultiValueHashMap<K, V>::clear() 
+void MultiValueHashMap<K, V>::clear()
 {
 	m_hashMap.clear();
 }
@@ -90,7 +87,7 @@ String MultiValueHashMap<K, V>::toString() const
 	StringBuilder sb(100*m_hashMap.size());
 	sb.append("MultiValueHashMap size=").append((int)size());
 	sb.append("{");
-	auto i=((MultiValueHashMap<K, V>*)this)->iterator();
+	auto i=const_cast<MultiValueHashMap<K, V>*>(this)->iterator();
 	while(i->hasNext())
 	{
 		auto entry=i->next();
@@ -98,7 +95,6 @@ String MultiValueHashMap<K, V>::toString() const
 		v=v.substring(v.find("{"),v.length());
 		sb.append(Value2String<K>(entry.key)).append('=').append(v).append(',');
 	}
-	((MultiValueHashMap<K, V>*)this)->releaseIterator(i);
 	int last=sb.lastIndexOf(",");
 	if(last>0)
 		sb.deleteCharAt(last);

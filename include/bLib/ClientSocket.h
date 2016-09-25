@@ -1,5 +1,5 @@
-#ifndef _ClientSocket_h_ 
-#define _ClientSocket_h_ 
+#ifndef _ClientSocket_h_
+#define _ClientSocket_h_
 
 #include "bluemeiLib.h"
 #include <winsock2.h>

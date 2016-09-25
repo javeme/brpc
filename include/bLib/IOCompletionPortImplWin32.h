@@ -8,14 +8,14 @@ namespace bluemei{
 
 enum IOCPEventType
 {
-	EVENT_IN  = 0x0001,			//表示对应的文件描述符可以读； 
-	EVENT_OUT = 0x0002,			//表示对应的文件描述符可以写； 
-	EVENT_PRI = 0x0008,			//表示对应的文件描述符有紧急的数据可读 
-	EVENT_ERR = 0x0010,			//表示对应的文件描述符发生错误； 
-	EVENT_HUP = 0x0020,			//表示对应的文件描述符被挂断； 
-	
-	EVENT_LT  = 0x0040,			//表示对应的文件描述符有事件发生； 
-	EVENT_ET  = 0x0080,			//表示对应的文件描述符有事件发生； 
+	EVENT_IN  = 0x0001,			//表示对应的文件描述符可以读；
+	EVENT_OUT = 0x0002,			//表示对应的文件描述符可以写；
+	EVENT_PRI = 0x0008,			//表示对应的文件描述符有紧急的数据可读
+	EVENT_ERR = 0x0010,			//表示对应的文件描述符发生错误；
+	EVENT_HUP = 0x0020,			//表示对应的文件描述符被挂断；
+
+	EVENT_LT  = 0x0040,			//表示对应的文件描述符有事件发生；
+	EVENT_ET  = 0x0080,			//表示对应的文件描述符有事件发生；
 
 	EVENT_READ		= EVENT_IN,
 	EVENT_WRITE		= EVENT_OUT,
@@ -57,12 +57,12 @@ typedef struct IOEventData { //not union!
 
 	__uint32_t length() const { return u32; }
 	byte* bytes() const { return (byte*)((IOCPData*)ptr)->buf; }
-}iocp_data;   
+}iocp_data;
 
-typedef struct IOEvent {   
-	__uint32_t events; /* Epoll events */   
-	IOEventData data; /* User data variable */   
-}iocp_event; 
+typedef struct IOEvent {
+	__uint32_t events; /* Epoll events */
+	IOEventData data; /* User data variable */
+}iocp_event;
 
 
 //class IOCompletionPortImplWin32 : public IOCompletionPortImpl
@@ -91,7 +91,7 @@ protected:
 	void receive(socket_t sock);
 private:
 	 HANDLE m_hIOCompletionPort;
-	 
+
 	 MemoryPool* m_pPoolIOCPData;
 };
 

@@ -4,7 +4,7 @@
 #include "ClassField.h"
 
 namespace bluemei{
-	
+
 class Object;
 class ClassField;
 class RuntimeException;
@@ -25,19 +25,19 @@ public:
 	Object* createObject()const;
 	cstring getName()const;
 	bool operator==(const Class& other)const;
-	const Class* superClass() const { 
-		return m_superClassRef; 
+	const Class* superClass() const {
+		return m_superClassRef;
 	}
 
-	Object* getInitPara() const { 
-		return m_pInitPara; 
+	Object* getInitPara() const {
+		return m_pInitPara;
 	}
-	void setInitPara(Object* val) { 
+	void setInitPara(Object* val) {
 		m_pInitPara = val;
 	}
 	bool isMyObject(const Object* pObj)const;//是否就是本类实例
 	bool isMyInstance(const Object* pObj)const;//是否属于本类实例
-	
+
 	bool putField(const FieldInfo& fld);
 	bool removeField(cstring fldName);
 

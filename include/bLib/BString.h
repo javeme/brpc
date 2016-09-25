@@ -140,7 +140,7 @@ template<> Value2String<double>::operator String()const{ return String::format("
 template class BLUEMEILIB_API Value2String<double>;
 
 template<> Value2String<const FieldInfo*>::operator String()const{
-	return String::format("%s<type %s>", value->name(), value->typeInfo().name()); 
+	return String::format("%s<type %s>", value->name(), value->typeInfo().name());
 }
 template class BLUEMEILIB_API Value2String<const FieldInfo*>;
 

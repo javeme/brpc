@@ -110,7 +110,7 @@ public:
 	 * The default capacity of a buffer.
 	 */
 	enum {DEFAULT_CAPACITY = 16};
- 
+
 
 	/**
 	 * Create an empty <code>StringBuilder</code> with the specified initial
@@ -130,17 +130,17 @@ public:
 	 * @throws NullPointerException if str is null
 	 */
 	StringBuilder(const String& str);
-		
+
 	virtual ~StringBuilder();
 
 public:
 	StringBuilder(const StringBuilder &src);
 	StringBuilder(StringBuilder&& src);//move
-	
-	StringBuilder& operator = (const StringBuilder &src);
-	StringBuilder& operator = (StringBuilder&& src);//move
 
-	bool operator == (const StringBuilder& other) const;
+	StringBuilder& operator= (const StringBuilder &src);
+	StringBuilder& operator= (StringBuilder&& src);//move
+
+	bool operator== (const StringBuilder& other) const;
 
 public:
 	/**
@@ -229,7 +229,7 @@ public:
 	 * @see System#arraycopy(Object, unsigned int, Object, unsigned int, unsigned int)
 	 */
 	void getChars(unsigned int srcOffset, unsigned int srcEnd,
-							 char_t dst[], unsigned int dstOffset=0)const;
+		char_t dst[], unsigned int dstOffset=0)const;
 
 	/**
 	 * Set the character at the specified index.
@@ -322,7 +322,7 @@ public:
 	 */
 	StringBuilder& append(bool b)
 	{
-		cstring str=b ? "true" : "false";
+		cstring str = (b ? "true" : "false");
 		//return append(str);//为何调用append(bool)?
 		return append(str);
 	}
@@ -417,11 +417,33 @@ public:
 		return deleteSub(index, index + 1);
 	}
 	
+	/**
+	 * Delete the last character from this <code>StringBuilder</code>.
+	 */
 	StringBuilder& pop()
 	{
 		return deleteCharAt(length()-1);
 	}
 	
+	/**
+	 * Is this <code>StringBuilder</code> started with the char `ch`.
+	 */
+	bool startWith(char_t ch)
+	{
+		if(length() > 0 && ch == charAt(0))
+			return true;
+		return false;
+	}
+	
+	/**
+	 * Is this <code>StringBuilder</code> ended with the char `ch`.
+	 */
+	bool endWith(char_t ch)
+	{
+		if(length() > 0 && ch == charAt(length()-1))
+			return true;
+		return false;
+	}
 
 	/**
 	 * Replace characters between index <code>start</code> (inclusive) and
@@ -477,8 +499,8 @@ public:
 	 * @throws NullPointerException if <code>str</code> is <code>null</code>
 	 * @throws StringIndexOutOfBoundsException if any index is out of bounds
 	 */
-	StringBuilder& insert(unsigned int offset,
-									const char_t str[], unsigned int strOffset, unsigned int len);
+	StringBuilder& insert(unsigned int offset, const char_t str[],
+		unsigned int strOffset, unsigned int len);
 
 	/**
 	 * Insert the <code>String</code> value of the argument into this
@@ -507,9 +529,10 @@ public:
 	 * @throws StringIndexOutOfBoundsException if offset is out of bounds
 	 */
 	StringBuilder& insert(unsigned int offset, const String& str)
-	{		
+	{
 		return insert(offset,str.c_str(), 0, str.length());
 	}
+
 	StringBuilder& insert(unsigned int offset, cstring str)
 	{
 		return insert(offset,str, 0, strlen(str));
@@ -700,7 +723,7 @@ public:
 
 	//set capacity to real size
 	void trimToSize();
-private:	
+private:
 	/**
 	 * Predicate which determines if a substring of this matches another String
 	 * starting at a specified offset for each String and continuing for a

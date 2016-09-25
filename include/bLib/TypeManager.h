@@ -134,7 +134,7 @@ public:
 	template<typename Target>
 	Target* dcast(Object* p){
 		if (p==nullptr)
-			return nullptr;	
+			return nullptr;
 		auto conver=m_typeMap.get(getObjectTypeInfo(p));
 		if(conver==nullptr)
 			return nullptr;
@@ -144,7 +144,7 @@ public:
 	//void* p当前类型是否为该指针本身的地址(只有多继承中第2个父类及后续父类才会出现地址偏移)
 	bool objectIsItselfAddr(void* p){
 		if (p==nullptr)
-			return true;	
+			return true;
 		TypeInfo t = getTypeInfo(p);
 		if (t==nullptr)//p is not an Object*, return true(We think it's a simple type)
 			return true;
@@ -191,7 +191,7 @@ static bool objectIsItselfType(T* p){
 	if (p==nullptr)
 		return false;
 
-	return TypeManager::getTypeInfo(p) == TypeManager::getTypeInfo<T>();	
+	return TypeManager::getTypeInfo(p) == TypeManager::getTypeInfo<T>();
 }
 
 }//end of namespace bluemei
