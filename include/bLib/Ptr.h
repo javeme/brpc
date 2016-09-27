@@ -101,14 +101,18 @@ class BLUEMEILIB_TEMPLATE ScopePointer : public Pointer<T>
 public:
 	ScopePointer(T* target=null) : Pointer(target) {}
 
-	virtual ~ScopePointer(void)
-	{
+	virtual ~ScopePointer(void) {
 		delete m_target;
 	}
 
+	ScopePointer& operator=(T* target) {
+		delete m_target;
+		m_target = target;
+		return *this;
+	}
 private:
 	ScopePointer(const ScopePointer& other);
-	ScopePointer& operator = (const ScopePointer& other) const;
+	ScopePointer& operator=(const ScopePointer& other) const;
 };
 
 }//end of namespace bluemei

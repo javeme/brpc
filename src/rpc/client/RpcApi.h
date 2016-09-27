@@ -44,7 +44,7 @@ public:
 	template<class T>
 	T call(cstring object, cstring method, const ObjectList& args) {
 		checkNullPtr(rpcClient);
-		SmartPtr<Object> result = rpcClient->call(object, method, args);
+		ScopePointer<Object> result = rpcClient->call(object, method, args);
 		return valueOf<T>(result);
 	}
 
@@ -55,7 +55,7 @@ public:
 	template<class T>
 	T cast(cstring object, cstring method, const ObjectList& args) {
 		checkNullPtr(rpcClient);
-		SmartPtr<Object> result = rpcClient->cast(object, method, args);
+		ScopePointer<Object> result = rpcClient->cast(object, method, args);
 		return valueOf<T>(result);
 	}
 public:

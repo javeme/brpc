@@ -39,7 +39,7 @@ void testMyRpcApi()
 
 	myApi.print("test print!!!");
 
-	TestObject* obj = new TestObject();
+	ScopePointer<TestObject> obj = new TestObject();
 	obj->name = "Cat";
 	obj->age = 28;
 	obj->weight = 46.82f;
@@ -157,7 +157,7 @@ int run(int argc, char* argv[])
 
 int main(int argc, char* argv[])
 {
-	//_CrtSetBreakAlloc(9373);
+	//_CrtSetBreakAlloc(6588);
 
 	System::instance().init();
 	BRpcUtil::setBrpcDebug(true);

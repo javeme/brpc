@@ -11,8 +11,9 @@ RpcClient::RpcClient(cstring url, RpcService* dispatcher, AuthChecker* authCheck
 {
 	this->rpcInvoker = RpcInvokerFacatory::loadRpcInvoker(url,
 		dispatcher, authChecker, serializerType, timeout);
-
 	checkNullPtr(this->rpcInvoker);
+	// TODO: handle the transport layer error
+	//this->rpcInvoker->setDataHookHandler(this);
 }
 
 RpcClient::~RpcClient()

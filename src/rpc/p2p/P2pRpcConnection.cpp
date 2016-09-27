@@ -17,18 +17,18 @@ P2pRpcConnection::P2pRpcConnection(cstring url, RpcService* dispatcher,
 	parseUrl(this->url);
 
 	//rpcSocket is null if this is a client, else not null(server).
-	if (rpcSocket == null){
-		rpcSocket = RpcSocketFactory::getRpcSocket(protocol);
-		if (rpcSocket == null)
+	if (this->rpcSocket == null){
+		this->rpcSocket = RpcSocketFactory::getRpcSocket(protocol);
+		if (this->rpcSocket == null)
 			throwpe(RpcException("invalid url: protocol " + protocol));
 	}
-	rpcSocket->setReceiveListener(this);
+	this->rpcSocket->setReceiveListener(this);
 }
 
 P2pRpcConnection::~P2pRpcConnection()
 {
-	if(rpcSocket){
-		delete rpcSocket;
+	if(this->rpcSocket){
+		delete this->rpcSocket;
 	}
 }
 
@@ -73,22 +73,22 @@ bool P2pRpcConnection::unsubscribe(cstring event, cstring method)
 
 bool P2pRpcConnection::checkConnected()
 {
-	if (!rpcSocket->isAlive()){
-		if (rpcSocket->isInServer())
+	if (!this->rpcSocket->isAlive()){
+		if (this->rpcSocket->isInServer())
 			return false;
 
 		HashMap<String,String> paras;
 		paras.put("ip", ip);
 		paras.put("port", port);
 		paras.put("timeout", String::format("%u",timeout));
-		rpcSocket->connect(paras);
+		this->rpcSocket->connect(paras);
 	}
 	return true;
 }
 
 void P2pRpcConnection::setDataHookHandler(RpcDataHookHandler* handler)
 {
-	rpcSocket->setDataHookHandler(handler);
+	this->rpcSocket->setDataHookHandler(handler);
 }
 
 bool P2pRpcConnection::onReceive(DataPackage& package)
@@ -104,12 +104,12 @@ bool P2pRpcConnection::onException(Exception& e)
 
 void P2pRpcConnection::onSend(const DataPackage& output)
 {
-	rpcSocket->send(output);
+	this->rpcSocket->send(output);
 }
 
 DataPackage P2pRpcConnection::onSendSynch(const DataPackage& output)
 {
-	return rpcSocket->sendSynch(output);
+	return this->rpcSocket->sendSynch(output);
 }
 
 bool P2pRpcConnection::onSerializeException(SerializeException& e)
@@ -126,7 +126,7 @@ bool P2pRpcConnection::onReturnCallException(Exception& e)
 
 String P2pRpcConnection::toString() const
 {
-	return rpcSocket->toString();
+	return this->rpcSocket->toString();
 }
 
 }//end of namespace brpc

@@ -133,15 +133,17 @@ bool RpcConnection::doCallResponse(const Headers& headers,
 bool RpcConnection::doCall(const Headers& headers, RpcMethod& method)
 {
 	bool success = false;
-	if (!method.waitResult)
-		success = doCallResponse(headers, method,
-								 null, RpcMethod::STATUS_RESPONSE_PENDING);
+	if (!method.waitResult){
+		success = doCallResponse(headers, method, null,
+			RpcMethod::STATUS_RESPONSE_PENDING);
+	}
 
 	ObjectList* args = dynamic_cast<ObjectList*>(method.args);
 	String methodName = method.getMethodNameWithVersion();
 
 	int status = 0;
-	SmartPtr<Object> result = null;
+	ScopePointer<Object> result = null;
+
 	try{
 		checkAuth(method);
 		if(args == null)
@@ -175,7 +177,6 @@ bool RpcConnection::doCall(const Headers& headers, RpcMethod& method)
 	if (method.waitResult){
 		success = doCallResponse(headers, method, result, status);
 	}
-	//delete result;
 
 	return success;
 }

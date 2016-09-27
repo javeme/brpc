@@ -29,7 +29,7 @@ RpcOnTcpSocket::~RpcOnTcpSocket(void)
 	try{
 		close();
 	}catch(Exception& e){
-		System::debugInfo("%s\n",e.toString().c_str());
+		Log::getLogger()->warn("Failed to close socket: " + e.toString());
 	}
 	delete this->recvThread;
 	delete this->clientSocket;
@@ -103,18 +103,22 @@ void RpcOnTcpSocket::connect(const HashMap<String,String>& paras) throw(IOExcept
 
 void RpcOnTcpSocket::close() throw(IOException)
 {
-	if (this->clientSocket==null)
+	if (this->clientSocket == null)
 	{
-		throwpe(Exception("null socket"));
+		throwpe(RpcException("can't close null socket"));
 	}
 
-	stopReceiveThread(); //wait util next data or timeout
+	// stop and wait util next data or timeout
+	stopReceiveThread();
+
+	// close TCP socket
 	this->clientSocket->close();
 }
 
 void RpcOnTcpSocket::startReceiveLoop()
 {
 	this->recving = true;
+	this->hasError = false;
 	this->timeoutCount = 0;
 	while(this->recving){
 		try{
@@ -124,29 +128,36 @@ void RpcOnTcpSocket::startReceiveLoop()
 		}catch(TimeoutException& e){
 			notifyException(e);
 			this->timeoutCount++;
-			if(this->timeoutCount > maxTimeoutCount){
+			if(maxTimeoutCount != 0 && this->timeoutCount > maxTimeoutCount){
 				this->hasError = true;
 				this->recving = false;
-				BRpcUtil::debug("====timeout count > %d, stop reveiver.",
+				BRpcUtil::debug("====timeout count > %d, stop reveiver.\n",
 					maxTimeoutCount);
 			}
 		}catch(SocketClosedException&){
+			// closed by peer (peer -> self)
 			this->hasError = false;
 			this->recving = false;
+			// close self side (self -> peer)
+			try{
+				this->clientSocket->close();
+			}catch(Exception& e){
+				Log::getLogger()->warn("Failed to close socket: " +
+					e.toString());
+			}
 		}catch(Exception& e){
 			//e.printStackTrace();
 			this->hasError = true;
 			BRpcUtil::debug("====exception(when receiving): %s\n",
 				e.toString().c_str());
-			//֪ͨ�쳣
+			// notify the RpcReceiveListener
 			this->recving &= notifyException(e);
 		}
-	}//end while
-	/*try{
-		m_pSocket->close();
-	}catch(Exception& e){
-		System::debugInfo("%s\n",e.toString().c_str());
-	}*/
+	} // end of while
+
+	// notify error, let the notify with HOOK_ERR_RECV_STOPED
+	// or HOOK_ERR_CLOSED delete this, and then close this socket
+	// please don't do anything after that! (this may be deleted)
 	if(this->hasError)
 		notifyHookError(toString(), HOOK_ERR_RECV_STOPED);
 	else
@@ -166,6 +177,7 @@ void RpcOnTcpSocket::startReceiveThread()
 	if(this->recvThread != null || this->recving)
 		return;
 
+	this->recving = true;
 	this->recvThread=new LambdaThread([&](){
 		//BRpcUtil::debug("====thread started for %s\n", toString().c_str());
 		startReceiveLoop();
@@ -177,10 +189,15 @@ void RpcOnTcpSocket::startReceiveThread()
 
 void RpcOnTcpSocket::stopReceiveThread()
 {
-	if(this->recving && this->recvThread!=null)
+	if(this->recving && this->recvThread != null)
 	{
 		stopReceiveLoop();
 		this->recvThread->wait();
+	}
+	if(this->recvThread != null)
+	{
+		delete this->recvThread;
+		this->recvThread = null;
 	}
 }
 
