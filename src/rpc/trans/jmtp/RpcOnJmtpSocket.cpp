@@ -23,7 +23,7 @@ RpcOnJmtpSocket::~RpcOnJmtpSocket(void)
 	;
 }
 
-//send: header data tail
+//send package: header + data + tail
 void RpcOnJmtpSocket::send(const DataPackage& package) throw(IOException)
 {
 	ScopedLock lock(this->sendLock);
@@ -34,34 +34,47 @@ void RpcOnJmtpSocket::send(const DataPackage& package) throw(IOException)
 	ClientSocket& sock = *this->clientSocket;
 
 	const ByteBuffer& output = package.body;
-	unsigned int len=output.size();
+	unsigned int len = output.size();
 	if(len>0){
-		//发送头部
-		//sock.writeShort(BYTE_ORDER(len));//LEN(short) 按小端发送
-		//static word count=0;
-		//sock.writeShort(BYTE_ORDER(count++));//CTR
+		// construct header
 		JmtpHeader header(package.headers);
 		if(!package.headers.contain(KEY_CONTENT_LEN))
 			header.setContentLength(len);
 
+		// send header
 		ByteBuffer headerBuffer;
 		header.writeTo(headerBuffer);
 		sock.writeEnoughBytes((const char*)headerBuffer.array(),
-			headerBuffer.size());//Header
+			headerBuffer.size());
+		// send body
+		sock.writeEnoughBytes((const char*)output.array(), output.size());
+		// send tail
+		sock.writeByte(JMTP_TAIL);
 
-		//发送数据
-		sock.writeEnoughBytes((const char*)output.array(),output.size());//Data
-		//发送尾部
-		sock.writeByte(JMTP_TAIL);//Tail
-
-		//通知数据钩子
-		notifyHookSent(toString(),package);
+		// notify the data hook
+		notifyHookSent(toString(), package);
 	}
 	else
 		System::debugInfo("send null data\n");
 }
 
-//接收数据
+/*
+// TODO: support async read like IOCP
+void RpcOnJmtpSocket::receive(ByteBuffer& buffer)
+{
+	buffer.lock()
+		buffer.peek(header, HEADER_LEN);
+	int bodyLen = header.getContentLength();
+	// header + body
+	if(buffer.avail() >= HEADER_LEN + bodyLen) {
+		// consume the header(peek before)
+		buffer.skip(HEADER_LEN);
+		buffer.read(body, bodyLen);
+	}
+	buffer.unlock()
+}
+*/
+
 void RpcOnJmtpSocket::receive() throw(RpcException)
 {
 	if(this->clientSocket==null){
@@ -69,18 +82,15 @@ void RpcOnJmtpSocket::receive() throw(RpcException)
 	}
 	ClientSocket& sock = *this->clientSocket;
 
-	//读头部
-	//word len=BYTE_ORDER(sock.readShort());
-	//word ctr=BYTE_ORDER(sock.readShort());//TCP本身已经保证有序
-
-	//unsigned char headerBuf[JmtpHeader::HEADER_LEN];
+	// read header
+	// TODO: read the header length from socket data
 	unsigned int headerLength = JmtpHeader::headerLength();
 	ByteBuffer headerBuf(headerLength, headerLength);
 	(void)sock.readEnoughBytes((char*)headerBuf.array(), headerLength);
 	JmtpHeader header;
 	header.readFrom(headerBuf);
 
-	//bad request [in server]
+	// bad request [on server side]
 	dword len = header.getContentLength();
 	if(isInServer() && len > BRPC_MAX_BODY_LEN){
 		String err = "Content Length Too Large";
@@ -88,18 +98,18 @@ void RpcOnJmtpSocket::receive() throw(RpcException)
 		throwpe(JmtpException(err));
 	}
 
-	//error response [in client]
+	// error response [on client side]
 	if(!isInServer() && header.getStatus() != JmtpHeader::JMTP_OK){
 		throwpe(JmtpException(header.getStatusStr()));
 	}
 
-	//组装
+	// assemble package header
 	DataPackage package;
 	package.headers.put(KEY_CONTENT_TYPE, header.getContentTypeStr());
+	package.headers.put(KEY_CHARSET, header.getContentEncodingStr());
 	package.headers.put(KEY_PACKAGE_ID, header.getPackageIdStr());
 
-
-	//读Data
+	// read body data
 	ByteBuffer& input = package.body;
 	const int LEN = 4096;
 	byte buf[LEN];
@@ -113,16 +123,16 @@ void RpcOnJmtpSocket::receive() throw(RpcException)
 		total += read;
 	}
 
-	//读尾部
+	// read tail
 	byte tail = sock.readByte();
 	if (tail != JMTP_TAIL)
 	{
 		throwpe(IOException("not matched the tail"));
 	}
 
-	//通知数据钩子
+	// notify the data hook
 	notifyHookReceived(toString(),package);
-	//通知收到数据
+	// handle data received
 	notifyReceive(package);
 }
 

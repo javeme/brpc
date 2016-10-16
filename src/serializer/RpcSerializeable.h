@@ -38,6 +38,19 @@ public:
 inline String RpcSerializeable::convertEncoding(const String& src,
 	const String& encodingFrom, const String& encodingTo)
 {
+	// TODO: use decode()/encode()
+	/*
+	String unicode;
+	if(!encodingFrom.compare("unicode", false))
+		unicode = CodeUtil::decode(src, encodingFrom);
+	else
+		unicode = src;
+
+	if(!encodingTo.compare("unicode", false))
+		return CodeUtil::encode(unicode, encodingTo);
+	else
+		return unicode;
+	*/
 	if(encodingTo.compare("gbk", false)){
 		if (encodingFrom.compare("utf-8", false)){//utf8-->gbk
 			return CodeUtil::utf8ToGbk(src);

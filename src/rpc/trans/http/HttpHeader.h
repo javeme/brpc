@@ -80,7 +80,7 @@ public:
 	bool addCookie(const String& name, const String& val);
 	String getCookieAsString(const String& name) const;
 
-	String getContentEncoding() const;
+	String getContentEncoding() const; // compression like zip
 	void setContentEncoding(const String& val);
 
 	String getConnection() const; // close/keepalive
