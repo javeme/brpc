@@ -23,7 +23,6 @@ RpcOnTcpSocket::RpcOnTcpSocket(void)
 	this->timeoutCount = 0;
 }
 
-
 RpcOnTcpSocket::~RpcOnTcpSocket(void)
 {
 	try{
@@ -38,12 +37,12 @@ RpcOnTcpSocket::~RpcOnTcpSocket(void)
 void RpcOnTcpSocket::initSocket(const HashMap<String,String>& paras)
 {
 	String timeout;
-	paras.get("timeout",timeout);
+	paras.get("timeout", timeout);
 	this->timeout = CodeUtil::str2Int(timeout);
 	this->clientSocket->setTimeout(this->timeout);
 
-	String noDelay;
-	paras.get("noDelay",noDelay);
+	String noDelay = "true";
+	paras.get("noDelay", noDelay);
 	this->clientSocket->setNoDelay(noDelay=="true");
 
 	this->timeoutCount = 0;
@@ -52,12 +51,13 @@ void RpcOnTcpSocket::initSocket(const HashMap<String,String>& paras)
 		startReceiveThread();
 }
 
-void RpcOnTcpSocket::acceptWith(Object* server, const HashMap<String,String>& paras) throw(RpcException)
+void RpcOnTcpSocket::acceptWith(Object* server,
+	const HashMap<String,String>& paras) throw(RpcException)
 {
 	ServerSocket* serverSocket = dynamic_cast<ServerSocket*>(server);
 	if (serverSocket)
 	{
-		this->clientSocket=serverSocket->accept();
+		this->clientSocket = serverSocket->accept();
 		this->inServer = true;
 		initSocket(paras);
 	}
@@ -71,7 +71,7 @@ void RpcOnTcpSocket::acceptWith(Object* server, const HashMap<String,String>& pa
 void RpcOnTcpSocket::connect(const HashMap<String,String>& paras) throw(IOException)
 {
 	//释放原来的Socket内存
-	if(this->clientSocket!=null)
+	if(this->clientSocket != null)
 	{
 		stopReceiveThread();
 		delete this->clientSocket;
@@ -79,23 +79,23 @@ void RpcOnTcpSocket::connect(const HashMap<String,String>& paras) throw(IOExcept
 	}
 	//判断是否为服务端
 	String server;
-	paras.get("server",server);
+	paras.get("server", server);
 	if (server == "true"){
 		//建立新的连接
 		String port;
-		paras.get("port",port);
+		paras.get("port", port);
 		ServerSocket serverSocket(CodeUtil::str2Int(port));
-		this->clientSocket=serverSocket.accept();
+		this->clientSocket = serverSocket.accept();
 		//服务端
 		this->inServer = true;
 	}
 	else{
 		//客户端
 		String ip,port;
-		paras.get("ip",ip);
-		paras.get("port",port);
-		this->clientSocket=new ClientSocket();
-		this->clientSocket->connect(ip,CodeUtil::str2Int(port));
+		paras.get("ip", ip);
+		paras.get("port", port);
+		this->clientSocket = new ClientSocket();
+		this->clientSocket->connect(ip, CodeUtil::str2Int(port));
 		this->inServer = false;
 	}
 	initSocket(paras);
@@ -178,11 +178,11 @@ void RpcOnTcpSocket::startReceiveThread()
 		return;
 
 	this->recving = true;
-	this->recvThread=new LambdaThread([&](){
+	this->recvThread = new LambdaThread([&](){
 		//BRpcUtil::debug("====thread started for %s\n", toString().c_str());
 		startReceiveLoop();
 		//end of thread
-	},nullptr);
+	});
 	this->recvThread->setAutoDestroy(false);
 	this->recvThread->start();
 }

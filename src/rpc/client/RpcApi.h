@@ -48,15 +48,12 @@ public:
 		return valueOf<T>(result);
 	}
 
-	template<class T>
-	T cast(cstring method, const ObjectList& args) {
-		return cast<T>(object(), method, args);
+	void cast(cstring method, const ObjectList& args) {
+		return cast(object(), method, args);
 	}
-	template<class T>
-	T cast(cstring object, cstring method, const ObjectList& args) {
+	void cast(cstring object, cstring method, const ObjectList& args) {
 		checkNullPtr(rpcClient);
-		ScopePointer<Object> result = rpcClient->cast(object, method, args);
-		return valueOf<T>(result);
+		return rpcClient->cast(object, method, args);
 	}
 public:
 	virtual cstring name() const { return serviceName; }

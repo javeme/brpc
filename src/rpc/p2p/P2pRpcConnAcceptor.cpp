@@ -22,6 +22,7 @@ void P2pRpcConnAcceptor::run()
 	try{
 		waitConnection();
 	}catch (Exception& e) {
+		BRpcUtil::debug("Failed to start server.\n");
 		logger->error("Wait for connection error: " + e.toString());
 	}
 }

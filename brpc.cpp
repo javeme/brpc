@@ -13,6 +13,9 @@ CHECK_MEMORY_LEAKS
 #include "ObjectMap.h"
 #include "ObjectFactory.h"
 
+#include "MyRpcApi.h"
+
+
 using namespace brpc;
 
 class LogErrorHandler : public bluemei::IErrorHandler
@@ -26,10 +29,40 @@ public:
 	}
 };
 
-#include "MyRpcApi.h"
+
+String url = "http://127.0.0.1";//http://192.168.1.131
+//String url = "jmtp://127.0.0.1";
+//String url = "amqp://guest:guest@127.0.0.1:5672/"\
+	"?self=node-1&destination=node-1&topic=rpc";
+
+void testClient(const String& method, const ObjectList& args)
+{
+	RpcService dispatcher;
+	DefaultAuthChecker checker("", "");
+	//"text/xml", "text/json", "application/brpc.bin"
+	RpcClient client(url, &dispatcher, &checker,"text/json", 1000*3);
+	
+	ObjectList loginArgs;
+	loginArgs.addValue("test");
+	loginArgs.addValue("123456");
+	String msg = client.login(loginArgs);
+
+	Object* result = client.call(method, args);
+	String rs = String::format(">>>>> call method %s(%s): \n"
+		"=====\n"
+		"%s\n"
+		"=====\n",
+		method.toString().c_str(),
+		args.toString().c_str(),
+		result ? result->toString().c_str() : "<null>");
+	printf(rs.c_str());
+
+	delete result;
+	msg = client.logout();
+}
+
 void testMyRpcApi()
 {
-	cstring url = "http://127.0.0.1"; // jmtp://127.0.0.1
 	cstring name = "test", password = "123456";
 	MyRpcApi myApi(url, name, password);
 
@@ -57,10 +90,63 @@ void testMyRpcApi()
 	getchar();
 }
 
+void testMyRpcApiPerf(int count, int threads=4)
+{
+	cstring name = "test", password = "123456";
+
+	auto perfTest = [&, count]() {
+		printf("start thread...\n");
+		MyRpcApi myApi(url, name, password);
+
+		String ping = myApi.ping();
+		printf("ping: %s\n", ping.c_str());
+
+		Date startTime = Date::getCurrentTime();
+		for (int i=0; i<count; i++)
+		{
+			try{
+				String result = myApi.echo(String::format("fake-%d", i));
+				printf("echo() returned: %s\n", result.c_str());
+				/*ObjectList args;
+				args.addValue(String::format("fake-%d", i));
+				myApi.cast("echo", args);*/
+			}catch(Exception& e){
+				e.printStackTrace();
+			}
+		}
+		Date endTime = Date::getCurrentTime();
+		float seconds = (endTime - startTime) / 1000.0;
+		float speed = count / seconds;
+		printf("end thread, total %d in %.2fs [%.2f reqs/s].\n",
+			count, seconds, speed);
+	};
+
+	for (int t=0; t<threads; t++) {
+		Thread* thread = new LambdaThread([&]{
+			try {
+				perfTest();
+			} catch (Exception& e) {
+				e.printStackTrace();
+			}
+		});
+		thread->start();
+	}
+	getchar();
+}
+
 int run(int argc, char* argv[])
 {
 	Log* logger = Log::getLogger();
 	cstring usage = "usage: brpc server|client [options...]\n";
+
+	try {
+		SimpleCfgFile cfg("brpc.ini");
+		std::string str;
+		if(cfg.getProperty("url", str))
+			url = str;
+	} catch(Exception& e) {
+		logger->warn("exception when reading conf file: " + e.toString());
+	}
 
 	if (argc > 1)
 	{
@@ -81,16 +167,7 @@ int run(int argc, char* argv[])
 		else if(arg1 == "client")
 		{
 			logger->info("brpc client starting...");
-
-			cstring url = "http://127.0.0.1";//http://192.168.1.131
-			//cstring url = "amqp://guest:guest@127.0.0.1:5672/"\
-				"?self=node-1&destination=node-1&topic=rpc";
-			RpcService dispatcher;
-			DefaultAuthChecker checker("", "");
-			//"text/xml", "text/json", "application/brpc.bin"
-			RpcClient client(url, &dispatcher, &checker,"text/json", 1000*3);
-
-			printf("client start...\n");
+			
 			//such as: echo "hello rpc"
 			if (argc > 2)
 			{
@@ -116,25 +193,7 @@ int run(int argc, char* argv[])
 					else
 						printf("invalid para: %s\n", argv[i]);
 				}
-
-				ObjectList loginArgs;
-				loginArgs.addValue("test");
-				loginArgs.addValue("123456");
-				String msg = client.login(loginArgs);
-
-				Object* result = client.call(method, args);
-				String rs = String::format(">>>>> call method %s(%s): \n"
-					"=====\n"
-					"%s\n"
-					"=====\n",
-					method.toString().c_str(),
-					args.toString().c_str(),
-					result ? result->toString().c_str() : "<null>");
-				printf(rs.c_str());
-				logger->info(rs);
-				delete result;
-
-				msg = client.logout();
+				testClient(method, args);
 			}
 			else
 			{
@@ -147,6 +206,13 @@ int run(int argc, char* argv[])
 			logger->info("brpc api-test starting...");
 			testMyRpcApi();
 		}
+		else if(arg1 == "api-test-perf")
+		{
+			String count = "1000";
+			if (argc > 2)
+				count = argv[2];
+			testMyRpcApiPerf(CodeUtil::str2Int(count));
+		}
 		else
 			printf(usage);
 	}
@@ -154,6 +220,7 @@ int run(int argc, char* argv[])
 		printf(usage);
 	return 0;
 }
+
 
 int main(int argc, char* argv[])
 {

@@ -27,13 +27,13 @@ void RpcOnHttpSocket::send(const DataPackage& package) throw(IOException)
 {
 	ScopedLock lock(this->sendLock);
 
-	if (this->clientSocket==null){
+	if (this->clientSocket == null){
 		throwpe(Exception("null socket"));
 	}
 	ClientSocket& sock = *this->clientSocket;
 
 	const ByteBuffer& output = package.body;
-	unsigned int len=output.size();
+	unsigned int len = output.size();
 
 	//发送头部
 	SmartPtr<HttpHeader> header = null;
@@ -54,12 +54,14 @@ void RpcOnHttpSocket::send(const DataPackage& package) throw(IOException)
 		header->setContentLength(len);
 	ByteBuffer headerBuf(header->getEntrySize()*20);
 	header->writeTo(headerBuf);
-	sock.writeEnoughBytes((const char*)headerBuf.array(),headerBuf.size());//Header
 
-	//发送数据
-	sock.writeEnoughBytes((const char*)output.array(),output.size());//Data
+	// send HTTP Header
+	sock.writeEnoughBytes((const char*)headerBuf.array(),headerBuf.size());
+	// send HTTP Data
+	sock.writeEnoughBytes((const char*)output.array(),output.size());
+
 	//通知数据钩子
-	notifyHookSent(sock.getPeerHost(),package);
+	notifyHookSent(sock.getPeerHost(), package);
 }
 
 void RpcOnHttpSocket::receive() throw(RpcException)

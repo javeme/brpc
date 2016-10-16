@@ -77,8 +77,8 @@ DataPackage RpcSocket::sendSynch(const DataPackage& output)
 	this->idOfWaitData=output.getId();
 
 	this->send(output);
-	unsigned int timeout = this->timeout * 3;
-	if(timeout == 0)
+	unsigned int timeout = this->timeout + 100;
+	if(this->timeout == 0)
 		timeout = INFINITE;
 	if(!this->waitLock.wait(this->sendLock, timeout))
 		throwpe(TimeoutException(timeout));
