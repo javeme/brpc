@@ -9,28 +9,39 @@
 
 namespace bluemei{
 
-class BLUEMEILIB_API Message : public Object
+
+typedef class BLUEMEILIB_API Message : public Object
 {
 public:
-	Message(){
+	// message priority
+	virtual int getPriority() const = 0;
+	// message type
+	virtual int getType() const = 0;
+} ThreadMessage;
+
+
+typedef class BLUEMEILIB_API SimpleMessage : public Message
+{
+public:
+	SimpleMessage(){
 		init(0,0,0,0,nullptr);
 	}
-	Message(int id){
+	SimpleMessage(int id){
 		init(0,id,0,0,nullptr);
 	}
-	Message(int id,int priority){
+	SimpleMessage(int id,int priority){
 		init(priority,id,0,0,nullptr);
 	}
-	Message(int id,int arg1,int arg2){
+	SimpleMessage(int id,int arg1,int arg2){
 		init(0,id,arg1,arg2,nullptr);
 	}
-	Message(int id,int arg1,int arg2,Object* object){
+	SimpleMessage(int id,int arg1,int arg2,Object* object){
 		init(0,id,arg1,arg2,object);
 	}
-	Message(int id,int priority,int arg1,int arg2,Object* object){
+	SimpleMessage(int id,int priority,int arg1,int arg2,Object* object){
 		init(priority,id,arg1,arg2,object);
 	}
-	virtual ~Message(){}
+	virtual ~SimpleMessage(){}
 public:
 	void init(int priority,int id,int arg1,int arg2,Object* object){
 		m_priority=priority;
@@ -49,13 +60,14 @@ public:
 	int getPriority() const { return m_priority; }
 	void setPriority(int val) { m_priority = val; }
 
-	int  getId() const { return m_id; }
+	int getId() const { return m_id; }
 	void setId(int val) { m_id = val; }
+	int getType() const { return getId(); }	
 
-	int  getArg1() const { return m_arg1; }
+	int getArg1() const { return m_arg1; }
 	void setArg1(int val) { m_arg1 = val; }
 
-	int  getArg2() const { return m_arg2; }
+	int getArg2() const { return m_arg2; }
 	void setArg2(int val) { m_arg2 = val; }
 
 	Object* getObject() const { return m_object; }
@@ -69,7 +81,7 @@ protected:
 	int m_arg1,m_arg2;
 	Object* m_object;
 	unsigned long long m_timestamp;
-};
+} SimpleThreadMessage;
 
 
 typedef std::function<void (Message* msg)> MessageFunction;
@@ -80,6 +92,14 @@ public:
 	MessageThread();
 	MessageThread(const MessageFunction& fun);
 	virtual ~MessageThread();
+
+	class ExitLoopException : public Exception
+	{
+	public:
+		virtual String name() const {
+			return "ExitLoopException";
+		}
+	};
 private:
 	MessageThread(const MessageThread& other);
 	MessageThread& operator=(const MessageThread& other);
@@ -90,12 +110,11 @@ public:
 	virtual Message* nextMessage();
 	virtual Message* waitMessage();
 	virtual bool hasMessage()const;
-public:
-	virtual void doMessageLoop();
-	virtual void finish();
-protected:
+
+	virtual void stop();
 	virtual void run();
 protected:
+	virtual void doMessageLoop();
 	virtual void onMessage(Message* msg);
 protected:
 	struct GetKey{

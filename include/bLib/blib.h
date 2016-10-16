@@ -45,6 +45,7 @@
 #include "LinkedList.h"
 #include "LinkedList.h"
 #include "Log.h"
+#include "Looper.h"
 #include "MemoryPool.cpp"
 #include "MemoryPool.h"
 #include "MessageThread.h"

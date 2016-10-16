@@ -1,4 +1,7 @@
 #pragma once
+#ifndef _ThreadException_h_
+#define _ThreadException_h_
+
 #include "Exception.h"
 
 namespace bluemei{
@@ -19,3 +22,4 @@ private:
 };
 
 }//end of namespace bluemei
+#endif

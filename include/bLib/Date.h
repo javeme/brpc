@@ -34,9 +34,9 @@ public:
 	static int month2Int(const char* month);
 public:
 	Date& operator=(long long ms);
-	long operator-(Date& other)const;
+	long operator-(const Date& other)const;
 	Date operator+(long ms)const;
-	bool operator<(Date& other)const;
+	bool operator<(const Date& other)const;
 
 	virtual String toString() const;
 	String formatDate( const char* format )const;
@@ -59,18 +59,23 @@ private:
 	//DateInfo m_dateInfo;//用于存放设置
 };
 
-#define COST_TIME(code_string,returnStr)\
+
+#define COST_TIME(code_string, returnStr)\
 {\
 	Date timeStart=Date::getCurrentTime();\
 	code_string;\
 	Date timeEnd=Date::getCurrentTime();\
 	int span=timeEnd-timeStart;\
 	char _buf[128];\
-	sprintf(_buf,"from %s to %s ,cost %d ms",timeStart.toString().c_str(),timeEnd.toString().c_str(),span);\
+	sprintf(_buf,"from %s to %s, cost %d ms",\
+		timeStart.toString().c_str(),\
+		timeEnd.toString().c_str(),\
+		span);\
 	returnStr=_buf;\
 	_buf;/*用于gcc的返回*/\
 }
-#define COST_TIME_BOX(code_string,task)\
+
+#define COST_TIME_BOX(code_string, task)\
 {\
 	wstring wstr;\
 	string _str;\
@@ -78,25 +83,5 @@ private:
 	SocketTools::gbkToUnicode(wstr,_str.c_str());\
 	::AfxMessageBox(CString(task)+_T(",")+wstr.c_str());\
 }
-/*
-#define COST_TIME(code_string)\
-{\
-	Date timeStart=Date::getCurrentTime();\
-	code_string;\
-	Date timeEnd=Date::getCurrentTime();\
-	int span=timeEnd-timeStart;\
-	CString str;\
-	wstring wstr1,wstr2;\
-	SocketTools::gbkToUnicode(wstr1,timeStart.toString().c_str());\
-	SocketTools::gbkToUnicode(wstr2,timeEnd.toString().c_str());\
-	str.Format(_T("from %s to %s,cost %d ms"),wstr1.c_str(),wstr2.c_str(),span);\
-	::AfxMessageBox(str);\
-}*/
-
-/*
-str=date.formatDate("%Y-%m-%d %H:%M:%S %i");
-date=Date::parseDate("%Y-%m-%d %H:%M:%S %i","2010-10-10 12:12:12 990");
-str=date.toString();
-*/
 
 }//end of namespace bluemei

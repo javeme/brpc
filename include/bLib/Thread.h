@@ -2,7 +2,7 @@
 *edit by bluemei
 *write for java-users
 */
-
+#pragma once
 #ifndef _Thread_h_
 #define _Thread_h_
 
@@ -24,10 +24,11 @@ private:
 	Thread(const Thread& other);
 	Thread& operator=(const Thread& other);
 public:
-	void start() throw(Exception);
-	void stop();
-	void detach();
-	void wait() throw(ThreadException);
+	virtual void start() throw(Exception);
+	virtual void stop();
+	virtual void attach();
+	virtual void detach();
+	virtual void wait() throw(ThreadException);
 	static void sleep(unsigned int msecond);
 
 	void setAutoDestroy(bool bAutoDestroy);
@@ -35,9 +36,10 @@ public:
 	void* getUserParameter() const;
 public:
 	virtual void run();
-	bool isRunning() const;
-	unsigned int getThreadId() const;
+	virtual bool isRunning() const;
+	virtual unsigned int getThreadId() const;
 	static unsigned int currentThreadId();
+	static unsigned int mainThreadId();
 public:
 	int callBackStartThread();
 protected:
@@ -47,6 +49,7 @@ protected:
 	Runnable* m_pObject;
 	void* m_pUserParameter;
 	unsigned int m_threadId;
+	static unsigned int s_mainThreadId;
 
 	SyncLock m_lock;
 	bool m_bAutoDestroyObj;
@@ -56,4 +59,5 @@ private:
 };
 
 }//end of namespace bluemei
+
 #endif
