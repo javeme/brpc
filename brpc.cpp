@@ -141,9 +141,8 @@ int run(int argc, char* argv[])
 
 	try {
 		SimpleCfgFile cfg("brpc.ini");
-		std::string str;
-		if(cfg.getProperty("url", str))
-			url = str;
+		url = cfg["default"]["url"];
+		//url = cfg["default"].option<String>("url"/*, url*/);
 	} catch(Exception& e) {
 		logger->warn("exception when reading conf file: " + e.toString());
 	}

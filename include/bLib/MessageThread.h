@@ -104,7 +104,7 @@ private:
 	MessageThread(const MessageThread& other);
 	MessageThread& operator=(const MessageThread& other);
 public:
-	virtual void addMessage(Message* msg);
+	virtual void postMessage(Message* msg);
 	virtual void clearMessage();
 	virtual Message* peekMessage();
 	virtual Message* nextMessage();

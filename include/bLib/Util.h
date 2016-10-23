@@ -31,6 +31,9 @@ public:
 	static double str2Float(cstring str);
 	static string float2Str(double f);
 
+	static bool str2Boolean(cstring str);
+	static string boolean2Str(bool b);
+
 	//ÅÐ¶Ï×Ö·û´®ÊÇ·ñÎªÊý×Ö
 	template<class CharType>
 	static bool isIntNumber(const CharType* str,int len);

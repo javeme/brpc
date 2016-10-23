@@ -1,30 +1,26 @@
 #pragma once
 #include "bluemeiLib.h"
+#include "ConfigOption.h"
 #include "File.h"
-#include "Object.h"
 
 namespace bluemei{
 
-using std::string;
-#define PropertiesMap map<string,string>
-
-class BLUEMEILIB_API SimpleCfgFile : public Object
+// class SimpleCfgFile
+class BLUEMEILIB_API SimpleCfgFile : public Config
 {
 public:
-	SimpleCfgFile(const string& path);
+	SimpleCfgFile(const String& path="");
 	~SimpleCfgFile(void);
+public:
+	virtual String path() const { return m_filePath; }
+	virtual String name() const { return m_filePath; }
+	virtual void parseFromFile(const String& path);
+protected:
+	void parse();
+	ConfigGroup& setOptionToGroup(const String& group,
+		const String& name, const String& value);
 private:
-	PropertiesMap m_propertiesMap;
-	string m_filePath;
-	string m_content;
-	bool m_isChanged;
-public:
-	void readPropertyFromFile(const string& path);
-public:
-	bool getProperty(const string& key,string& value);//获取配置属性
-	bool setProperty(const string& key,const string& value);//设置配置属性
-	bool removeProperty(const string& key);
-	void saveProperty();
+	String m_filePath;
 };
 
 }//end of namespace bluemei

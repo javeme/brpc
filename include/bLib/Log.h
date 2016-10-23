@@ -2,8 +2,8 @@
 #define _Log_h_
 
 #include "File.h"
-#include "CriticalLock.h"
 #include "HashMap.h"
+#include "Looper.h"
 
 namespace bluemei{
 
@@ -96,7 +96,7 @@ protected:
 	String m_formatter;
 private:
 	File m_file;
-	CriticalLock m_lock;
+	Looper m_looper;
 	Template* m_tmpl;
 protected:
 	const static LogCtx s_nullCtx;
