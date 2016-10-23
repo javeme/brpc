@@ -83,7 +83,7 @@ void JmtpHeader::init(dword len/*=0*/, word type/*=0*/,
 
 	if (timestamp == 0) {
 		long long current = Date::getCurrentTime().getTotalMillSecond();
-		this->timestamp = current / 1000; // ms => second
+		this->timestamp = (dword)(current / 1000); // ms => second
 	}
 }
 
