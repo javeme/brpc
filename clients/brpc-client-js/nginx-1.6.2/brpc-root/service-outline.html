@@ -5,43 +5,43 @@
 <title>brpc service outline</title>
 <style type="text/css">
     html, body { height:100%; font-family: "Times New Roman",Georgia,Serif; }
-    /*body, h2, p {margin:0px;padding:0px;}*/    
-    
+    /*body, h2, p {margin:0px;padding:0px;}*/
+
     .normalTreeNode {
-		font-family: "Times New Roman",Georgia,Serif;
+        font-family: "Times New Roman",Georgia,Serif;
         line-height: 22px;
         cursor:pointer;
-	}
-	.selectedTreeNode {
-		font-weight: bolder;
-	}
-    
+    }
+    .selectedTreeNode {
+        font-weight: bolder;
+    }
+
     .overCell {
-		background-color: #F8F8F8;
-	}
-    
-    .tableStyle{ 
-        background:#D5D5D5; 
+        background-color: #F8F8F8;
+    }
+
+    .tableStyle{
+        background:#D5D5D5;
         color:#333333;
         margin:auto;
-    }      
-    .trStyle{ 
-        background:#F4F4F4; 
-    } 
-    .thStyle{ 
-		font-family: "Times New Roman",Georgia,Serif;
-        height:20px; 
-        padding:5px; 
-        background:#E0E0E0; 
-    } 
-    .tdStyle{ 
-		font-family: "Times New Roman",Georgia,Serif;
-        padding:5px; 
-    } 
-    
+    }
+    .trStyle{
+        background:#F4F4F4;
+    }
+    .thStyle{
+        font-family: "Times New Roman",Georgia,Serif;
+        height:20px;
+        padding:5px;
+        background:#E0E0E0;
+    }
+    .tdStyle{
+        font-family: "Times New Roman",Georgia,Serif;
+        padding:5px;
+    }
+
     .treeStyle {
-		margin:20px;
-	}
+        margin:20px;
+    }
     .methodStyle { font-weight:bolder; line-height:28px; color:#000; padding-left:4px;  }
     .signatureStyle { line-height:22px; color:#000; padding-left:12px; }
     .requestStyle {text-align:center;line-height:30px;color:#000;margin:5px; }/*border:1px solid #F00;*/
@@ -52,25 +52,25 @@
                   background:url(./images/but.jpg) no-repeat;border:none;
                   display:inline;margin:0 10px;cursor:pointer;}
     .disableButtonStyle {color:#ccc;}
-	
-	a:link { 
-		/*font-size: 12px; */
-		color: #999999; 
-		text-decoration: none; 
-	} 
-	a:visited { 
-		color: #999999; 
-		text-decoration: none; 
-	} 
-	a:hover { 
-		color: #8888ee; 
-		text-decoration: underline; 
-	} 
-	/*
-	a[class ="normalTreeNode"] { 
-	   padding-right: 28px; 
-	   background: transparent url(./images/expand.png) no-repeat center right; 
-	}*/
+
+    a:link {
+        /*font-size: 12px; */
+        color: #999999;
+        text-decoration: none;
+    }
+    a:visited {
+        color: #999999;
+        text-decoration: none;
+    }
+    a:hover {
+        color: #8888ee;
+        text-decoration: underline;
+    }
+    /*
+    a[class ="normalTreeNode"] {
+       padding-right: 28px;
+       background: transparent url(./images/expand.png) no-repeat center right;
+    }*/
 </style>
 <script type="text/javascript" src="js/prototype-1.7.js"></script>
 <script type="text/javascript" src="js/tree2.js"></script>
@@ -98,7 +98,7 @@ function createNode(type, value, api, parent){
     };
     return node;
 }
-function createServiceNode(value, api, parent){    
+function createServiceNode(value, api, parent){
     return createNode(NODE_SERVICE, value, api, parent);
 }
 function createMethodNode(value, parent){
@@ -133,162 +133,170 @@ function parseValue(value, type){
         return !(value.strip()=='false' || value.strip()=='0');
     else if (type == 'array') {
         var paras = [];
-		if (!Object.isArray(value))
-			return paras;
-		for (var i=0; i<value.length; i++) {
-			var ele = value[i];
-			if(ele.type != 'none')
-				paras.push(parseValue(ele.value, ele.type));
-		}
-		return paras;
-	}
-	else if (type == 'object') {
+        if (!Object.isArray(value))
+            return paras;
+        for (var i=0; i<value.length; i++) {
+            var ele = value[i];
+            if(ele.type != 'none')
+                paras.push(parseValue(ele.value, ele.type));
+        }
+        return paras;
+    }
+    else if (type == 'object') {
         var obj = {};
-		if (!Object.isArray(value))
-			return obj;
-		for (var i=0; i<value.length; i++) {
-			var ele = value[i];
-			if(ele.type != 'none')
-				obj[ele.name] = parseValue(ele.value, ele.type);
-		}
-		return obj;
-	}
+        if (!Object.isArray(value))
+            return obj;
+        for (var i=0; i<value.length; i++) {
+            var ele = value[i];
+            if(ele.type != 'none')
+                obj[ele.name] = parseValue(ele.value, ele.type);
+        }
+        return obj;
+    }
     else if (type == 'null')
         return null;
 }
 
 function showMethodInvokerView(method, api) {
-	//show view
-	var invokerView = new Alert('invoker_box', {
-		title : 'brpc method invoker',
-		content : '<div id="invokerMethod" class="methodStyle">' + method + ':</div>' +
-				  '<div id="invokerSignature" class="signatureStyle"></div>' +
-				  '<div id="invokerRequest" class="requestStyle"> loading... </div>' +
-				  '<div class="buttonsDiv">' +
-					'<button id="btnInvoke" class="buttonStyle">invoke</button>' +
-					'<button id="btnCancel" class="buttonStyle">back</button>' +
-				  '</div>' +
-				  '<div id="invokerResponse" class="responseStyle"></div>',
-		width : '800',
-		height : '600',
-		top : '',
-		left : '',
-		fixed : '',
-		close : 'close'
-	}); 
-	invokerView.load();
-	
-	//init table
-	var table = showMethodParas($('invokerRequest'));
-	table.setWidth('100%');
-	
-	//method signature
-	api.signatureOf(method, {
-		onSuccess: function(result){
-			result = result.responseJSON;
-			var signature = result.returnValue;
-			signature = signature.replace(/\|/g, '<br/>');//f()|f(int)|f(bool)
-			$('invokerSignature').update(signature);
-		},
-		onFailure: function(result){
-			var msg = 'Failed to get signature, ' + statusText(result);
-			//alert(msg);
-			$('invokerSignature').update(msg);
-		},
-		onException: function(request, e){
-			var msg = 'Exception when getting signature: ' + e.toString();
-			//alert(msg);
-			$('invokerSignature').update(msg);
-		}
-	});
-	
-	function disableBtn(btn) {
-		btn.disable();
-		btn.addClassName('disableButtonStyle');
-	}
-	function enableBtn(btn) {
-		btn.enable();
-		btn.removeClassName('disableButtonStyle');
-	}
-	
-	//invoke button listener
-	$('btnInvoke').observe('click', function(e) {                     
-		var btn = e.element();
-		disableBtn(btn);                    
-		setTimeout(function(){
-			enableBtn(btn);
-		}, 1000*1);
-		//invoke method
-		var loadView = null;
-		//method = method.substring(method.indexOf('.')+1, method.indexOf('('));
-		var data = table.getData();
-		var paras = parseValue(data, "array");
-		
-		api.call(method, paras, {
-			onLoading: function(){
-				loadView = showLoadView('invoking method');
-				showMethodResponse($('invokerResponse'), 'loading...');
-			},
-			onSuccess: function(transport){ 
-				var result = transport.responseJSON.returnValue;
-				showMethodResponse($('invokerResponse'), result);
-				loadView.destroy();
-			},
-			onFailure: function(transport){ 
-				var result = 'Failed to invoke method, ' + statusText(transport);
-				showMethodResponse($('invokerResponse'), result);
-				loadView.destroy();
-			},
-			onException: function(request, e){
-				var result = e.toString();
-				showMethodResponse($('invokerResponse'), result);
-				loadView.destroy();
-			}
-		});
-	});
-	$('btnCancel').observe('click', function() {
-		invokerView.close();
-	});
+    //show view
+    var invokerView = new Alert('invoker_box', {
+        title : 'brpc method invoker',
+        content : '<div id="invokerMethod" class="methodStyle">' + method + ':</div>' +
+                  '<div id="invokerSignature" class="signatureStyle"></div>' +
+                  '<div id="invokerRequest" class="requestStyle"> loading... </div>' +
+                  '<div class="buttonsDiv">' +
+                    '<button id="btnInvoke" class="buttonStyle">invoke</button>' +
+                    '<button id="btnCancel" class="buttonStyle">back</button>' +
+                  '</div>' +
+                  '<div id="invokerResponse" class="responseStyle"></div>',
+        width : '800',
+        height : '600',
+        top : '',
+        left : '',
+        fixed : '',
+        close : 'close'
+    });
+    invokerView.load();
+
+    //init table
+    var table = showMethodParas($('invokerRequest'));
+    table.setWidth('100%');
+
+    //method signature
+    api.signatureOf(method, {
+        onSuccess: function(result){
+            result = result.responseJSON;
+            var signature = result.returnValue;
+            signature = signature.replace(/\|/g, '<br/>');//f()|f(int)|f(bool)
+            $('invokerSignature').update(signature);
+        },
+        onFailure: function(result){
+            var msg = 'Failed to get signature, ' + statusText(result);
+            //alert(msg);
+            $('invokerSignature').update(msg);
+        },
+        onException: function(request, e){
+            var msg = 'Exception when getting signature: ' + e.toString();
+            //alert(msg);
+            $('invokerSignature').update(msg);
+        }
+    });
+
+    function disableBtn(btn) {
+        btn.disable();
+        btn.addClassName('disableButtonStyle');
+    }
+    function enableBtn(btn) {
+        btn.enable();
+        btn.removeClassName('disableButtonStyle');
+    }
+
+    //invoke button listener
+    $('btnInvoke').observe('click', function(e) {
+        //disableBtn
+        var btn = e.element();
+        disableBtn(btn);
+        setTimeout(function(){
+            enableBtn(btn);
+        }, 1000*1);
+        //invoke method
+        var loadView = null;
+        var completed = false;
+        //method = method.substring(method.indexOf('.')+1, method.indexOf('('));
+        var data = table.getData();
+        var paras = parseValue(data, "array");
+
+        api.call(method, paras, {
+            onCreate: function(){
+                showMethodResponse($('invokerResponse'), 'loading...');
+                //show LoadView if needs
+                setTimeout(function(){
+                    if(!completed)
+                        loadView = showLoadView('invoking method');
+                }, 500);
+            },
+            onSuccess: function(transport){
+                var result = transport.responseJSON.returnValue;
+                showMethodResponse($('invokerResponse'), result);
+            },
+            onFailure: function(transport){
+                var result = 'Failed to invoke method, ' + statusText(transport);
+                showMethodResponse($('invokerResponse'), result);
+            },
+            onException: function(request, e){
+                var result = e.toString();
+                showMethodResponse($('invokerResponse'), result);
+            },
+            onComplete: function(){
+                completed = true;
+                loadView && loadView.destroy();
+            }
+        });
+    });
+
+    $('btnCancel').observe('click', function() {
+        invokerView.close();
+    });
 }
 
 function loadSubNodes(node, onSuccess, onFailure, onException) {
     var api = node.api;
-	
-	function onServices(result){
-		result = result.responseJSON;
-		//alert('Result:\n' +result.returnValue);
-		services = result.returnValue;
-		for (var i=0; i<services.length; i++)
-			api.addSubService(services[i]);
-		
-		var nodes = createServiceNodes(services, node);
-		node.children = nodes;
-		
-		/*var subService = services[0];
-		subService = subService.split('.').pop();
-		api.addSubService(subService);
-		api = api.getSubService(subService);*/
-		
-		//request methods
-		api.listMethods({
-			onSuccess: function(result){
-				result = result.responseJSON;
-				//alert('Result:\n' +result.returnValue);
-				methods = result.returnValue;
-				nodes.extend(createMethodNodes(methods, node));
-				onSuccess(nodes);
-			},
-			onFailure: onFailure,
-			onException: onException
-		});
-	}
-	
+
+    function onServices(result){
+        result = result.responseJSON;
+        //alert('Result:\n' +result.returnValue);
+        services = result.returnValue;
+        for (var i=0; i<services.length; i++)
+            api.addSubService(services[i]);
+
+        var nodes = createServiceNodes(services, node);
+        node.children = nodes;
+
+        /*var subService = services[0];
+        subService = subService.split('.').pop();
+        api.addSubService(subService);
+        api = api.getSubService(subService);*/
+
+        //request methods
+        api.listMethods({
+            onSuccess: function(result){
+                result = result.responseJSON;
+                //alert('Result:\n' +result.returnValue);
+                methods = result.returnValue;
+                nodes.extend(createMethodNodes(methods, node));
+                onSuccess(nodes);
+            },
+            onFailure: onFailure,
+            onException: onException
+        });
+    }
+
     //request sub services
     api.listServices({
         onSuccess: onServices,
         onFailure: onFailure,
         onException: onException
-    });	
+    });
 }
 
 function showNodes(data, tree, parentNode){
@@ -308,10 +316,10 @@ function showNodes(data, tree, parentNode){
         var content = e.element().innerHTML;
         //alert(content);
     }
-    
+
     function onClick(e) {
         var ele = e.element();
-        
+
         var node = ele.up().retrieve('object');
         if (!node)
             return;
@@ -319,8 +327,8 @@ function showNodes(data, tree, parentNode){
             if (node.type == NODE_METHOD) { //method
                 var api = node.parent.api;
                 var method = node.value;
-				showMethodInvokerView(method, api);                
-            } 
+                showMethodInvokerView(method, api);
+            }
             else if (node.type == NODE_SERVICE){ //load sub service
                 var loadView = showLoadView('load sub services and method');
                 loadSubNodes(node,
@@ -340,7 +348,7 @@ function showNodes(data, tree, parentNode){
             }
         }
     }
-    
+
     if (parentNode) {
         tree.updateChildren(parentNode, data);
     }
@@ -354,41 +362,42 @@ function showMethodParas(tableDiv) {
     var operation = "<input name='btnAddRow' type='button' onclick='' value='Add Row'>";
     //var header = {id:"id", name:"name", type:"type", value:"parameter value",operation:"operation"};
     var types = "string:string, int:int, double:double, boolean:boolean, object:object, array:array, null:null, none:none";
-    var header = [{name:"id",value:"Id",type:"id"}, {name:"name",value:"Name"}, 
-                  {name:"type",value:"Type",type:"select",meta:types}, 
-                  {name:"value",value:"Value",type:"text"}, {name:"operation",value:operation}];
+    var header = [{name:"id",value:"Id",type:"id"},
+                  {name:"name",value:"Name"},
+                  {name:"type",value:"Type",type:"select",meta:types},
+                  {name:"value",value:"Value",type:"text"},
+                  {name:"operation",value:operation}];
     var operation = "<input type='button' onclick='deleteThisRow(this)' value='Remove'>";
-    var data = [{id:1, name:'para1', type:'none', value:'none', operation:operation, toString: function(){ return this.value; }},
-               ];
-    
-    function observeAddRowBtns() {    
-        $$('input[name="btnAddRow"]').each(function(item){ 
+    var data = [{id:1, name:'arg', type:'none', value:'none', operation:operation, toString: function(){ return this.value; }}];
+
+    function observeAddRowBtns() {
+        $$('input[name="btnAddRow"]').each(function(item){
             item.stopObserving('click');
             item.observe('click', function(e) {
                 var table = BrpcTable.getTableByElement(e.element());
                 table = table.retrieve('object');
-                table.appendRow({id:table.size(), name:'para', type:'int', value:'0', operation:operation, toString: function(){ return this.value; }});
+                table.appendRow({id:table.size(), name:'arg', type:'int', value:'0', operation:operation, toString: function(){ return this.value; }});
             });
         });
     }
-	
-	function isSimpleType(type) {
-		if (type == 'object' || type == 'array')
-			return false;
-		else
-			return true;
-	}
-	
+
+    function isSimpleType(type) {
+        if (type == 'object' || type == 'array')
+            return false;
+        else
+            return true;
+    }
+
     function onUpdateData(e) {
         var cellName = e.cellName;
-        if (cellName == 'type') {            
+        if (cellName == 'type') {
             var oldValue = e.oldValue;
             var newValue = e.newValue;
             var table = e.table;
             var rowIndex = e.rowIndex;
             var row = table.getRow(rowIndex);
-			if (!row)
-				return;
+            if (!row)
+                return;
             if (!isSimpleType(oldValue) && isSimpleType(newValue)) {//such as: object -> string
                 row['type'] = newValue;
                 row['value'] = row['value'].value || row['value'].toString();
@@ -397,23 +406,23 @@ function showMethodParas(tableDiv) {
             else if (isSimpleType(oldValue) && !isSimpleType(newValue)) {//such as: string -> object
                 row['type'] = newValue;
                 //var obj new Object({value: row['value']});
-                var obj = {id:0, name:'para', type:'string', value:row['value'], operation:operation, toString: function(){ return this.value; }};
+                var obj = {id:0, name:'arg', type:'string', value:row['value'], operation:operation, toString: function(){ return this.value; }};
                 row['value'] = [obj];
                 table.updateRow(rowIndex, row);
                 observeAddRowBtns();
             }
         }
     }
-	
+
     function onCellClick(e) {
         var ele = e.element();
     }
-      
-	tableDiv.update('');
+
+    tableDiv.update('');
     var table = showTable(tableDiv, header, data, onUpdateData, onCellClick);
     observeAddRowBtns();
     header[1]['type'] = "text";
-    return table;    
+    return table;
 }
 
 function showMethodResponse(responseDiv, data) {
@@ -434,7 +443,7 @@ function showMethodResponse(responseDiv, data) {
         var onUpdateData = null;
         var onCellClick = null;
         responseDiv.update(html);
-        var table = showTable(responseDiv, header, data, onUpdateData, onCellClick);  
+        var table = showTable(responseDiv, header, data, onUpdateData, onCellClick);
         table.setWidth('100%');
     }
 }
@@ -443,7 +452,7 @@ function showMethodResponse(responseDiv, data) {
 function showLoadView(title, content) {
     if (Object.isUndefined(content))
         content = 'loading...'
-	var id = randomString(8);
+    var id = randomString(8);
     var loadView = new Alert(id, {
         title : title,
         content : '<div id="loadContent" class="contentStyle">' + content + '</div>',
@@ -453,13 +462,13 @@ function showLoadView(title, content) {
         left : '',
         fixed : '',
         close : ''
-    }); 
+    });
     loadView.load();
     return loadView;
 }
 
 //生成并显示表格
-function showTable(div4Table, header, data, onUpdateData, onCellClick) {  
+function showTable(div4Table, header, data, onUpdateData, onCellClick) {
     var table = new BrpcTable(div4Table, {  header: header,
                                             onUpdateData: onUpdateData,
                                             onCellClick: onCellClick,
@@ -473,13 +482,13 @@ function showTable(div4Table, header, data, onUpdateData, onCellClick) {
     table.load(data);
     return table;
 }
-        
+
 //生成并显示树。divJSON：显示JSON格式的数据；divTree：树所在的DIV。
 function showTree(data, divTree, getLabel, getChildren, onClick, onDblClick) {
-	divTree.update('');
-	//var data = randomData(3);
-	//$('dJSON').update(Object.toJSON(data));
-	var tree = new Tree(divTree, {
+    divTree.update('');
+    //var data = randomData(3);
+    //$('dJSON').update(Object.toJSON(data));
+    var tree = new Tree(divTree, {
                         data: null,
                         getLabel: getLabel,
                         getChildren: getChildren,
@@ -488,8 +497,8 @@ function showTree(data, divTree, getLabel, getChildren, onClick, onDblClick) {
                         selectedStyle: 'selectedTreeNode',
                         normalStype: 'normalTreeNode'
                         });
-	tree.load(data);	
-	return tree;
+    tree.load(data);
+    return tree;
 }
 
 // 随机整数[bottom, top)
@@ -524,51 +533,58 @@ function handleException(request, e) {
 
 Event.observe(window, 'load', function() {
     var serviceName = 'nova';
-	var divTrees = $('dTree');
-	
-	function loadService(serviceName) {
-		var content = 'loading service "' + serviceName + '"...';
-		var loadView = showLoadView('brpc', content);
-		var api = new RpcApi(serviceName, 'test', '123456', {
-			onSuccess: function(transport){
-				var root = createServiceNode(serviceName, api);
-				
-				//request methods and sub-services
-				loadSubNodes(root,
-					function(nodes){
-						var divTree = new Element('div');
-						showNodes(root, divTree);
-						divTrees.appendChild(divTree);
-						
-						//request extend services
-						api.listEextendServices({
-							onSuccess: function(result){
-								result = result.responseJSON;
-								services = result.returnValue;
-								for (var i = 0; i < services.length; ++i) {
-									loadService(services[i]);
-								}
-							},
-							onFailure: handleFailure,
-							onException: handleException
-						});
-						loadView.destroy();
-					},
-					handleFailure,
-					handleException
-				);				
-			},
-			onFailure: handleFailure,
-			onException: handleException
-		});
-		return api;
-	}
+    var divTrees = $('dTree');
+
+    function loadService(serviceName) {
+        var api = new RpcApi(serviceName, 'test', '123456', {
+            onSuccess: function(transport){
+                var root = createServiceNode(serviceName, api);
+
+                //request methods and sub-services
+                loadSubNodes(root,
+                    function(nodes){
+                        var divTree = new Element('div');
+                        showNodes(root, divTree);
+                        divTrees.appendChild(divTree);
+
+                        //request extend services
+                        api.listEextendServices({
+                            onSuccess: function(result){
+                                result = result.responseJSON;
+                                services = result.returnValue;
+                                for (var i = 0; i < services.length; ++i) {
+                                    loadService(services[i]);
+                                }
+                            },
+                            onFailure: handleFailure,
+                            onException: handleException
+                        });
+                    },
+                    handleFailure,
+                    handleException
+                );
+            },
+            onComplete: function(){
+                // destroy loadView (waiting 500ms)
+                setTimeout(function(){
+                    loadView && loadView.destroy();
+                    loadView = null;
+                }, 500);
+            },
+            onFailure: handleFailure,
+            onException: handleException
+        });
+        return api;
+    }
+
+    var content = 'loading service "' + serviceName + '"...';
+    var loadView = showLoadView('brpc', content);
     loadService(serviceName);
-});  
+});
 </script>
 </head>
 <body>
     <div id="dJSON" class="normal"></div>
-    <div id="dTree" class="treeStyle"></div>                    
+    <div id="dTree" class="treeStyle"></div>
 </body>
 </html>

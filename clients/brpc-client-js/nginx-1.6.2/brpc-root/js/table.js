@@ -6,35 +6,35 @@
         return typeof o == 'object';
     }
     Object.isSimpleObject = function(o) {
-        return Object.isString(o) || Object.isNumber(o) 
+        return Object.isString(o) || Object.isNumber(o)
                 || Object.isBoolean(o) || o == null;
     }
-    
-    Array.prototype.insertAt=function(index,obj){ 
-        return this.splice(index,0,obj); 
-    } 
-    Array.prototype.removeAt=function(index){ 
-        return this.splice(index,1); 
-    } 
-    Array.prototype.remove=function(obj){ 
-        var index=this.indexOf(obj); 
-        if (index>=0){ 
-            return this.removeAt(index); 
-        } 
+
+    Array.prototype.insertAt=function(index,obj){
+        return this.splice(index,0,obj);
+    }
+    Array.prototype.removeAt=function(index){
+        return this.splice(index,1);
+    }
+    Array.prototype.remove=function(obj){
+        var index=this.indexOf(obj);
+        if (index>=0){
+            return this.removeAt(index);
+        }
         return this;
-    } 
-    Array.prototype.extend=function(other){ 
-        for (var i=0; i<other.length; i++){ 
-            this.push(other[i]); 
-        } 
-        return this; 
-    } 
+    }
+    Array.prototype.extend=function(other){
+        for (var i=0; i<other.length; i++){
+            this.push(other[i]);
+        }
+        return this;
+    }
 
     var C = {
         KEY_NAME: 'name',
         KEY_TYPE: 'type',
         KEY_DISPLAY_NAME: 'value',
-        KEY_META: 'meta',        
+        KEY_META: 'meta',
         KEY_HEADER: 'header',
         KEY_DATA: 'data',
         KEY_OBJECT: 'object',
@@ -46,22 +46,22 @@
         OBJECT_ATTR_VALUE_KEY: 'value',
         OBJECT_ATTR_VALUE_LABEL: 'Value'
     };
-    
+
     //表头
     var TableHeader = Class.create(Hash, {
-        initialize: function($super, header) { 
+        initialize: function($super, header) {
             $super();
             if (!header) {
                 this.none = true;
                 return;
             }
             this.none = false;
-                
+
             var cols = this;
             if (Object.isArray(header)) {
-                for (var i = 0; i < header.length; ++i) { 
+                for (var i = 0; i < header.length; ++i) {
                     var item = header[i];
-                    if (Object.isString(item)) {//['col1','col2']                            
+                    if (Object.isString(item)) {//['col1','col2']
                         var key = item;
                         cols.set(key, {name:item, displayName:item, index:i, type:null});
                     }
@@ -83,7 +83,7 @@
             }
             else if (Object.isObject(header)){//{col1:"col-1", col2:"col-2", ...}
                 var keys = Object.keys(header);
-                for (var i = 0; i < keys.length; ++i) { 
+                for (var i = 0; i < keys.length; ++i) {
                     var name = keys[i];
                     var val = header[key];
                     cols.set(name, {name:name, displayName:val, index:i, type:null, meta:null});
@@ -94,35 +94,35 @@
                 cols.set(key, {name:key, displayName:key, index:0, type:null});
             }
         },
-        getColNames: function() { 
+        getColNames: function() {
             var cols = this;
             return cols.keys();
         },
-        getColType: function(colName) { 
+        getColType: function(colName) {
             if(this.isNone())
                 return null;
             var cols = this;
             return cols.get(colName).type;
         },
-        getColDisplayName: function(colName) { 
+        getColDisplayName: function(colName) {
             if(this.isNone())
                 return colName;
             var cols = this;
             return cols.get(colName).displayName;
         },
-        getColIndex: function(colName) { 
+        getColIndex: function(colName) {
             if(this.isNone())
                 return 0;
             var cols = this;
             return cols.get(colName).index;
         },
-        getColMeta: function(colName) { 
+        getColMeta: function(colName) {
             if(this.isNone())
                 return null;
             var cols = this;
             return cols.get(colName).meta;
-        },        
-        isNone: function() { 
+        },
+        isNone: function() {
             return this.none;
         }
     });
@@ -141,18 +141,18 @@
         col2[displayName] = C.OBJECT_ATTR_VALUE_LABEL;
         return [col0, col1, col2];
     })();
-    
+
     //表格
     var BrpcTable = Class.create({
         initialize: function(parent, config) {
             this.parent = parent;
-            
+
             this.config = config;
             this.header = new TableHeader(config.header);//[{name:"col1",value:"col-1"}, {name:"col2",value:"col-2"}, ...]
             this.data = config.data;//[{col1:1, col2:"value1"}, {col1:2, col2:"value2"}, ...]
-            
+
             var that = this;
-            
+
             //获取表头名称
             this.getColNames = config.getColNames ? config.getColNames : function(header) {
                 if (header == that.header)
@@ -162,7 +162,7 @@
                 return header.getColNames();
             };
             //根据表头列名称获取列类型
-            this.getColType = config.getColType ? config.getColType : function(col) {                
+            this.getColType = config.getColType ? config.getColType : function(col) {
                 return that.header.getColType(col);
             };
             //根据表头列名称获取列显示名称
@@ -170,16 +170,16 @@
                 return that.header.getColDisplayName(col);
             };
             //根据表头列名称获取列元数据
-            this.getColMeta = config.getColMeta ? config.getColMeta : function(col) {                
+            this.getColMeta = config.getColMeta ? config.getColMeta : function(col) {
                 return that.header.getColMeta(col);
             };
             //获取单元格数据的显示文本
             this.getLabel = config.getLabel ? config.getLabel : function(obj) {
-                if (Object.isString(obj)) 
+                if (Object.isString(obj))
                     return obj;
-                else if (Object.isNumber(obj) || Object.isBoolean(obj)) 
+                else if (Object.isNumber(obj) || Object.isBoolean(obj))
                     return obj.toString();
-                else if (obj && obj.hasOwnProperty('label')) 
+                else if (obj && obj.hasOwnProperty('label'))
                     return obj.label;
                 return '<unknown>';
             };
@@ -209,17 +209,17 @@
                     return {header:null, data:obj};
                 else if (obj && Object.isObject(obj) && (attrs = Object.keys(obj)).length > 0) {
                     var header = TableHeader.OBJECT_ATTRS_HEADER;
-                    
+
                     var col0 = C.OBJECT_ATTR_NAME_KEY;
                     var col1 = C.OBJECT_ATTR_TYPE_KEY;
                     var col2 = C.OBJECT_ATTR_VALUE_KEY;
-                    
+
                     var data = new Array();
-                    for (var i = 0; i < attrs.length; ++i) { 
+                    for (var i = 0; i < attrs.length; ++i) {
                         var name = attrs[i];
                         var val = obj[name];
                         var type = typeof val;
-                        
+
                         var row = new Object();
                         row[col0] = name;
                         row[col1] = type;
@@ -232,19 +232,19 @@
                     return {header:obj[C.KEY_HEADER], data:obj[C.KEY_DATA]};
                 return {header:null, data:null};
             };
-            
+
             // 将界面数据更新到模型
             this.onDataChanged = config.onDataChanged ? config.onDataChanged : function(cell, event) {
                 var col = cell.retrieve(C.KEY_NAME);
                 var data = cell.up().retrieve(C.KEY_DATA);
                 var ele = event.element();
-                
+
                 var oldValue = data[col];
-                var newValue = ele.value || ele.innerText;                        
+                var newValue = ele.value || ele.innerText;
                 var updateObj = {table: that, rowIndex: BrpcTable.getRowIndex(cell.up()), cellName: col,
                                  oldValue: oldValue, newValue: newValue, event: event
                                 };
-				
+
                 if (config.onUpdateData && (false == config.onUpdateData(updateObj))) {
                     if (ele.value == newValue)
                         ele.value = oldValue;
@@ -253,44 +253,44 @@
                 }
                 else
                     data[col] = newValue;
-				
-				//阻止事件冒泡(否则子表格的数据更新出发父表格的td事件,导致其object-value变为修改的单值)
-				event.stopPropagation();
+
+                //阻止事件冒泡(否则子表格的数据更新出发父表格的td事件,导致其object-value变为修改的单值)
+                event.stopPropagation();
             };
-             
+
             this.onCellClick = config.onCellClick ? config.onCellClick : function(){};
             this.onCellDblClick = config.onCellDblClick ? config.onCellDblClick : function(){};
-             
+
             this.root = new Element('table');
             this.root.store(C.KEY_OBJECT, this);
             if (config.tableStyle)
                 this.root.addClassName(config.tableStyle);
             this.parent.appendChild(this.root);
-            
+
             this.loadHeader();
         },
         //  载入表头
-        loadHeader: function(header) {              
-            if (!Object.isUndefined(header) && header) 
+        loadHeader: function(header) {
+            if (!Object.isUndefined(header) && header)
                 this.header = new TableHeader(header);
             if (!this.header || this.header.isNone())
                 return;
-            
-            var config = this.config;        
-            var createRow = this._createRow; 
+
+            var config = this.config;
+            var createRow = this._createRow;
             var createCell = this._createHeaderCell;
-            
+
             var row = createRow();
             if (config.trStyle)
                 row.addClassName(config.trStyle);
-                        
+
             var cols = this.getColNames(this.header);
             for(var j = 0; j < cols.length; ++j) {
                 var name = cols[j];
                 var displayName = this.getColDisplayName(name);
                 var cell = createCell();
                 this._setCellProperty(cell, null, displayName, config.thStyle);
-                
+
                 row.appendChild(cell);
             }
             this.root.update('');
@@ -298,11 +298,11 @@
         },
         // 载入数据
         load: function(data) {
-            if (!Object.isUndefined(data) && data) 
+            if (!Object.isUndefined(data) && data)
                 this.data = data;
-            if (!this.data) 
+            if (!this.data)
                 return;
-            
+
             data = this.data;
             this.clear();
             this.data = data;
@@ -317,11 +317,11 @@
         },
         // 增加一行数据
         appendRow: function(data) {
-            if (Object.isUndefined(data) || !data) 
+            if (Object.isUndefined(data) || !data)
                 return false;
-            if (!this.data) 
+            if (!this.data)
                 return false;
-            
+
             this.data.push(data);//add one row
             data = [data];
             this._loadData(data);//add to ui
@@ -340,7 +340,7 @@
             return true;
         },
         // 更新一行数据
-        updateRow: function(index, data) {            
+        updateRow: function(index, data) {
             if (Object.isUndefined(index) || index >= this.size())
                 return false;
             this.data[index] = data;
@@ -358,13 +358,13 @@
         },
         // 获取行数
         size: function() {
-            if (!this.data) 
+            if (!this.data)
                 return 0;
             return this.data.length;
         },
         // 获取行索引
         getRowIndex: function(row) {
-            if (!this.data) 
+            if (!this.data)
                 return -1;
             for (var i=0; i<this.data.length; ++i) {
                 if (this.data[i] == row)
@@ -375,11 +375,11 @@
         setWidth: function(w) {
             this.root.style.width = w;
         },
-        setHeight: function(h) {            
+        setHeight: function(h) {
             this.root.style.width = w;
         },
         _loadData: function(data) {
-            var that = this;                      
+            var that = this;
             this._traverseData(this.root, data, function(parent, name, data, isCell) {
                 var node = null;
                 //td
@@ -396,8 +396,8 @@
         },
         _appendRow: function(name, data) {
             var config = this.config;
-            var createRow = this._createRow; 
-            
+            var createRow = this._createRow;
+
             var node = createRow();
             node.store(C.KEY_DATA, data);
             if (config.trStyle)
@@ -408,10 +408,10 @@
             var me = this;
             var config = this.config;
             var createCell = this._createCell;
-            
+
             var cell = createCell();
             me._setCellProperty(cell, name, me.getLabel(data), config.tdStyle);
-            
+
             cell.observe('click', me.onCellClick);
             cell.observe('dblclick', me.onCellDblClick);
             cell.observe('mouseenter', function(e) {//mouseover会触发子元素的该事件
@@ -423,9 +423,10 @@
             cell.observe('mouseleave', function(e) {//mouseout会触发子元素的该事件
                 var ovrs = config.overCellStyle;
                 if (ovrs && e.element().hasClassName(ovrs)) {
-                    e.element().removeClassName(ovrs); 
-                }  
+                    e.element().removeClassName(ovrs);
+                }
             });
+            // NOTE: why this does not work in IE8? use onpropertychange?
             cell.observe('change', function(e) {//onchange
                 //var ele = e.element();
                 //ele.value = "change:" + ele.value;
@@ -440,24 +441,24 @@
         },
         //创建单元格
         _createCell: function() {
-            var cell = new Element('td'); 
+            var cell = new Element('td');
             return cell;
         },
         //创建表头单元格
         _createHeaderCell: function() {
-            var cell = new Element('th'); 
+            var cell = new Element('th');
             return cell;
-        },        
+        },
         // 遍历数据
         _traverseData: function(root, data, callback) {
-            if (!data) 
+            if (!data)
                 return;
             var rows;
-            if (Object.isArray(data)) 
+            if (Object.isArray(data))
                 rows = data;
             else
                 rows = $A(data);
-            
+
             //rows.each(function(row)
             //for (var i in rows)
             for (var i = 0; i < rows.length; ++i) { //for(var row in rows)
@@ -465,11 +466,11 @@
                 var tr = callback(root, i, row, false);
                 var cols = this.getColNames(!this.header.isNone() ? this.header : row);
                 for(var j = 0; j < cols.length; ++j) {
-                    var name = cols[j];                    
+                    var name = cols[j];
                     if (this.getColType(name) == C.KEY_TYPE_ID)
                         this.setCellData(row, name, this.getRowIndex(row)+1);
                     var col = this.getCellData(row, name);
-                    var td = callback(tr, name, col, true);                    
+                    var td = callback(tr, name, col, true);
                     //has children?
                     var children = this.getChildren(col);
                     if (children[C.KEY_DATA]) {//Todo: how to do?
@@ -479,22 +480,22 @@
                         td.update('');
                         var tb = new BrpcTable(td, config);
                         tb.load(children[C.KEY_DATA]);
-                    }                    
+                    }
                 }
             }
         },
         // 设置节点的属性（数据,风格）
-        _setCellProperty: function(node, name, text, normalClass) {            
+        _setCellProperty: function(node, name, text, normalClass) {
             var type = name ? this.getColType(name) : null;
             //add input
-            if (type && type != C.KEY_TYPE_ID) {  
+            if (type && type != C.KEY_TYPE_ID) {
                 var that = this;
                 // 创建控件
                 function createInput(type, text) {
                     var inputItem = null;
-                    if (type == 'select'){ 
+                    if (type == 'select'){
                         inputItem = new Element(type);
-                        
+
                         var selections = that.getColMeta(name);
                         var options = selections.split(',');
                         for (var i = 0; i < options.length; ++i) {
@@ -505,8 +506,8 @@
                         }
                         inputItem.setValue(text);
                     }
-                    else {                    
-                        inputItem = new Element('input'); 
+                    else {
+                        inputItem = new Element('input');
                         inputItem.type = type; //'text','button'
                         inputItem.value = text;
                     }
@@ -521,19 +522,19 @@
             }
             //update content
             else {
-                if (node && text) 
+                if (node && text)
                     node.update(text);
             }
             //store col name into metadata
             node.store(C.KEY_NAME, name);
             //add style
             if (node && normalClass) {
-                node.addClassName(normalClass); 
+                node.addClassName(normalClass);
             }
         }
     });
-    
-    // 根据行内的子元素获取行 (静态方法)    
+
+    // 根据行内的子元素获取行 (静态方法)
     BrpcTable.getRowByElement = function(ele) {
         while(ele && ele.tagName.toLowerCase() != "tr"){
             ele = ele.parentNode;
@@ -544,7 +545,7 @@
             return ele;
         return null;
     }
-    // 根据表格内的子元素获取表格 (静态方法)     
+    // 根据表格内的子元素获取表格 (静态方法)
     BrpcTable.getTableByElement = function(ele) {
         while(ele && ele.tagName.toLowerCase() != "table"){
             ele = ele.parentNode;
@@ -552,7 +553,7 @@
         if (ele.tagName.toLowerCase() == "table")
             return ele;
         return null;
-    } 
+    }
     // 删除当前行(元素所在的行) (静态方法)
     BrpcTable.deleteRow = function(element) {
         var tr = BrpcTable.getRowByElement(element);
@@ -565,7 +566,7 @@
                 return data.remove(row);
         }
         else
-            throw new Error("the given object is not contained by the table"); 
+            throw new Error("the given object is not contained by the table");
         return null;
     }
     // 获取当前行号(静态方法)
@@ -576,13 +577,13 @@
         for(var i= 0; i < trs.length; i++){
             var tr = trs[i];
             if(tr.children.length > 0 && tr.children[0].tagName.toLowerCase() == "td")
-                rowIndex++;            
+                rowIndex++;
             if(trObj == tr)
                 return rowIndex;
         }
         return -1;
     }
-    
+
     window.deleteThisRow = BrpcTable.deleteRow;
     window.BrpcTable = BrpcTable;
 })();
