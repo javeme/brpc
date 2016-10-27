@@ -71,7 +71,7 @@ std::vector<std::string> testStringList(cstring str)
 	String str2(str);
 	auto l = str2.splitWith(",");
 
-	for(int i=0; i<l.size(); i++)
+	for(unsigned int i=0; i<l.size(); i++)
 		list.push_back(l[i]);
 	return list;
 }
@@ -80,7 +80,7 @@ std::string testList2String(std::vector<int> list)
 {
 	String str;
 
-	for(int i=0; i<list.size(); i++)
+	for(unsigned int i=0; i<list.size(); i++)
 		str += String::format("%d,", list[i]);
 	return str;
 }
@@ -91,7 +91,7 @@ std::map<std::string, int> testString2Map(cstring str)
 
 	String str2(str);
 	auto list = str2.splitWith(",");
-	for(int i=0; i<list.size(); i++)
+	for(unsigned int i=0; i<list.size(); i++)
 	{
 		auto kv= list[i].splitWith(":");
 		if(kv.size() == 2)

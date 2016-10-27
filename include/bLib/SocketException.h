@@ -7,7 +7,7 @@
 namespace bluemei{
 
 
-class BLUEMEILIB_API SocketException:public Exception
+class BLUEMEILIB_API SocketException : public Exception
 {
 public:
 	SocketException(int nError=0);
@@ -15,10 +15,10 @@ public:
 	SocketException(int nError,const String& strError);
 	virtual ~SocketException();
 public:
-	virtual String name()const;
+	virtual String name() const;
 	virtual int getError();
 	virtual void printErrorMsg();
-	virtual String toString()const;
+	virtual String toString() const;
 protected:
 	int m_nError;
 };
@@ -26,11 +26,8 @@ protected:
 class BLUEMEILIB_API SocketClosedException : public SocketException
 {
 public:
-	SocketClosedException(const String& strError):SocketException(strError){}
-	virtual String name()const
-	{
-		return "SocketClosedException";
-	}
+	SocketClosedException(const String& strError) : SocketException(strError){}
+	virtual String name() const { return "SocketClosedException"; }
 };
 
 }//end of namespace bluemei

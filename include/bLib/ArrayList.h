@@ -20,9 +20,9 @@ public:
 
 	virtual ~ArrayList();
 public:
-	virtual T& get(unsigned int i)const;
-	virtual T& getLast()const;
-	virtual T& getFirst()const;
+	virtual T& get(unsigned int i) const;
+	virtual T& getLast() const;
+	virtual T& getFirst() const;
 
 	virtual unsigned int find(const T& v,unsigned int i=0);//查找元素位置
 
@@ -41,14 +41,14 @@ public:
 
 	virtual void copy(const ArrayList<T>& list, unsigned int to, unsigned int num);
 
-	const T& operator[](int pos)const { return get(pos); }
+	const T& operator[](int pos) const { return get(pos); }
 	T& operator[](int pos) { return get(pos); }
 
-	virtual String toString()const;
+	virtual String toString() const;
 protected:
 	virtual void assign(unsigned int capacity);
 	virtual void release();
-	virtual void checkBound(unsigned int current)const;
+	virtual void checkBound(unsigned int current) const;
 protected:
 	T *m_pData;
 	unsigned int m_nSize;
@@ -121,7 +121,7 @@ ArrayList<T>::~ArrayList()
 
 
 template< class T >
-T& ArrayList<T>::get(unsigned int i)const
+T& ArrayList<T>::get(unsigned int i) const
 {
 	checkBound(i);
 	return m_pData[i];
@@ -233,6 +233,7 @@ public:
 		}
 	}
 };
+
 //内存清零
 template< class T >
 class BLUEMEILIB_TEMPLATE resetMemory
@@ -349,7 +350,7 @@ void ArrayList<T>::resetCapacity( unsigned int capacity )
 }
 
 template< class T >
-void ArrayList<T>::checkBound(unsigned int current)const
+void ArrayList<T>::checkBound(unsigned int current) const
 {
 	if(current>=m_nSize || current>=m_nCapacity)
 	{

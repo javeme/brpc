@@ -14,9 +14,9 @@ public:
 	~ThreadException(void);
 
 public:
-	virtual String name()const;
-	virtual String getMessage()const;
-	virtual String toString()const;
+	virtual String name() const;
+	virtual String getMessage() const;
+	virtual String toString() const;
 private:
 	int m_nError;
 };

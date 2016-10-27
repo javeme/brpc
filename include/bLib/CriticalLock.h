@@ -28,7 +28,7 @@ public:
 	virtual void releaseLock();
 	void notify(){ return releaseLock();}
 	virtual long getWaitCount() const;
-	virtual long getMyThreadEnteredCount()const;
+	virtual long getMyThreadEnteredCount() const;
 };
 
 }//end of namespace bluemei

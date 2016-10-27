@@ -32,6 +32,10 @@ void AmqpRpcConnAcceptor::run()
 	}catch (Exception& e) {
 		BRpcUtil::debug("Failed to connect to MQ server.\n");
 		logger->error("Failed to connect to MQ server: " + e.toString());
+	}catch (std::exception& e){
+		logger->error("Failed to connect to MQ server: " + String(e.what()));
+	}catch (...){
+		logger->error("Failed to connect to MQ server: unknown error");
 	}
 }
 

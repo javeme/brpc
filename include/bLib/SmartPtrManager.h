@@ -206,7 +206,7 @@ public:
 	}
 private:
 	ObjectWrapper* attachWrapper(void* pTarget, DESTORY_PROC destory, size_t memSize=0);
-	bool existPtr(void* pTarget)const;
+	bool existPtr(void* pTarget) const;
 private:
 	static ObjectWrapper* nullWrapper;
 

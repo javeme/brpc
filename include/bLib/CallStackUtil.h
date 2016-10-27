@@ -5,6 +5,7 @@
 #include "Object.h"
 #include "StackWalker.h"
 #include "CriticalLock.h"
+#include "BString.h"
 
 namespace bluemei{
 
@@ -27,7 +28,6 @@ protected:
 protected:
 	static CallStackUtil staticCallStackUtil;
 };
-
 
 }//end of namespace bluemei
 #endif

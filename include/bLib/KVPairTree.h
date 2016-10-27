@@ -30,7 +30,7 @@ public:
 		m_singleValue.key=name;
 	}
 	//获取名称
-	Key name()const{
+	Key name() const{
 		return m_singleValue.key;
 	}
 
@@ -40,7 +40,7 @@ public:
 		m_singleValue.value=v;
 	}
 	//获取单值对的值
-	Value getValue()const{
+	Value getValue() const{
 		return m_singleValue.value;
 	}
 
@@ -54,7 +54,7 @@ public:
 	void setType(const Key& val) { m_type = val; }
 
 	//子项数目
-	int itemSize()const{
+	int itemSize() const{
 		return this->m_valueList.size();
 	}
 	//添加项
@@ -83,7 +83,7 @@ public:
 	}
 
 	//是否为叶子节点
-	bool isSingleValue()const{
+	bool isSingleValue() const{
 		return m_bSingleValue;
 	}
 
@@ -91,7 +91,7 @@ public:
 	bool contain(const Key& k) const;
 
 	//判断是否相等
-	bool operator==(const KVPairTree<Key,Value>& node)const{
+	bool operator==(const KVPairTree<Key,Value>& node) const{
 		if(m_bSingleValue==node.m_bSingleValue && m_singleValue==node.singleValue
 			&& m_valueList==node.valueList)
 			return true;
@@ -99,7 +99,7 @@ public:
 			return false;
 	}
 private:
-	void checkBound(unsigned int index)const{
+	void checkBound(unsigned int index) const{
 		if(index<0 || index>=m_valueList.size())
 			throwpe(OutOfBoundException(index,m_valueList.size()));
 	}

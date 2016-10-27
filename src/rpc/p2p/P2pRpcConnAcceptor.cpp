@@ -24,6 +24,10 @@ void P2pRpcConnAcceptor::run()
 	}catch (Exception& e) {
 		BRpcUtil::debug("Failed to start server.\n");
 		logger->error("Wait for connection error: " + e.toString());
+	}catch (std::exception& e){
+		logger->error("Wait for connection error: " + String(e.what()));
+	}catch (...){
+		logger->error("Wait for connection error: unknown error");
 	}
 }
 

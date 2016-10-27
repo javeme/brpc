@@ -15,14 +15,12 @@ public:
 		this->key=key;
 		this->value=value;
 	};
-	bool operator==(const Pair<K,V>& pair)const{
+	bool operator==(const Pair<K,V>& pair) const{
 		if(this->key==pair.key && this->value==pair.value)
 			return true;
 		else
 			return false;
 	}
 };
-
-
 
 }//end of namespace bluemei

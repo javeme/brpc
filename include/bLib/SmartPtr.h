@@ -252,7 +252,7 @@ template<typename S, typename T>
 SmartPtr<S> ptr_dynamic_cast(SmartPtr<T> ptr) { return ptr.dynamicCast<S>(); }
 
 
-template<> Value2String<SmartPtr<Object>>::operator String()const{
+template<> Value2String<SmartPtr<Object>>::operator String() const{
 	if(value==nullptr)
 		return "<null>";
 	return value->toString();

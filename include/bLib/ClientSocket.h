@@ -20,10 +20,10 @@ public:
 	void connect(cstring ip,unsigned short port);
 
 	void setPeerAddr(sockaddr_in& addr);
-	virtual String toString()const;
+	virtual String toString() const;
 
-	String getPeerHost()const;//若返回string&是否会出错?
-	int getPeerPort()const;
+	String getPeerHost() const;//若返回string&是否会出错?
+	int getPeerPort() const;
 
 	void setTimeout(int ms)/*超时,毫秒 */;
 	void setNoDelay(bool noDelay);

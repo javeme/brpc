@@ -1,7 +1,7 @@
 #pragma once
 #include "ClientSocket.h"
 //#include "IOCompletionPortImpl.h"
-#include "MemoryPool.cpp"
+#include "MemoryPool.h"
 
 
 namespace bluemei{
@@ -39,8 +39,8 @@ struct IOCPData
 
 	OVERLAPPED ol;				   // 重叠结构
 	//WSABUF dataBuffer;
-	char buf[IOCP_BUFFER_SIZE];    // 数据缓冲区
-	int operationType;             // 操作类型
+	char buf[IOCP_BUFFER_SIZE];	// 接收数据缓冲区
+	int operationType;			 // 操作类型
 	int para;					   // 其它参数
 
 	unsigned long lengthReceived;

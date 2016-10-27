@@ -38,9 +38,9 @@ public:
 	int addMoreThread(int num);
 public:
 	int remainTask();
-	int totalThread()const;
+	int totalThread() const;
 	int idleThread();
-	bool isStop()const;
+	bool isStop() const;
 };
 
 }//end of namespace bluemei

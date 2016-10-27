@@ -11,6 +11,8 @@ template<class T> class ArrayList;
 #define TRIM_RIGHT 2
 #define TRIM_BOTH 0
 
+#define STR_SMALL_SIZE 8
+
 /*
 * 字符串类
 * @author Javeme(整理)
@@ -20,33 +22,36 @@ template<class T> class ArrayList;
 class BLUEMEILIB_API String : public Object
 {
 public:
+	// constructors
 	String();
-	String(cstring src , int len=-1);
+	String(cstring src, unsigned int len=-1);
 	String(const std::string &src);
 	String(const String &src);
-	String(String&& src);//move
+	String(String&& src); // move
 	virtual ~String();
-	//操作符重载
+
+	// operators
 	String& operator= (cstring src);
 	String& operator= (const String &src);
-	String& operator= (String&& src);//move
-	bool operator== (const String &other)const{ return compare(other); }
-	bool operator!= (const String &other)const{ return !compare(other); }
-	bool operator<(cstring str)const;
-	bool operator== (cstring str)const{ return compare(str); };
-	bool operator!= (cstring str)const{ return !compare(str); };
-	//char * operator + (String &add2);
+	String& operator= (String&& src); // move
+	bool operator== (const String &other) const{ return compare(other); }
+	bool operator!= (const String &other) const{ return !compare(other); }
+	bool operator< (cstring str) const;
+	bool operator== (cstring str) const{ return compare(str); };
+	bool operator!= (cstring str) const{ return !compare(str); };
 	String operator+ (const String &add) const;
 	String& operator+= (const String &add);
-	//强制转换
+
+	// conversions
 	operator cstring() const;
 	operator std::string() const;
-	//成员函数
+
+	// member methods
 	virtual String& append(const String &add);
 	virtual char charAt(int index) const;
 	virtual unsigned int length() const;
 	virtual bool empty() const{ return length() == 0; }
-	virtual int find(const String& substr, unsigned int start = 0) const;
+	virtual int find(const String& substr, unsigned int start=0) const;
 	virtual int rfind(const String& substr, unsigned int fromIndex=-1) const;
 	virtual bool contain(const String& substr) const;
 	virtual bool startWith(const String& substr) const;
@@ -68,17 +73,32 @@ public:
 	virtual cstring c_str() const;
 	static String format(cstring frmt, ...);
 private:
-	//init memory
-	bool init(int len);
-	//check offset is out of bound
+	// union to store string data
+	typedef union {
+		// small string optimization: memory may be in stack
+		char buf[STR_SMALL_SIZE]; // and this permit aliasing
+		// memory in heap
+		char *ptr;
+	} str_buf_t;
+
+	// init memory
+	void init(unsigned int len);
+	// destroy memory
+	void destroy();
+	// resize memory
+	void resize(unsigned int len);
+	// update memory
+	void steal(String& src);
+	// get data ptr
+	char* data() const;
+	// check offset is out of bound
 	void checkBound(unsigned int offset) const;
 private:
-	char *m_charBuffer;
+	str_buf_t m_chars;
 	unsigned int m_nLength;
+	unsigned int m_nSize;
 };
 
-//BLUEMEILIB_API bool operator<(const String& str1,const String& str2);
-//BLUEMEILIB_API String operator+(cstring str1,const String& str2);
 
 #define APPEND2STRING(Type)\
 	BLUEMEILIB_API String operator+(const Type& str1,const String& str2);\
@@ -101,7 +121,7 @@ protected:
 	const Type& value;
 public:
 	Value2String(const Type& v):value(v){}
-	operator String()const{
+	operator String() const{
 		const bool convertible = is_convertible<Type, Object*>::value;
 		if(convertible)
 			return dynamic_caster<Type, convertible>::toObject(value)->toString();
@@ -109,37 +129,37 @@ public:
 	}
 };
 
-template<> Value2String<cstring>::operator String()const{ return String(value); }
+template<> Value2String<cstring>::operator String() const{ return String(value); }
 template class BLUEMEILIB_API Value2String<cstring>;
 
-template<> Value2String<String>::operator String()const{ return value; }
+template<> Value2String<String>::operator String() const{ return value; }
 template class BLUEMEILIB_API Value2String<String>;
 
-template<> Value2String<bool>::operator String()const{ return value?"true":"false"; }
+template<> Value2String<bool>::operator String() const{ return value?"true":"false"; }
 template class BLUEMEILIB_API Value2String<bool>;
 
-template<> Value2String<char>::operator String()const{ return String::format("%c",value); }
+template<> Value2String<char>::operator String() const{ return String::format("%c",value); }
 template class BLUEMEILIB_API Value2String<char>;
 
-template<> Value2String<short>::operator String()const{ return String::format("%d",value); }
+template<> Value2String<short>::operator String() const{ return String::format("%d",value); }
 template class BLUEMEILIB_API Value2String<short>;
 
-template<> Value2String<int>::operator String()const{ return String::format("%d",value); }
+template<> Value2String<int>::operator String() const{ return String::format("%d",value); }
 template class BLUEMEILIB_API Value2String<int>;
 
-template<> Value2String<long>::operator String()const{ return String::format("%ld",value); }
+template<> Value2String<long>::operator String() const{ return String::format("%ld",value); }
 template class BLUEMEILIB_API Value2String<long>;
 
-template<> Value2String<long long>::operator String()const{ return String::format("%ld",value); }
+template<> Value2String<long long>::operator String() const{ return String::format("%ld",value); }
 template class BLUEMEILIB_API Value2String<long long>;
 
-template<> Value2String<float>::operator String()const{ return String::format("%f",value); }
+template<> Value2String<float>::operator String() const{ return String::format("%f",value); }
 template class BLUEMEILIB_API Value2String<float>;
 
-template<> Value2String<double>::operator String()const{ return String::format("%lf",value); }
+template<> Value2String<double>::operator String() const{ return String::format("%lf",value); }
 template class BLUEMEILIB_API Value2String<double>;
 
-template<> Value2String<const FieldInfo*>::operator String()const{
+template<> Value2String<const FieldInfo*>::operator String() const{
 	return String::format("%s<type %s>", value->name(), value->typeInfo().name());
 }
 template class BLUEMEILIB_API Value2String<const FieldInfo*>;
@@ -152,12 +172,12 @@ protected:
 	const Type& value;
 public:
 	Value2String(const Type& v):value(v){}
-	operator String()const{
+	operator String() const{
 		return "unknown";
 	}
 };
 template <>
-Value2String<int>::operator String()const{ return String::format("%d",value); }
+Value2String<int>::operator String() const{ return String::format("%d",value); }
 
 template <class Type>
 String operator+(const Type& str1,const String& str2)

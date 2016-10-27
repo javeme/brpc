@@ -37,7 +37,7 @@ public:
 
 	virtual void clear();
 
-	virtual unsigned int remains()const;
+	virtual unsigned int remains() const;
 	virtual unsigned int size() const;
 	virtual const Type* array() const;
 protected:

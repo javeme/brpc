@@ -223,7 +223,7 @@ int run(int argc, char* argv[])
 
 int main(int argc, char* argv[])
 {
-	//_CrtSetBreakAlloc(6588);
+	//_CrtSetBreakAlloc(3011);
 
 	System::instance().init();
 	BRpcUtil::setBrpcDebug(true);

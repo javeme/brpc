@@ -270,9 +270,8 @@ void DataBuffer<Type>::clear()
 	memClear(m_buffer,m_nCapacity);
 }
 
-
 template<typename Type>
-unsigned int DataBuffer<Type>::remains()const
+unsigned int DataBuffer<Type>::remains() const
 {
 	if(m_nSize<=m_nReadOffset)
 		return 0;

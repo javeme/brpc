@@ -26,7 +26,7 @@ public:
 	void listen(int nPort);
 	void close();//¹Ø±Õ
 public:
-	operator socket_t()const;
+	operator socket_t() const;
 
 	static void destroy(ClientSocket*& pClientSocket);
 protected:

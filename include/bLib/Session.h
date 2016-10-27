@@ -19,6 +19,4 @@ protected:
 	};
 };
 
-
-
 }//end of namespace bluemei

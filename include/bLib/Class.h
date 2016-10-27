@@ -22,9 +22,9 @@ public:
 	Class(cstring name,CreateFun* pFun,const Class* superClass=nullptr);
 	virtual ~Class();
 public:
-	Object* createObject()const;
-	cstring getName()const;
-	bool operator==(const Class& other)const;
+	Object* createObject() const;
+	cstring getName() const;
+	bool operator==(const Class& other) const;
 	const Class* superClass() const {
 		return m_superClassRef;
 	}
@@ -35,8 +35,8 @@ public:
 	void setInitPara(Object* val) {
 		m_pInitPara = val;
 	}
-	bool isMyObject(const Object* pObj)const;//是否就是本类实例
-	bool isMyInstance(const Object* pObj)const;//是否属于本类实例
+	bool isMyObject(const Object* pObj) const;//是否就是本类实例
+	bool isMyInstance(const Object* pObj) const;//是否属于本类实例
 
 	bool putField(const FieldInfo& fld);
 	bool removeField(cstring fldName);
@@ -75,7 +75,7 @@ protected:
 		return cls;																			   \
 	}																						   \
 	static Object* createObject(){ return new Self();}										   \
-	virtual Object* clone()const{ return new Self(*this);}									   \
+	virtual Object* clone() const{ return new Self(*this);}									   \
 	virtual const Class* getThisClass() const { 											   \
 		const Class* cls=thisClass();														   \
 		if(!cls->isMyObject(this))															   \

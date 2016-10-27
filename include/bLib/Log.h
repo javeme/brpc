@@ -21,13 +21,13 @@ public:
 	{
 		LOG_UNKNOWN = 0,
 		LOG_FATAL = 1,   /// A fatal error. The application will most likely terminate. This is the highest priority.
-		LOG_CRITICAL,    /// A critical error. The application might not be able to continue running successfully.
-		LOG_ERROR,       /// An error. An operation did not complete successfully, but the application as a whole is not affected.
-		LOG_WARNING,     /// A warning. An operation completed with an unexpected result.
-		LOG_NOTICE,      /// A notice, which is an information with just a higher priority.
-		LOG_INFO,        /// An informational message, usually denoting the successful completion of an operation.
-		LOG_DEBUG,       /// A debugging message.
-		LOG_TRACE,       /// A tracing message. This is the lowest priority.
+		LOG_CRITICAL,	/// A critical error. The application might not be able to continue running successfully.
+		LOG_ERROR,	   /// An error. An operation did not complete successfully, but the application as a whole is not affected.
+		LOG_WARNING,	 /// A warning. An operation completed with an unexpected result.
+		LOG_NOTICE,	  /// A notice, which is an information with just a higher priority.
+		LOG_INFO,		/// An informational message, usually denoting the successful completion of an operation.
+		LOG_DEBUG,	   /// A debugging message.
+		LOG_TRACE,	   /// A tracing message. This is the lowest priority.
 		LOG_LEVEL_SIZE
 	};
 	typedef HashMap<String, String> LogCtx;

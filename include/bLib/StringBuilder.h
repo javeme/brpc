@@ -152,7 +152,7 @@ public:
 	 * @see #capacity()
 	 * @see #setLength(int)
 	 */
-	unsigned int length()const
+	unsigned int length() const
 	{
 		return avail;
 	}
@@ -165,7 +165,7 @@ public:
 	 * @see #length()
 	 * @see #ensureCapacity(int)
 	 */
-	unsigned int getCapacity()const
+	unsigned int getCapacity() const
 	{
 		return this->capacity;
 	}
@@ -207,7 +207,7 @@ public:
 	 * @throws IndexOutOfBoundsException if index is negative or &gt;= length()
 	 *				 (while unspecified, this is a StringIndexOutOfBoundsException)
 	 */
-	char_t charAt(unsigned int index)const
+	char_t charAt(unsigned int index) const
 	{
 		checkBound(index);
 		return buffer[index];
@@ -229,7 +229,7 @@ public:
 	 * @see System#arraycopy(Object, unsigned int, Object, unsigned int, unsigned int)
 	 */
 	void getChars(unsigned int srcOffset, unsigned int srcEnd,
-		char_t dst[], unsigned int dstOffset=0)const;
+		char_t dst[], unsigned int dstOffset=0) const;
 
 	/**
 	 * Set the character at the specified index.
@@ -469,7 +469,7 @@ public:
 	 * @throws StringIndexOutOfBoundsException if beginIndex is out of bounds
 	 * @see #substring(unsigned int, unsigned int)
 	 */
-	String substring(unsigned int beginIndex)const
+	String substring(unsigned int beginIndex) const
 	{
 		return substring(beginIndex, avail);
 	}
@@ -485,7 +485,7 @@ public:
 	 * @throws StringIndexOutOfBoundsException if beginIndex or endIndex is out
 	 *				 of bounds
 	 */
-	String substring(unsigned int beginIndex, unsigned int endIndex)const;
+	String substring(unsigned int beginIndex, unsigned int endIndex) const;
 
 	/**
 	 * Insert a subarray of the <code>char_t[]</code> argument into this
@@ -656,7 +656,7 @@ public:
 	 * @throws NullPointerException if str is null
 	 * @see #indexOf(String, unsigned int)
 	 */
-	int indexOf(const String& str)const
+	int indexOf(const String& str) const
 	{
 		return indexOf(str, 0);
 	}
@@ -672,7 +672,7 @@ public:
 	 * @return location (base 0) of the String, or -1 if not found
 	 * @throws NullPointerException if str is null
 	 */
-	int indexOf(const String& str, unsigned int fromIndex)const;
+	int indexOf(const String& str, unsigned int fromIndex) const;
 
 	/**
 	 * Finds the last instance of a substring in this StringBuilder.
@@ -682,7 +682,7 @@ public:
 	 * @throws NullPointerException if str is null
 	 * @see #lastIndexOf(String, unsigned int)
 	 */
-	int lastIndexOf(const String& str)const
+	int lastIndexOf(const String& str) const
 	{
 		return lastIndexOf(str, avail - str.length());
 	}
@@ -698,7 +698,7 @@ public:
 	 * @return location (base 0) of the String, or -1 if not found
 	 * @throws NullPointerException if str is null
 	 */
-	int lastIndexOf(const String& str, unsigned int fromIndex)const;
+	int lastIndexOf(const String& str, unsigned int fromIndex) const;
 
 	/**
 	 * Reverse the characters in this StringBuilder. The same sequence of
@@ -716,7 +716,7 @@ public:
 	 *
 	 * @return the characters in this StringBuilder
 	 */
-	String toString()const
+	String toString() const
 	{
 		return String(buffer,avail);
 	}
@@ -737,7 +737,7 @@ private:
 	 * @see #lastIndexOf(String, unsigned int)
 	 * @see String#regionMatches(boolean, unsigned int, String, unsigned int, unsigned int)
 	 */
-	bool regionMatches(unsigned int toffset, const String& other)const;
+	bool regionMatches(unsigned int toffset, const String& other) const;
 
 	//check offset is out of bound
 	void checkBound(unsigned int offset) const

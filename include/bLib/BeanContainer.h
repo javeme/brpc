@@ -27,7 +27,7 @@ public:
 	/*bool put(const char* key,Object* pBean){
 		return put(string(key),pBean);
 	}*/
-	virtual Object* get(const string& key)const;
+	virtual Object* get(const string& key) const;
 	virtual Object* remove(const string& key);
 	virtual bool remove(Object* pBean);
 
@@ -35,7 +35,7 @@ public:
 
 	virtual void clear(bool autoRelease=true);
 
-	virtual Object* operator[](const string& key)const;
+	virtual Object* operator[](const string& key) const;
 	virtual Object*& operator[](const string& key);
 protected:
 	ObjectMap m_beanMap;

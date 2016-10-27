@@ -20,7 +20,7 @@ public:
 	}
 	virtual ~Entry(){ delete next; }
 public:
-	virtual String toString()const{
+	virtual String toString() const{
 		return Value2String<K>(key)+"="+Value2String<V>(value);
 	}
 	virtual Entry<K,V>* dettachNext(){
@@ -41,10 +41,10 @@ class BLUEMEILIB_TEMPLATE IMap : public Object
 {
 public:
 	virtual bool put(const K& k,const V& v)=0;
-	virtual V* get(const K& key)const=0;
-	virtual bool get(const K& key,V& v)const=0;
+	virtual V* get(const K& key) const=0;
+	virtual bool get(const K& key,V& v) const=0;
 	virtual bool remove(const K& key,V& v)=0;
-	virtual bool contain(const K& key)const=0;
+	virtual bool contain(const K& key) const=0;
 	virtual unsigned int size() const=0;
 
 	virtual RefPointer<Iterator<Entry<K,V>>> iterator()=0;
@@ -74,7 +74,8 @@ class BLUEMEILIB_TEMPLATE HashMap : public IMap<K,V>
 	typedef Entry<K,V> HashEntry;
 	typedef HashMap<K,V> MyType;
 public:
-	HashMap(unsigned int capacity=16,float loadFactor=0.84f):m_nMaxSize(capacity),m_entryTable(m_nMaxSize,1)
+	HashMap(unsigned int capacity=16,float loadFactor=0.84f)
+		: m_nMaxSize(capacity),m_entryTable(m_nMaxSize,1)
 	{
 		m_nSize=0;
 		if(loadFactor<0.4)
@@ -143,7 +144,7 @@ public:
 		return *this;
 	}
 
-	const V& operator[](const K& key)const
+	const V& operator[](const K& key) const
 	{
 		V* v=get(key);
 		if (v == null)
@@ -163,14 +164,14 @@ public:
 	}
 public:
 	virtual bool put(const K& k,const V& v);
-	virtual V* get(const K& key)const;
-	virtual bool get(const K& k,V& v)const;
-	virtual V getDefault(const K& key,const V& defaultVal)const;
+	virtual V* get(const K& key) const;
+	virtual bool get(const K& k,V& v) const;
+	virtual V getDefault(const K& key,const V& defaultVal) const;
 	virtual bool remove(const K& key,V& v);
 	virtual void clear();
-	virtual bool contain(const K& key)const;
+	virtual bool contain(const K& key) const;
 	virtual unsigned int size() const;
-	virtual String toString()const;
+	virtual String toString() const;
 
 	virtual RefPointer<Iterator<Entry<K,V>>> iterator();
 protected:
@@ -178,7 +179,7 @@ protected:
 
 	void addEntry(const K& k,const V& v,unsigned int h, unsigned int index);
 	void resize(unsigned int newCapacity);
-	void transfer(ArrayList<HashEntry*>& newTable)const;
+	void transfer(ArrayList<HashEntry*>& newTable) const;
 protected:
 	void initListNull(ArrayList<HashEntry*>& list);
 protected:
@@ -248,7 +249,7 @@ void HashMap<K, V>::resize(unsigned int newCapacity)
 }
 
 template<class K,class V>
-void HashMap<K, V>::transfer(ArrayList<HashEntry*>& newTable)const
+void HashMap<K, V>::transfer(ArrayList<HashEntry*>& newTable) const
 {
 	const ArrayList<HashEntry*>& src=m_entryTable;
 	unsigned int newCapacity=newTable.size();
@@ -339,7 +340,8 @@ bool HashMap<K, V>::remove(const K& key,V& v)
 {
 	unsigned int index=indexFor(hashCode<K>(key),m_nMaxSize);
 	HashEntry* previous=nullptr;
-	for(HashEntry* entry=m_entryTable[index]; entry!=nullptr; previous=entry,entry=entry->next)
+	for(HashEntry* entry=m_entryTable[index]; entry!=nullptr;
+		previous=entry,entry=entry->next)
 	{
 		if(key==entry->key){
 			v=entry->value;
@@ -380,7 +382,8 @@ String HashMap<K, V>::toString() const
 	sb.append("{");
 	for(unsigned int i=0;i<m_entryTable.size();i++)
 	{
-		for(HashEntry* entry=m_entryTable[i]; entry!=nullptr; entry=entry->next)
+		for(HashEntry* entry=m_entryTable[i]; entry!=nullptr;
+			entry=entry->next)
 		{
 			sb.append(entry->toString()).append(",");
 		}
@@ -405,7 +408,7 @@ void HashMap<K, V>::releaseIterator(Iterator<Entry<K,V>>* itor)
 }
 
 template<class K,class V>
-bool HashMap<K, V>::contain(const K& key)const
+bool HashMap<K, V>::contain(const K& key) const
 {
 	return get(key)!=nullptr;
 }

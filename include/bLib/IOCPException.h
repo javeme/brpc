@@ -14,7 +14,7 @@ public:
 	IOCPException(int error):SocketException(error){}
 
 
-	virtual String toString()const{
+	virtual String toString() const{
 		return "IOCPException:"+m_strLastError+"("+SocketTools::getWinsockErrorMsg(m_nError)+")";
 	}
 };
@@ -24,11 +24,11 @@ class BLUEMEILIB_API IOCPForceCloseException : public IOCPException
 public:
 	IOCPForceCloseException(socket_t client,int error=0):sock(client),IOCPException("iocp client force close exception",error){};
 
-	virtual String toString()const{
+	virtual String toString() const{
 		return "IOCPForceCloseException:"+m_strLastError+"("+SocketTools::getWinsockErrorMsg(m_nError)+")";
 	}
 
-	socket_t getSocket()const{
+	socket_t getSocket() const{
 		return sock;
 	}
 protected:

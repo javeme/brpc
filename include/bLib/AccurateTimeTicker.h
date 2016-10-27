@@ -68,6 +68,4 @@ public:
 
 #endif
 
-
-
 }//end of namespace bluemei

@@ -63,7 +63,7 @@ hashCode<int>::hashCode(const int& i)
 	hash=i;
 }
 
-template<> Value2String<Object*>::operator String()const{
+template<> Value2String<Object*>::operator String() const{
 	if(value==nullptr)
 		return "<null>";
 	return value->toString();

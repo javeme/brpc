@@ -16,6 +16,8 @@ public:
 	static void handle(Exception& e);
 	static void setHandler(IErrorHandler* handler);
 protected:
+	static void handleErrorOfHandler(const Exception& e, const Exception&);
+protected:
 	static IErrorHandler* s_errorHandler;
 };
 

@@ -34,7 +34,8 @@ KVPairTree<Key,Value>& KVPairTree<Key,Value>::item(const Key& k)
 			return m_valueList[i];
 	}
 	String key=Value2String<Key>(k);
-	String s=String::format("KVPairTree item(): key '%s' not found",key.c_str());
+	String s=String::format("KVPairTree item(): key '%s' not found",
+		key.c_str());
 	throwpe(Exception(s));
 }
 
@@ -50,7 +51,7 @@ KVPairTree<Key,Value> KVPairTree<Key, Value>::removeItem(unsigned int index)
 template<typename Key,typename Value>
 KVPairTree<Key,Value> KVPairTree<Key, Value>::removeItem(const Key& k)
 {
-	for(auto iter = m_valueList.begin(); iter != m_valueList.end(); )
+	for(auto iter = m_valueList.begin(); iter != m_valueList.end();)
 	{
 		auto& item=*iter;
 		if(k==item.name())
@@ -63,7 +64,8 @@ KVPairTree<Key,Value> KVPairTree<Key, Value>::removeItem(const Key& k)
 			++iter;
 	}
 	String key=Value2String<Key>(k);
-	String s=String::format("KVPairTree removeItem(): key '%s' not found",key.c_str());
+	String s=String::format("KVPairTree removeItem(): key '%s' not found",
+		key.c_str());
 	throwpe(Exception(s));
 }
 

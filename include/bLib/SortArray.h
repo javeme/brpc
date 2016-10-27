@@ -7,7 +7,7 @@ template <class T>
 class Compareable
 {
 public:
-	virtual bool compare(T& elem1,T& elem2)const{
+	virtual bool compare(T& elem1,T& elem2) const{
 		return elem1<elem2;
 	}
 public:

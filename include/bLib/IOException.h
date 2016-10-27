@@ -11,7 +11,7 @@ class BLUEMEILIB_API IOException:public Exception
 public:
 	IOException();
 	IOException(String msg);
-	virtual String name()const;
+	virtual String name() const;
 };
 
 }//namespace bluemei

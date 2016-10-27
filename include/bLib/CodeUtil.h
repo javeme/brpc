@@ -109,10 +109,11 @@ void bluemei::CodeUtil::bigIntToBytes(byte *buf, Type value, bool bigEndian)
 }
 
 #define invert_int32(x)\
-	( (((x) & (0xffU << 24)) >> 24)\
-	| (((x) & (0xffU << 16)) >> 8)\
-	| (((x) & (0xffU << 8))  << 8)\
-	| (((x) & 0xffU)         << 24) )
+    ( (((x) & (0xffU << 24)) >> 24) \
+    | (((x) & (0xffU << 16)) >> 8)  \
+    | (((x) & (0xffU <<  8)) << 8)  \
+    | (((x) & (0xffU      )) << 24) \
+    )
 
 
 struct BLUEMEILIB_API CONVWSTR{

@@ -24,7 +24,7 @@ public:
 	FtpException(int type,const String& msg);
 	virtual ~FtpException(void);
 public:
-	virtual String name()const;
+	virtual String name() const;
 private:
 	int m_nErrorType;
 };

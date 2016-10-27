@@ -34,16 +34,16 @@ public:
 	static int month2Int(const char* month);
 public:
 	Date& operator=(long long ms);
-	long operator-(const Date& other)const;
-	Date operator+(long ms)const;
-	bool operator<(const Date& other)const;
+	long operator-(const Date& other) const;
+	Date operator+(long ms) const;
+	bool operator<(const Date& other) const;
 
 	virtual String toString() const;
-	String formatDate( const char* format )const;
-	DateInfo getDateInfo()const;
+	String formatDate( const char* format ) const;
+	DateInfo getDateInfo() const;
 
 	void setToCurrentTime();
-	long long getTotalMillSecond()const;
+	long long getTotalMillSecond() const;
 public:
 	void setYear(int i);
 	void setMonth(int i);

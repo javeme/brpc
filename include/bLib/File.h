@@ -37,7 +37,7 @@ public:
 	virtual size_t readAll(char buf[],size_t bufSize);
 	virtual int readInt();
 
-	virtual size_t currentPos()const;
+	virtual size_t currentPos() const;
 	virtual void setPos(size_t pos);
 	virtual void seek(long offset);//相对现在的位置进行偏移offset
 	virtual size_t getSize();

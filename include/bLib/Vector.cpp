@@ -50,7 +50,7 @@ bool Vector<T>::pop(T& value)
 }
 
 template <class T>
-bool Vector<T>::get(unsigned int pos,T& value)const
+bool Vector<T>::get(unsigned int pos,T& value) const
 {
 	if(pos<0||pos>=m_dataArray.size())
 		return false;
@@ -71,7 +71,7 @@ T& Vector<T>::operator[](unsigned int pos)
 }
 
 template <class T>
-const T& Vector<T>::operator[](unsigned int pos)const
+const T& Vector<T>::operator[](unsigned int pos) const
 {
 	if(pos<0||pos>=m_dataArray.size())
 	{

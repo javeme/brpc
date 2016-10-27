@@ -23,7 +23,7 @@ public:
 	#undef __super*/
 	static const Class* thisClass();
 	static Object* createObject();
-	virtual Object* clone()const;
+	virtual Object* clone() const;
 	virtual const Class* getThisClass() const;
 	virtual void setAttribute(cstring name, Object* val);
 	virtual Object* getAttribute(cstring name) const;
@@ -34,8 +34,7 @@ public:
 
 	virtual void init(Object *pObj);
 	virtual void release();
-	//virtual string toString();
-	virtual String toString()const;
+	virtual String toString() const;
 };
 
 

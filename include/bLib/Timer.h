@@ -15,7 +15,7 @@ public:
 	//void schedule(Class* pTaskClass,unsigned long delay,unsigned long period=0);//Runnable *pTask
 	virtual void schedule(Class& taskClass,unsigned long delay,unsigned long period=0);
 	virtual void schedule(Runnable* task,unsigned long delay,unsigned long period,bool autoDestroyTask);
-	virtual bool isRunning()const;
+	virtual bool isRunning() const;
 	virtual void cancel();
 	virtual void reset();//重置定时器, 线程不安全方法,请慎用!!!
 private:
