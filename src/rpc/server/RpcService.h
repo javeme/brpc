@@ -106,7 +106,7 @@ public:
 
 
 template<>
-struct TypeObjectHelper<RpcContext*, true>
+struct TypeWrapperHelper<RpcContext*, true>
 {
 	static bool deletePtr(RpcContext*& ptr)
 	{

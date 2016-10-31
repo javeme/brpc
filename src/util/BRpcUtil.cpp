@@ -18,8 +18,18 @@ static Object* map2object(ObjectMap* objMap, Object* obj, const Class* cls=null)
 	for(auto itor = objMap->begin(); itor != objMap->end(); ++itor)
 	{
 		cstring fldName = itor->first.c_str();
+		Object* fldValue = itor->second;
 		if(cls->hasField(fldName)) {
-			obj->setAttribute(fldName, itor->second);
+			// is the fldValue a ObjectMap?
+			ObjectMap* subMap = dynamic_cast<ObjectMap*>(fldValue);
+			if(subMap != null) {
+				Object* attr = obj->getAttribute(fldName);
+				if(attr != null) {
+					fldValue = map2object(subMap, attr);
+				}
+			}
+			// set value into `obj`
+			obj->setAttribute(fldName, fldValue);
 		}
 		else {
 			throwpe(BadCastException(String::format(
@@ -28,6 +38,13 @@ static Object* map2object(ObjectMap* objMap, Object* obj, const Class* cls=null)
 		}
 	}
 	return obj;
+}
+
+static bool isTypedObject(Object* obj)
+{
+	// return true if obj is one of:
+	//  [Number*, TString*, ObjectMap*, ObjectList*]
+	return dynamic_cast<TypeVisitable*>(obj) != null;
 }
 
 Object* MapObjectConverter::object2map(Object* obj)
@@ -39,7 +56,12 @@ Object* MapObjectConverter::object2map(Object* obj)
 	{
 		const FieldInfo* fldInfo = flds[i];
 		cstring name = fldInfo->name();
-		map->put(name, obj->getAttribute(name));
+		Object* val = obj->getAttribute(name);
+		// cast obj to map if it's not a Typed Object
+		if(!isTypedObject(val)) { // common object
+			val = MapObjectConverter::object2map(val);
+		}
+		map->put(name, val);
 	}
 	return map.detach();
 }

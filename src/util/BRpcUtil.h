@@ -12,11 +12,11 @@ namespace brpc{
 using namespace blib;
 using blib::byte;
 
-/*
-* 字符及其编码工具类
-* @author Javeme
-* @create 2014/7/5
-*/
+/**
+ * 字符及其编码工具类
+ * @author Javeme
+ * @create 2014/7/5
+ */
 class BRpcUtil : public blib::CodeUtil
 {
 public:
@@ -99,11 +99,11 @@ struct MapObjectHelper<Type, false>
 };
 
 
-/*
-* Object对象转换为指定类型(无法转换时抛出异常)
-* @author Javeme
-* @create 2014/7/4
-*/
+/**
+ * Object对象转换为指定类型(无法转换时抛出异常)
+ * @author Javeme
+ * @create 2014/7/4
+ */
 template <typename Type>
 inline Type valueOf(Object* obj)
 {
@@ -113,13 +113,13 @@ inline Type valueOf(Object* obj)
 		return brpc::Converter<Type>::valueOf(obj);
 	}catch(BadCastException&){
 		//Type is a sub-Object pointer?
-		const bool isSubObjectPtr = blib::is_convertible<Type, Object*>::value;
+		const bool IS_SUB_OBJ = blib::is_convertible<Type, Object*>::value;
 		bool needMap2Object = false;
-		if (isSubObjectPtr) {
+		if (IS_SUB_OBJ) {
 			needMap2Object = true;
 			try{
 				//parse a map to a object
-				return MapObjectHelper<Type, isSubObjectPtr>::map2object(obj);
+				return MapObjectHelper<Type, IS_SUB_OBJ>::map2object(obj);
 			}catch(NotMapException&){
 				needMap2Object = false;
 			}
@@ -146,26 +146,26 @@ template <typename Type>
 inline Object* objectToMap(Type obj)
 {
 	//Type is a sub-Object
-	const bool isSubObject = is_convertible<Type, Object*>::value;
-	return MapObjectHelper<Type, isSubObject>::object2map(obj);
+	const bool IS_SUB_OBJ = is_convertible<Type, Object*>::value;
+	return MapObjectHelper<Type, IS_SUB_OBJ>::object2map(obj);
 }
 
 template <typename Type>
 inline Type mapToObject(Object* map)
 {
 	//Type is a sub-Object
-	const bool isSubObject = is_convertible<Type, Object*>::value;
-	return MapObjectHelper<Type, isSubObject>::map2object(map);
+	const bool IS_SUB_OBJ = is_convertible<Type, Object*>::value;
+	return MapObjectHelper<Type, IS_SUB_OBJ>::map2object(map);
 }
 
 
 /////////////////////////////////////////////////////////////
-// TypeObjectHelper for TypeObject
+// TypeWrapperHelper for TypeWrapper
 template<typename Type, typename bool>
-struct TypeObjectHelper;
+struct TypeWrapperHelper;
 
 template<typename Type>
-struct TypeObjectHelper<Type, true>
+struct TypeWrapperHelper<Type, true>
 {
 	static bool deletePtr(Type& ptr)
 	{
@@ -182,7 +182,7 @@ struct TypeObjectHelper<Type, true>
 };
 
 template<typename Type>
-struct TypeObjectHelper<SmartPtr<Type>, true>
+struct TypeWrapperHelper<SmartPtr<Type>, true>
 {
 	static bool deletePtr(SmartPtr<Type>& ptr)
 	{
@@ -198,7 +198,7 @@ struct TypeObjectHelper<SmartPtr<Type>, true>
 };
 
 template<typename Type>
-struct TypeObjectHelper<Type, false>
+struct TypeWrapperHelper<Type, false>
 {
 	static bool deletePtr(Type& ptr)
 	{
@@ -210,25 +210,25 @@ struct TypeObjectHelper<Type, false>
 	}
 };
 
-// for auto release type ptr
+// class TypeWrapper for auto release type if it's a ptr
 template <typename Type>
-class TypeObject : public Object
+class TypeWrapper : public Object
 {
 public:
-	TypeObject(const Type& val=Type(), bool dontDelete=false)
+	TypeWrapper(const Type& val=Type(), bool dontDelete=false)
 		: m_val(val), m_dontDelete(dontDelete) {
 	}
 
-	~TypeObject() {
+	~TypeWrapper() {
 		if(!this->m_dontDelete)
 			deletePtr();
 	}
 
-	TypeObject(TypeObject&& other) {
+	TypeWrapper(TypeWrapper&& other) {
 		*this = std::move(other);
 	}
 
-	TypeObject& operator=(TypeObject&& other) {
+	TypeWrapper& operator=(TypeWrapper&& other) {
 		this->m_val = other.detach();
 		this->m_dontDelete = other.m_dontDelete;
 		return *this;
@@ -245,18 +245,18 @@ public:
 
 	Type detach() {
 		const bool IS_PTR = blib::is_convertible<Type, void*>::value;
-		return TypeObjectHelper<Type, IS_PTR>::setNull(m_val);
+		return TypeWrapperHelper<Type, IS_PTR>::setNull(m_val);
 	}
 
 protected:
 	void deletePtr() {
 		const bool IS_PTR = blib::is_convertible<Type, void*>::value;
-		(void)TypeObjectHelper<Type, IS_PTR>::deletePtr(m_val);
+		(void)TypeWrapperHelper<Type, IS_PTR>::deletePtr(m_val);
 	}
 
 private:
-	TypeObject(const TypeObject& other);
-	TypeObject& operator = (const TypeObject& other) const;
+	TypeWrapper(const TypeWrapper& other);
+	TypeWrapper& operator = (const TypeWrapper& other) const;
 
 protected:
 	Type m_val;
@@ -264,17 +264,20 @@ protected:
 };
 
 
-// arg object to type object
+// convert arg object to a value of Type
 template <typename Type>
-inline TypeObject<Type> methodArg(Object* obj)
+inline TypeWrapper<Type> methodArg(Object* obj)
 {
 	checkNullPtr(obj);
 	ObjectRef* ref = dynamic_cast<ObjectRef*>(obj);
 	if (ref)
 	{
 		Object* originalObj = ref->getObject();
-		//this should return originalObj;
-		return TypeObject<Type>(valueOf<Type>(originalObj), true);
+		// this should return the `originalObj`
+		const bool IS_OBJ_PTR = blib::is_convertible<Type, Object*>::value;
+		return TypeWrapper<Type>(
+			blib::dynamic_caster<Type, IS_OBJ_PTR>::toType(originalObj),
+			true);
 	}
 	else
 	{
@@ -284,24 +287,31 @@ inline TypeObject<Type> methodArg(Object* obj)
 
 
 /////////////////////////////////////////////////////////////
-// Match args
+// match args
 enum MatchLevel{ LEVEL_NOT_MATCHED, LEVEL_CAN_CONVERT, LEVEL_MATCHED };
+
+// does an object match the Type
 template <typename Type>
 inline MatchLevel matchLevel(Object* obj)
 {
 	try{
-		TypeObject<Type> val = methodArg<Type>(obj);
+		// whether `obj` can be cast to a value of `Type`
+		TypeWrapper<Type> val = methodArg<Type>(obj);
 
+		// if expected type is number, the `obj` may be not the same type
+		// like expected type is int but `obj` is a Double, and we should
+		// return LEVEL_CAN_CONVERT, return LEVEL_MATCHED if the same type
 		Number* number = dynamic_cast<Number*>(obj);
 		if (number != null)
 		{
-			SmartPtr<Object> objBack = toObject<Type>(val);
+			ScopePointer<Object> objBack = toObject<Type>(val);
 			Number* numberBack = dynamic_cast<Number*>((Object*)objBack);
 			if (numberBack != null && numberBack->isSameType(*number)){
 				return LEVEL_MATCHED;
 			}
 			return LEVEL_CAN_CONVERT;
 		}
+		// expected type is not number
 		else
 			return LEVEL_MATCHED;
 	}catch (Exception&)
