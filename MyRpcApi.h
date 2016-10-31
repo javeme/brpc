@@ -1,10 +1,9 @@
 #pragma once
-#include "stdafx.h"
-#include "RpcApi.h"
-#include "ErrorHandler.h"
-#include "RpcClient.h"
-#include "DefaultAuthChecker.h"
-#include "JsonSerializer.h"
+#include "blib/ErrorHandler.h"
+#include "src/rpc/client/RpcApi.h"
+#include "src/auth/DefaultAuthChecker.h"
+#include "src/serializer/json/JsonSerializer.h"
+
 using namespace brpc;
 
 class MySubRpcApi : public RpcApi

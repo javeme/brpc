@@ -1,11 +1,9 @@
 #pragma once
-#include "blib.h"
-#include "Condition.h"
-#include "Column.h"
+#include "orm/Condition.h"
+#include "orm/Column.h"
 
 
 namespace brpc{
-
 
 class SqlFunctions : public Object
 {
@@ -51,6 +49,5 @@ public:
 //function with filed ident, func: ident, col: ident.
 //TODO: parse the col type
 #define FUNCTION_C(func, col) FUNCTION_F(func, parent.col)
-
 
 }//end of namespace brpc

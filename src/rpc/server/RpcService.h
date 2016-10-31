@@ -1,7 +1,6 @@
 #pragma once
-#include "stdafx.h"
-#include "FuncDispatcher.h"
-#include "RpcContext.h"
+#include "src/fun/FuncDispatcher.h"
+#include "src/rpc/RpcContext.h"
 
 
 namespace brpc{

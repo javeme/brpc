@@ -1,6 +1,5 @@
 #pragma once
-#include "blib.h"
-
+#include "blib/RuntimeException.h"
 
 namespace brpc{
 
@@ -9,7 +8,7 @@ class ObjectList;
 class ObjectMap;
 class TypeIterator;
 
-class TypeVisiter : public bluemei::Object
+class TypeVisiter : public blib::Object
 {
 public:
 	TypeVisiter(){
@@ -60,4 +59,3 @@ public:
 ;*/
 
 }//end of namespace brpc
-

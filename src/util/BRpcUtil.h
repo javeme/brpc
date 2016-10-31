@@ -1,19 +1,23 @@
 #pragma once
 #include "stdafx.h"
-#include "blib.h"
-#include "ObjectRef.h"
-#include "TypeConverter.h"
-#include "RpcException.h"
-
+#include "blib/CodeUtil.h"
+#include "bLib/SmartPtr.h"
+#include "bLib/BeanContainer.h"
+#include "src/type/ObjectRef.h"
+#include "src/type/TypeConverter.h"
+#include "src/util/RpcException.h"
 
 namespace brpc{
+
+using namespace blib;
+using blib::byte;
 
 /*
 * 字符及其编码工具类
 * @author Javeme
 * @create 2014/7/5
 */
-class BRpcUtil : public bluemei::CodeUtil
+class BRpcUtil : public blib::CodeUtil
 {
 public:
 	static int debug(cstring frmt, ...)
@@ -109,7 +113,7 @@ inline Type valueOf(Object* obj)
 		return brpc::Converter<Type>::valueOf(obj);
 	}catch(BadCastException&){
 		//Type is a sub-Object pointer?
-		const bool isSubObjectPtr = bluemei::is_convertible<Type, Object*>::value;
+		const bool isSubObjectPtr = blib::is_convertible<Type, Object*>::value;
 		bool needMap2Object = false;
 		if (isSubObjectPtr) {
 			needMap2Object = true;
@@ -240,13 +244,13 @@ public:
 	}
 
 	Type detach() {
-		const bool IS_PTR = bluemei::is_convertible<Type, void*>::value;
+		const bool IS_PTR = blib::is_convertible<Type, void*>::value;
 		return TypeObjectHelper<Type, IS_PTR>::setNull(m_val);
 	}
 
 protected:
 	void deletePtr() {
-		const bool IS_PTR = bluemei::is_convertible<Type, void*>::value;
+		const bool IS_PTR = blib::is_convertible<Type, void*>::value;
 		(void)TypeObjectHelper<Type, IS_PTR>::deletePtr(m_val);
 	}
 

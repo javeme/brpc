@@ -1,6 +1,6 @@
 #pragma once
-#include "AuthException.h"
-#include "ObjectList.h"
+#include "src/auth/AuthException.h"
+#include "src/type/ObjectList.h"
 
 
 namespace brpc{

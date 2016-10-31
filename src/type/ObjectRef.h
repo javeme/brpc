@@ -1,8 +1,10 @@
 #pragma once
-#include "blib.h"
-
+#include "bLib/Class.h"
+#include "blib/BString.h"
 
 namespace brpc{
+
+using namespace blib;
 
 class VarContext : public Object
 {
@@ -18,7 +20,8 @@ public:
 class ObjectRef : public Object
 {
 public:
-	ObjectRef(cstring id, VarContext* context = null) : m_objId(id), m_context(context)
+	ObjectRef(cstring id, VarContext* context = null)
+		: m_objId(id), m_context(context)
 	{
 		;
 	}

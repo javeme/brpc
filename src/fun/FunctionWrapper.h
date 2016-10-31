@@ -1,6 +1,5 @@
 #pragma once
-#include "stdafx.h"
-#include "BRpcUtil.h"
+#include "src/util/BRpcUtil.h"
 
 
 namespace brpc{
@@ -447,6 +446,5 @@ private:                                                                      \
         }                                                                     \
     };                                                                        \
 };                                                                            \
-
 
 }//end of namespace brpc

@@ -1,7 +1,6 @@
 #pragma once
-#include "stdafx.h"
-#include "RpcConnection.h"
-#include "RpcSocket.h"
+#include "src/rpc/RpcConnection.h"
+#include "src/rpc/trans/RpcSocket.h"
 
 
 namespace brpc{
@@ -63,6 +62,5 @@ protected:
 protected:
 	RpcSocket* rpcSocket;
 };
-
 
 }//end of namespace brpc

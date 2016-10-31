@@ -1,10 +1,9 @@
 #pragma once
-#include "stdafx.h"
-#include "RpcClient.h"
-#include "RpcInvokerFacatory.h"
+#include "src/rpc/client/RpcClient.h"
+#include "src/rpc/RpcInvokerFacatory.h"
+
 
 namespace brpc{
-
 
 RpcClient::RpcClient(cstring url, RpcService* dispatcher, AuthChecker* authChecker,
 	cstring serializerType, unsigned int timeout)

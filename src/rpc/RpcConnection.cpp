@@ -1,11 +1,10 @@
 #pragma once
-#include "stdafx.h"
-#include "RpcConnection.h"
-#include "RpcSerializerFactory.h"
+#include "blib/ErrorHandler.h"
+#include "src/rpc/RpcConnection.h"
+#include "src/serializer/RpcSerializerFactory.h"
 
 
 namespace brpc{
-
 
 RpcConnection::RpcConnection(RpcService* dispatcher,
 	AuthChecker* authChecker, cstring serializerType)
@@ -362,6 +361,5 @@ void RpcConnection::setDataHookHandler(RpcDataHookHandler* handler)
 {
 	return;
 }
-
 
 }//end of namespace brpc

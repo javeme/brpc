@@ -1,10 +1,10 @@
 #pragma once
-#include "blib.h"
+#include "src/util/RpcException.h"
 
 
 namespace brpc{
 
-class HttpException : public Exception
+class HttpException : public blib::Exception
 {
 public:
 	HttpException(cstring msg);

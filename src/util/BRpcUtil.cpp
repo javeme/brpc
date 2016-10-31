@@ -1,9 +1,7 @@
 #pragma once
-#include "stdafx.h"
-#include "BRpcUtil.h"
-#include "ObjectMap.h"
-#include "RpcException.h"
-
+#include "src/util/BRpcUtil.h"
+#include "src/type/ObjectMap.h"
+#include "src/util/RpcException.h"
 
 namespace brpc{
 
@@ -20,14 +18,13 @@ static Object* map2object(ObjectMap* objMap, Object* obj, const Class* cls=null)
 	for(auto itor = objMap->begin(); itor != objMap->end(); ++itor)
 	{
 		cstring fldName = itor->first.c_str();
-		if(cls->hasField(fldName))
-		{
-			try {
-				obj->setAttribute(fldName, itor->second);
-			} catch (...) {
-				delete obj;
-				throw;
-			}
+		if(cls->hasField(fldName)) {
+			obj->setAttribute(fldName, itor->second);
+		}
+		else {
+			throwpe(BadCastException(String::format(
+				"class '%s' without field '%s'",
+				cls->getName(), fldName)));
 		}
 	}
 	return obj;
@@ -36,7 +33,7 @@ static Object* map2object(ObjectMap* objMap, Object* obj, const Class* cls=null)
 Object* MapObjectConverter::object2map(Object* obj)
 {
 	checkNullPtr(obj);
-	ObjectMap* map = new ObjectMap();
+	ScopePointer<ObjectMap> map = new ObjectMap();
 	auto flds = obj->getThisClass()->allFields();
 	for(unsigned int i = 0; i < flds.size(); i++)
 	{
@@ -44,7 +41,7 @@ Object* MapObjectConverter::object2map(Object* obj)
 		cstring name = fldInfo->name();
 		map->put(name, obj->getAttribute(name));
 	}
-	return map;
+	return map.detach();
 }
 
 //Object* MapObjectConverter::map2object(cstring cls, Object* map)
@@ -56,9 +53,10 @@ Object* MapObjectConverter::map2object(Object* map, const Class* cls)
 	if(!objMap)
 		throw NotMapException(map);
 
-	//Object* obj = ObjectFactory::instance().createObject(cls);
-	Object* obj = cls->createObject();
-	return brpc::map2object(objMap, obj, cls);
+	//Object* obj = ObjectFactory::instance().createObject(clsName);
+	ScopePointer<Object> obj = cls->createObject();
+	brpc::map2object(objMap, obj, cls);
+	return obj.detach();
 }
 
 Object* MapObjectConverter::map2object(Object* map, Object* obj)
@@ -71,4 +69,4 @@ Object* MapObjectConverter::map2object(Object* map, Object* obj)
 	return brpc::map2object(objMap, obj);
 }
 
-}
+}//end of namespace brpc

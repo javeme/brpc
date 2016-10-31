@@ -1,17 +1,16 @@
 #pragma once
-#include "stdafx.h"
-#include "JsonSerializer.h"
-#include "RpcSerializerFactory.h"
-#include "ObjectList.h"
-#include "ObjectMap.h"
+#include "src/serializer/json/JsonSerializer.h"
+#include "src/serializer/RpcSerializerFactory.h"
+#include "src/type/ObjectList.h"
+#include "src/type/ObjectMap.h"
 
-#include "jsoncpp/reader.h"
+#include "src/serializer/json/jsoncpp/reader.h"
 #include <sstream>
 #include <iosfwd>
 #include <iomanip>
 
-namespace brpc{
 
+namespace brpc{
 
 const cstring TAG_STR_BEGIN = "\"";
 const cstring TAG_STR_END   = "\"";
@@ -294,6 +293,5 @@ int RpcMethodJsonSerializer::read(RpcMethod& method, const InputStream& input,
 	}
 	return -1;
 }
-
 
 }//end of namespace brpc

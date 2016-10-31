@@ -1,12 +1,12 @@
 #pragma once
-#include "blib.h"
-#include "SqlExpression.h"
+#include "blib/ArrayList.h"
+#include "blib/StringBuilder.h"
+#include "orm/SqlExpression.h"
 
 
 namespace brpc{
 
 class ConditionWrapper;
-
 
 /* class Condition
  * Base class of all values/conditions like a number / operator > expression
@@ -476,7 +476,7 @@ public:
 }//end of namespace brpc
 
 
-namespace bluemei{
+namespace blib{
 
 using brpc::ConditionWrapper;
 using brpc::Condition;
@@ -499,4 +499,4 @@ struct dynamic_caster<ConditionWrapper, true>
 	}
 };
 
-}//end of namespace bluemei
+}//end of namespace blib

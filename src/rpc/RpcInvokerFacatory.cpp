@@ -1,13 +1,12 @@
 #pragma once
-#include "stdafx.h"
-#include "amqp/AmqpRpcConnection.h"
-#include "amqp/AmqpRpcConnAcceptor.h"
-#include "p2p/P2pRpcConnection.h"
-#include "p2p/P2pRpcConnAcceptor.h"
-#include "RpcInvokerFacatory.h"
+#include "src/rpc/amqp/AmqpRpcConnection.h"
+#include "src/rpc/amqp/AmqpRpcConnAcceptor.h"
+#include "src/rpc/p2p/P2pRpcConnection.h"
+#include "src/rpc/p2p/P2pRpcConnAcceptor.h"
+#include "src/rpc/RpcInvokerFacatory.h"
+
 
 namespace brpc{
-
 
 RpcInvoker* RpcInvokerFacatory::loadRpcInvoker(String url, RpcService* dispatcher,
 	AuthChecker* authChecker, cstring serializerType, unsigned int timeout)

@@ -1,8 +1,6 @@
 #pragma once
-#include "blib.h"
 #include "Query.h"
 #include "Column.h"
-
 
 namespace brpc{
 

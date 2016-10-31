@@ -8,8 +8,8 @@
 # include <string>
 # include <iostream>
 
-# include "ObjectList.h"
-# include "ObjectMap.h"
+# include "src/type/ObjectList.h"
+# include "src/type/ObjectMap.h"
 
 namespace Json {
 
@@ -144,17 +144,17 @@ namespace Json {
                                TokenType skipUntilToken );
       void skipUntilSpace();
 
-	  bluemei::Object &currentValue();
-	  template<typename Type>
-	  void currentValue(const Type& val){
-		  nodes_.push(brpc::toObject(val));
-	  }
-	  void currentValue(brpc::ObjectMap* val){
-		  nodes_.push(val);
-	  }
-	  void currentValue(brpc::ObjectList* val){
-		  nodes_.push(val);
-	  }
+      blib::Object &currentValue();
+      template<typename Type>
+      void currentValue(const Type& val){
+          nodes_.push(brpc::toObject(val));
+      }
+      void currentValue(brpc::ObjectMap* val){
+          nodes_.push(val);
+      }
+      void currentValue(brpc::ObjectList* val){
+          nodes_.push(val);
+      }
 
       Char getNextChar();
       void getLocationLineAndColumn( Location location,
@@ -166,7 +166,7 @@ namespace Json {
                        CommentPlacement placement );
       void skipCommentTokens( Token &token );
 
-      typedef std::stack<bluemei::Object *> Nodes;
+      typedef std::stack<blib::Object *> Nodes;
       Nodes nodes_;
       Errors errors_;
       std::string document_;
@@ -174,7 +174,7 @@ namespace Json {
       Location end_;
       Location current_;
       Location lastValueEnd_;
-      bluemei::Object *lastValue_;
+      blib::Object *lastValue_;
       std::string commentsBefore_;
       Features features_;
       bool collectComments_;
@@ -194,11 +194,11 @@ namespace Json {
     Result:
     \verbatim
     {
-	"dir": {
-	    "file": {
-		// The input stream JSON would be nested here.
-	    }
-	}
+    "dir": {
+        "file": {
+        // The input stream JSON would be nested here.
+        }
+    }
     }
     \endverbatim
     \throw std::exception on parse error.

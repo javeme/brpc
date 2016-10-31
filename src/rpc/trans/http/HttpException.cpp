@@ -1,6 +1,6 @@
 #pragma once
-#include "stdafx.h"
-#include "HttpException.h"
+#include "src/rpc/trans/http/HttpException.h"
+
 
 namespace brpc{
 

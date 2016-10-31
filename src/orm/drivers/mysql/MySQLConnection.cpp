@@ -1,18 +1,15 @@
 #pragma once
-#include "blib.h"
 #include <stdio.h>
-#include <winsock2.h>
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 #include "orm/drivers/mysql/MySQLConnection.h"
-#include "Number.h"
-#include "Url.h"
+#include "src/type/Number.h"
+#include "src/util/Url.h"
 
 
 namespace brpc{
-
 
 MySQLResultSet::MySQLResultSet()
 {
@@ -190,7 +187,8 @@ double MySQLResultSet::getDouble(cstring columnName)
 ByteArray MySQLResultSet::getBytes(uint32 columnIndex)
 {
 	checkIndex(columnIndex);
-	return ByteArray((byte*)m_result->current_row[columnIndex],getDataLength(columnIndex));
+	return ByteArray((byte*)m_result->current_row[columnIndex],
+		getDataLength(columnIndex));
 }
 
 ByteArray MySQLResultSet::getBytes(cstring columnName)
@@ -424,5 +422,22 @@ void MySQLConnection::executeSQLWithBytesArray(cstring sql,ByteArray bufs[],int 
 	}
 }
 
+
+MySQLConnection* MySQLDriver::connect(const char *host, const char *username,
+	const char *password, const char *db, unsigned int port/*=0*/)
+{
+	MYSQL *conn=NULL;
+	conn = mysql_init(NULL);
+	if (conn == NULL) {
+		cstring error=mysql_error(conn);
+		throw SQLException(error);
+	}
+	if ((mysql_real_connect(conn, host, username, password, db, port,
+		NULL, 0)) == NULL) {
+		cstring error=mysql_error(conn);
+		throw SQLException(error);
+	}
+	return new MySQLConnection(conn);
+}
 
 }//end of namespace brpc

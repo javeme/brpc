@@ -1,12 +1,12 @@
-#include "StdAfx.h"
-#include "RpcOnHttpSocket.h"
-#include "LambdaThread.h"
-#include "ServerSocket.h"
-#include "Exceptions.h"
-#include "CodeUtil.h"
-#include "HttpHeader.h"
-#include "HttpParser.h"
-#include "Log.h"
+#pragma once
+#include "blib/LambdaThread.h"
+#include "blib/ServerSocket.h"
+#include "blib/Exceptions.h"
+#include "blib/CodeUtil.h"
+#include "src/rpc/trans/http/RpcOnHttpSocket.h"
+#include "src/rpc/trans/http/HttpHeader.h"
+#include "src/rpc/trans/http/HttpParser.h"
+
 
 namespace brpc{
 

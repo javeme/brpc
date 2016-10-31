@@ -1,8 +1,8 @@
 #pragma once
-#include "stdafx.h"
-#include "HttpHeader.h"
-#include "CodeUtil.h"
-#include "HttpException.h"
+#include "blib/CodeUtil.h"
+#include "src/rpc/trans/http/HttpHeader.h"
+#include "src/rpc/trans/http/HttpException.h"
+
 
 namespace brpc{
 

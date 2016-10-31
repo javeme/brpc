@@ -1,8 +1,8 @@
 #pragma once
-#include "RpcSocket.h"
-#include "RpcOnTcpSocket.h"
-#include "JmtpHeader.h"
-#include "JmtpException.h"
+#include "src/rpc/trans/RpcSocket.h"
+#include "src/rpc/trans/RpcOnTcpSocket.h"
+#include "src/rpc/trans/jmtp/JmtpHeader.h"
+#include "src/rpc/trans/jmtp/JmtpException.h"
 
 
 namespace brpc{

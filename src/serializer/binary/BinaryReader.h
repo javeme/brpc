@@ -1,7 +1,8 @@
 #pragma once
-#include "ObjectMap.h"
-#include "ObjectList.h"
-#include "RpcSerializeable.h"
+#include "src/type/ObjectMap.h"
+#include "src/type/ObjectList.h"
+#include "src/serializer/RpcSerializeable.h"
+
 
 namespace brpc{
 

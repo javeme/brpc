@@ -1,10 +1,9 @@
 #pragma once
-#include "RpcSerializeable.h"
-#include "TypeVisitor.h"
+#include "src/serializer/RpcSerializeable.h"
+#include "src/type/TypeVisitor.h"
 
 
 namespace brpc{
-
 
 class Type2JsonSerializer : public TypeVisiter
 {
@@ -45,6 +44,5 @@ public:
 	virtual int read(RpcMethod& method, const InputStream& input,
 		const String& encoding="");
 };
-
 
 }//end of namespace brpc

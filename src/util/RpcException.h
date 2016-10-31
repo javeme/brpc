@@ -1,15 +1,16 @@
 #pragma once
-#include "blib.h"
-
+#include "blib/Exceptions.h"
 
 namespace brpc{
 
+using namespace blib;
+
 /*
-* Rpc“Ï≥£
+* Rpc Exception
 * @author Javeme
 * @create 2013/5/28
 */
-class RpcException : public bluemei::Exception
+class RpcException : public blib::Exception
 {
 public:
 	RpcException(void);

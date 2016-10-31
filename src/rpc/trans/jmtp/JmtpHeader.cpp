@@ -1,9 +1,8 @@
 #pragma once
-#include "stdafx.h"
-#include "JmtpHeader.h"
+#include "src/rpc/trans/jmtp/JmtpHeader.h"
+
 
 namespace brpc{
-
 
 struct ContentEncodingMapIniter
 {

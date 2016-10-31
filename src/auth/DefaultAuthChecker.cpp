@@ -1,7 +1,6 @@
 #pragma once
-#include "stdafx.h"
-#include "DefaultAuthChecker.h"
-#include "Date.h"
+#include "src/auth/DefaultAuthChecker.h"
+
 
 namespace brpc{
 
@@ -13,7 +12,6 @@ DefaultAuthChecker::DefaultAuthChecker(cstring name, cstring password)
 
 DefaultAuthChecker::~DefaultAuthChecker()
 {
-
 }
 
 bool DefaultAuthChecker::checkAuth(cstring authToken, cstring method)

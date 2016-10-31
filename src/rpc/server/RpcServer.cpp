@@ -1,10 +1,10 @@
 #pragma once
-#include "stdafx.h"
-#include "Log.h"
-#include "RpcServer.h"
-#include "RpcSocketFactory.h"
-#include "RpcConnection.h"
-#include "RpcInvokerFacatory.h"
+#include "blib/Log.h"
+#include "src/rpc/server/RpcServer.h"
+#include "src/rpc/trans/RpcSocketFactory.h"
+#include "src/rpc/RpcConnection.h"
+#include "src/rpc/RpcInvokerFacatory.h"
+
 
 namespace brpc{
 

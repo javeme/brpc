@@ -1,9 +1,8 @@
 #pragma once
-#include "stdafx.h"
-#include "BRpcUtil.h"
-#include "AnyFunction.h"
-#include "TemplateFunction.h"
-#include "FunctionDefine.h"
+#include "src/util/BRpcUtil.h"
+#include "src/fun/AnyFunction.h"
+#include "src/fun/TemplateFunction.h"
+#include "src/fun/FunctionDefine.h"
 
 
 namespace brpc{

@@ -1,8 +1,8 @@
-#include "stdafx.h"
-#include "AuthException.h"
+#pragma once
+#include "src/auth/AuthException.h"
+
 
 namespace brpc{
-
 
 /*****************************************************************/
 AuthException::AuthException(void):Exception("Authority Exception")
@@ -23,7 +23,7 @@ String AuthException::toString() const
 }
 
 
-
+/*****************************************************************/
 LogoutException::LogoutException(void):Exception("Logout Exception")
 {
 }
@@ -42,7 +42,7 @@ String LogoutException::toString() const
 }
 
 
-
+/*****************************************************************/
 LoginException::LoginException(void):Exception("Login Exception")
 {
 }

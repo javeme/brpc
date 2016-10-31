@@ -1,8 +1,8 @@
 #pragma once
-#include "stdafx.h"
 #include <algorithm>
-#include "FuncDispatcher.h"
-#include "RpcException.h"
+#include "src/fun/FuncDispatcher.h"
+#include "src/util/RpcException.h"
+
 
 namespace brpc{
 
@@ -327,6 +327,5 @@ bool FuncDispatcher::exclude(FuncDispatcher* dispatcher)
 	}
 	return false;
 }
-
 
 }//end of namespace brpc

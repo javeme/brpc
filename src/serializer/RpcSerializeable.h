@@ -1,8 +1,7 @@
 #pragma once
-#include "blib.h"
-#include "RpcMethod.h"
-#include "RpcException.h"
-
+#include "blib/ByteBuffer.h"
+#include "src/rpc/RpcMethod.h"
+#include "src/util/RpcException.h"
 
 namespace brpc{
 
@@ -64,6 +63,5 @@ inline String RpcSerializeable::convertEncoding(const String& src,
 
 	return src;
 }
-
 
 }//end of namespace brpc

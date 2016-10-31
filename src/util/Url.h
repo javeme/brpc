@@ -1,7 +1,9 @@
 #pragma once
-#include "blib.h"
+#include "blib/HashMap.h"
 
 namespace brpc{
+
+using namespace blib;
 
 class Url : public Object
 {

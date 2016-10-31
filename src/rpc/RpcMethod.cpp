@@ -1,4 +1,6 @@
-#include "RpcMethod.h"
+#pragma once
+#include "src/rpc/RpcMethod.h"
+
 
 namespace brpc{
 
@@ -155,4 +157,4 @@ void RpcMethod::readFrom(const ObjectMap& methodObjMap)
 	this->returnValue = methodObjMap.get("returnValue");
 }
 
-}
+}//end of namespace brpc

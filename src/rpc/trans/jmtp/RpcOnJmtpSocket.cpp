@@ -1,11 +1,11 @@
-#include "stdafx.h"
-#include "RpcOnJmtpSocket.h"
-#include "LambdaThread.h"
-#include "ServerSocket.h"
-#include "Exceptions.h"
-#include "CodeUtil.h"
-#include "JmtpHeader.h"
-#include "Log.h"
+#pragma once
+#include "blib/LambdaThread.h"
+#include "blib/ServerSocket.h"
+#include "blib/Exceptions.h"
+#include "blib/CodeUtil.h"
+#include "src/rpc/trans/jmtp/RpcOnJmtpSocket.h"
+#include "src/rpc/trans/jmtp/JmtpHeader.h"
+
 
 namespace brpc{
 

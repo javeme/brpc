@@ -1,10 +1,10 @@
 #pragma once
-#include "stdafx.h"
+#include "blib/CodeUtil.h"
 #include "XmlReader.h"
-#include "CodeUtil.h"
 
 namespace Xml{
 
+using namespace blib;
 using namespace brpc;
 
 const cstring TAG_BOOL= "bool";

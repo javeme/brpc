@@ -1,9 +1,10 @@
 #pragma once
-#include "stdafx.h"
-#include "src\rpc\server\RpcService.h"
+#include "blib/LambdaThread.h"
+#include "src/rpc/server/RpcService.h"
 #include <shellapi.h>
-#include "LambdaThread.h"
+
 using namespace brpc;
+
 
 class TestObject : public Object
 {

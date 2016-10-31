@@ -1,10 +1,10 @@
 #pragma once
-#include "blib.h"
+#include "src/util/RpcException.h"
 
 
 namespace brpc{
 
-class JmtpException : public Exception
+class JmtpException : public blib::Exception
 {
 public:
 	JmtpException(cstring msg);

@@ -1,15 +1,13 @@
 #pragma once
-#include "stdafx.h"
-#include "XmlSerializer.h"
-#include "RpcSerializerFactory.h"
-#include "ObjectList.h"
-#include "ObjectMap.h"
+#include "src/serializer/xml/XmlSerializer.h"
+#include "src/serializer/RpcSerializerFactory.h"
+#include "src/type/ObjectList.h"
+#include "src/type/ObjectMap.h"
 
 #include "parser/XmlReader.h"
 
 
 namespace brpc{
-
 
 const cstring TAG_INT_BEGIN = "<int>";
 const cstring TAG_INT_END   = "</int>";

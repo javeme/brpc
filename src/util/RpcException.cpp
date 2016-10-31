@@ -1,15 +1,14 @@
-#include "stdafx.h"
-#include "RpcException.h"
+#pragma once
+#include "src/util/RpcException.h"
 
 namespace brpc{
 
-
 /*****************************************************************/
-RpcException::RpcException(void) : bluemei::Exception("RPC Exception")
+RpcException::RpcException(void) : blib::Exception("RPC Exception")
 {
 }
 
-RpcException::RpcException(cstring str) : bluemei::Exception(str)
+RpcException::RpcException(cstring str) : blib::Exception(str)
 {
 }
 

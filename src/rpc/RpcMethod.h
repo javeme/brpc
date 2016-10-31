@@ -1,8 +1,7 @@
 #pragma once
-#include "stdafx.h"
-#include "blib.h"
-#include "ObjectList.h"
-#include "ObjectMap.h"
+#include "blib/Object.h"
+#include "src/type/ObjectList.h"
+#include "src/type/ObjectMap.h"
 
 
 namespace brpc{
@@ -78,6 +77,5 @@ public:
 private:
 	bool autoDelArgs;
 };
-
 
 }//end of namespace brpc

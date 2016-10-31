@@ -1,5 +1,4 @@
 #pragma once
-#include "stdafx.h"
 #include "reader.h"
 #include <utility>
 #include <cstdio>
@@ -174,22 +173,22 @@ Reader::parse( const char *beginDoc, const char *endDoc,
 
    bool successful = readValue();
 
-   bluemei::Object* result = null;
+   blib::Object* result = null;
    if(successful) {
-	   result = &currentValue();
-	   nodes_.pop();
+       result = &currentValue();
+       nodes_.pop();
    }
 
    Token token;
    skipCommentTokens( token );
    root = dynamic_cast<brpc::ObjectMap*>(result);
    if ( root && collectComments_  &&  !commentsBefore_.empty() )
-	   root->setComment( commentsBefore_, commentAfter );
+       root->setComment( commentsBefore_, commentAfter );
 
    if ( features_.strictRoot_ )
    {
       if ( !dynamic_cast<brpc::ObjectList*>(result)
-		  &&  !dynamic_cast<brpc::ObjectMap*>(result) )
+          &&  !dynamic_cast<brpc::ObjectMap*>(result) )
       {
          // Set error location to start of doc, ideally should be first token found in doc
          token.type_ = tokenError;
@@ -202,10 +201,10 @@ Reader::parse( const char *beginDoc, const char *endDoc,
    }
 
    if(!root){
-	   delete result;
-	   addError( "A valid JSON document must be an object value.",
-		   token );
-	   return false;
+       delete result;
+       addError( "A valid JSON document must be an object value.",
+           token );
+       return false;
    }
 
    return successful;
@@ -528,11 +527,11 @@ Reader::readObject( Token &tokenStart )
                                     tokenObjectEnd );
       }
       bool ok = readValue();
-	  if (ok)
-	  {
-		  obj->put(name, &currentValue());
-		  nodes_.pop();
-	  }
+      if (ok)
+      {
+          obj->put(name, &currentValue());
+          nodes_.pop();
+      }
       if ( !ok ) // error already set
          return recoverFromError( tokenObjectEnd );
 
@@ -540,7 +539,7 @@ Reader::readObject( Token &tokenStart )
       if ( !readToken( comma )
             ||  ( comma.type_ != tokenObjectEnd  &&
                   comma.type_ != tokenArraySeparator &&
-		  comma.type_ != tokenComment ) )
+          comma.type_ != tokenComment ) )
       {
          return addErrorAndRecover( "Missing ',' or '}' in object declaration",
                                     comma,
@@ -575,11 +574,11 @@ Reader::readArray( Token &tokenStart )
    while ( true )
    {
       bool ok = readValue();
-	  if (ok)
-	  {
-		  list->add(&currentValue());
-		  nodes_.pop();
-	  }
+      if (ok)
+      {
+          list->add(&currentValue());
+          nodes_.pop();
+      }
       if ( !ok ) // error already set
          return recoverFromError( tokenArrayEnd );
 
@@ -824,11 +823,11 @@ Reader::addErrorAndRecover( const std::string &message,
 }
 
 
-bluemei::Object &
+blib::Object &
 Reader::currentValue()
 {
    if (nodes_.empty())
-	   throw bluemei::OutOfBoundException(0, 0);
+       throw blib::OutOfBoundException(0, 0);
    return *(nodes_.top());
 }
 

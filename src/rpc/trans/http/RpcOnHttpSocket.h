@@ -1,8 +1,9 @@
 #pragma once
-#include "RpcSocket.h"
-#include "RpcOnTcpSocket.h"
-#include "HttpHeader.h"
-#include "HttpException.h"
+#include "src/rpc/trans/RpcSocket.h"
+#include "src/rpc/trans/RpcOnTcpSocket.h"
+#include "src/rpc/trans/http/HttpHeader.h"
+#include "src/rpc/trans/http/HttpException.h"
+
 
 namespace brpc{
 

@@ -1,5 +1,5 @@
 #pragma once
-#include "RpcSerializeable.h"
+#include "src/serializer/RpcSerializeable.h"
 
 namespace brpc{
 

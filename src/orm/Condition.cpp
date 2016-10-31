@@ -1,6 +1,6 @@
 #pragma once
-#include "stdafx.h"
-#include "Condition.h"
+#include "orm/Condition.h"
+
 
 namespace brpc{
 

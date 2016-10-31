@@ -1,9 +1,8 @@
 #pragma once
-#include "stdafx.h"
-#include "Session.h"
+#include "orm/Session.h"
+
 
 namespace brpc{
-
 
 /////////////////////////////////////////////////////////////////
 //Model
@@ -243,6 +242,5 @@ void Session::rollback()
 {
 	m_connection->excute(TransactionRollback());
 }
-
 
 }//end of namespace brpc

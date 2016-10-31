@@ -1,4 +1,3 @@
-#include "StdAfx.h"
 // Markup.cpp: implementation of the CMarkup class.
 //
 // Markup Release 11.5

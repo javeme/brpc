@@ -1,7 +1,7 @@
-#include "StdAfx.h"
-#include "RpcSocket.h"
-#include "Date.h"
-#include "BRpcUtil.h"
+#pragma once
+#include "src/rpc/trans/RpcSocket.h"
+#include "src/util/BRpcUtil.h"
+
 
 namespace brpc{
 

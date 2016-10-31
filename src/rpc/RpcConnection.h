@@ -1,12 +1,11 @@
 #pragma once
-#include "stdafx.h"
-#include "RpcInvoker.h"
-#include "RpcSerializeable.h"
-#include "FuncDispatcher.h"
-#include "AuthChecker.h"
-#include "RpcService.h"
-#include "DataPackage.h"
-#include "RpcDataHookHandler.h"
+#include "src/rpc/RpcInvoker.h"
+#include "src/serializer/RpcSerializeable.h"
+#include "src/fun/FuncDispatcher.h"
+#include "src/auth/AuthChecker.h"
+#include "src/rpc/server/RpcService.h"
+#include "src/rpc/trans/DataPackage.h"
+#include "src/rpc/trans/RpcDataHookHandler.h"
 
 
 namespace brpc{

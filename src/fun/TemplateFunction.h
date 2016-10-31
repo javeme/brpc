@@ -1,7 +1,6 @@
 #pragma once
-#include "stdafx.h"
-#include "AnyFunction.h"
-#include "FunctionWrapper.h"
+#include "src/fun/AnyFunction.h"
+#include "src/fun/FunctionWrapper.h"
 
 
 namespace brpc{
@@ -122,6 +121,5 @@ public:
 private:
 	FunctionWrapper<Func> m_fw;
 };
-
 
 }//end of namespace brpc

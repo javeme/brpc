@@ -1,7 +1,6 @@
 #pragma once
-#include "stdafx.h"
-#include "PollDataThreadPool.h"
-#include "RpcOnTcpSocket.h"
+#include "src/rpc/trans/PollDataThreadPool.h"
+#include "src/rpc/trans/RpcOnTcpSocket.h"
 
 
 namespace brpc{

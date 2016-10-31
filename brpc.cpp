@@ -2,23 +2,19 @@
 //
 
 #include "stdafx.h"
+#include "blib/blib.h"
 #include "CheckMemLeaks.h"
 CHECK_MEMORY_LEAKS
 
-#include "RpcServer.h"
-#include "RpcClient.h"
-#include "DefaultAuthChecker.h"
-#include "JsonSerializer.h"
 #include "MyRpcService.h"
-#include "ObjectMap.h"
-#include "ObjectFactory.h"
-
 #include "MyRpcApi.h"
+#include "src/type/ObjectMap.h"
+#include "src/rpc/server/RpcServer.h"
 
 
 using namespace brpc;
 
-class LogErrorHandler : public bluemei::IErrorHandler
+class LogErrorHandler : public blib::IErrorHandler
 {
 public:
 	virtual bool handle(Exception& e)
@@ -152,6 +148,7 @@ int run(int argc, char* argv[])
 		String arg1 = argv[1];
 		if (arg1 == "server")
 		{
+			printf("brpc server starting...\n");
 			logger->info("brpc server starting...");
 
 			MyRpcService dispatcher("nova");

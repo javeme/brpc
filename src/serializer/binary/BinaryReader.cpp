@@ -1,7 +1,8 @@
 #pragma once
-#include "stdafx.h"
-#include "BinaryReader.h"
-#include "CodeUtil.h"
+
+#include "blib/CodeUtil.h"
+#include "src/serializer/binary/BinaryReader.h"
+
 
 namespace brpc{
 
@@ -14,7 +15,6 @@ BinaryReader::BinaryReader():inputStream(null)
 BinaryReader::~BinaryReader()
 {
 }
-
 
 bool BinaryReader::readBool(Boolean& bul)
 {

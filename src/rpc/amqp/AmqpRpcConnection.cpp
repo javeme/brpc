@@ -1,9 +1,8 @@
 #pragma once
-#include "stdafx.h"
-#include "PublisherConsumer.h"
-#include "IOCPLogHandler.h"
-#include "Log.h"
-#include "AmqpRpcConnection.h"
+// NOTE: make sure include amqp header before others(due to macro max/min)
+#include "bamqp/PublisherConsumer.h"
+#include "src/rpc/amqp/IOCPLogHandler.h"
+#include "src/rpc/amqp/AmqpRpcConnection.h"
 
 
 namespace brpc{

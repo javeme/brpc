@@ -1,7 +1,6 @@
 #pragma once
-#include "stdafx.h"
-#include "ObjectList.h"
-#include "RpcInvoker.h"
+#include "src/type/ObjectList.h"
+#include "src/rpc/RpcInvoker.h"
 
 
 namespace brpc{
@@ -21,6 +20,5 @@ public:
 protected:
 	RpcInvoker& invoker;
 };
-
 
 }//end of namespace brpc

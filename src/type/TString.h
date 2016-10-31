@@ -1,7 +1,6 @@
 #pragma once
-#include "blib.h"
-#include "TypeVisitor.h"
-
+#include "blib/BString.h"
+#include "src/type/TypeVisitor.h"
 
 namespace brpc{
 

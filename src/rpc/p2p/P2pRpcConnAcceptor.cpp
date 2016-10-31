@@ -1,10 +1,8 @@
 #pragma once
-#include "stdafx.h"
-#include "Log.h"
-#include "P2pRpcConnAcceptor.h"
-#include "P2pRpcConnection.h"
-#include "ServerSocket.h"
-#include "RpcSocketFactory.h"
+#include "blib/ServerSocket.h"
+#include "src/rpc/p2p/P2pRpcConnAcceptor.h"
+#include "src/rpc/p2p/P2pRpcConnection.h"
+#include "src/rpc/trans/RpcSocketFactory.h"
 
 
 namespace brpc{

@@ -1,9 +1,7 @@
 #pragma once
-#include "stdafx.h"
-#include "RpcSerializerFactory.h"
+#include "src/serializer/RpcSerializerFactory.h"
 
 namespace brpc{
-
 
 RpcSerializerFactory::RpcSerializerFactory()
 {
@@ -95,6 +93,5 @@ cstring RpcSerializerFactory::contentType2str(BrpcContentType type)
 {
 	return contentTypeMapIniter.contentType2str(type);
 }
-
 
 }//end of namespace brpc

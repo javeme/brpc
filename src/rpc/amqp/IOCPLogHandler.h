@@ -1,8 +1,9 @@
 #pragma once
-#include "IOCPHandler.h"
-#include "IOCPChannelFactory.h"
-#include "BRpcUtil.h"
-#include "Log.h"
+#include "blib/Log.h"
+#include "blib/ErrorHandler.h"
+#include "bamqp/IOCPHandler.h"
+#include "bamqp/IOCPChannelFactory.h"
+#include "src/util/BRpcUtil.h"
 
 
 namespace AMQP{
@@ -10,7 +11,6 @@ namespace AMQP{
 class IOCPConnection;
 using brpc::BRpcUtil;
 using brpc::Log;
-
 
 ///////////////////////////////////////////////////////////////////////////
 //IOCPLogHandler

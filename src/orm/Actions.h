@@ -1,11 +1,10 @@
 #pragma once
-#include "blib.h"
-#include "Condition.h"
-#include "Column.h"
+#include "blib/BString.h"
+#include "orm/Condition.h"
+#include "orm/Column.h"
 
 
 namespace brpc{
-
 
 class Action : public SQLExpression
 {

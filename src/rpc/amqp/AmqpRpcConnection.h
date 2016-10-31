@@ -1,8 +1,8 @@
 #pragma once
-#include "stdafx.h"
-#include "RpcConnection.h"
-#include "RpcSocket.h"
-#include "ChannelFactory.h"
+#include "blib/Date.h"
+#include "bamqp/ChannelFactory.h"
+#include "src/rpc/RpcConnection.h"
+#include "src/rpc/trans/RpcSocket.h"
 
 namespace AMQP{ class Message; }
 
@@ -82,6 +82,5 @@ private:
 	AMQP::ChannelFactory* channelFactory;
 	bool deleteChannelFactory;
 };
-
 
 }//end of namespace brpc

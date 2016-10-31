@@ -1,7 +1,7 @@
 #pragma once
-#include "stdafx.h"
-#include "BRpcUtil.h"
-#include "TypeVisitor.h"
+#include "blib/Vector.cpp"
+#include "src/util/BRpcUtil.h"
+#include "src/type/TypeVisitor.h"
 
 
 namespace brpc{
@@ -58,6 +58,10 @@ protected:
 	bool autoDelete;
 };
 
+}//end of namespace brpc
+
+
+namespace blib{
 
 /*函数模板无法偏特化!!!
 template <typename T>
@@ -79,6 +83,8 @@ inline std::vector<T> valueOf<std::vector<T>>(Object* obj)
 	return vec;
 }*/
 
+using brpc::ObjectList;
+
 template <typename T>
 struct Converter<std::vector<T>>
 {
@@ -98,14 +104,13 @@ struct Converter<std::vector<T>>
 
 	static inline Object* toObject(const std::vector<T>& val)
 	{
-		ObjectList* list = new ObjectList();
+		ScopePointer<ObjectList> list = new ObjectList();
 		for (unsigned int i=0; i<val.size(); i++)
 		{
 			list->addValue(val[i]);
 		}
-		return list;
+		return list.detach();
 	}
 };
 
-
-}//end of namespace brpc
+}//end of namespace blib

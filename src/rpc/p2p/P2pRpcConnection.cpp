@@ -1,9 +1,8 @@
 #pragma once
-#include "stdafx.h"
-#include "Log.h"
-#include "P2pRpcConnection.h"
-#include "ErrorHandler.h"
-#include "RpcSocketFactory.h"
+#include "blib/ErrorHandler.h"
+#include "src/rpc/p2p/P2pRpcConnection.h"
+#include "src/rpc/trans/RpcSocketFactory.h"
+
 
 namespace brpc{
 

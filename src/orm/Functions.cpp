@@ -1,9 +1,8 @@
 #pragma once
-#include "stdafx.h"
-#include "Functions.h"
+#include "orm/Functions.h"
+
 
 namespace brpc{
-
 
 #define funcWithColume(func, col) \
 	new ValueCondition(String::format("%s(%s)", func, col))

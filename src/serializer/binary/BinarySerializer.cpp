@@ -1,10 +1,9 @@
 #pragma once
-#include "stdafx.h"
-#include "BinarySerializer.h"
-#include "RpcSerializerFactory.h"
-#include "ObjectList.h"
-#include "ObjectMap.h"
-#include "BinaryReader.h"
+#include "src/serializer/binary/BinarySerializer.h"
+#include "src/serializer/binary/BinaryReader.h"
+#include "src/serializer/RpcSerializerFactory.h"
+#include "src/type/ObjectList.h"
+#include "src/type/ObjectMap.h"
 
 
 namespace brpc{
@@ -189,6 +188,5 @@ int RpcMethodBinarySerializer::read(RpcMethod& method, const InputStream& input,
 	}
 	return -1;
 }
-
 
 }//end of namespace brpc

@@ -1,7 +1,7 @@
 #pragma once
-#include "stdafx.h"
-#include "HttpParser.h"
-#include "HttpException.h"
+#include "src/rpc/trans/http/HttpParser.h"
+#include "src/rpc/trans/http/HttpException.h"
+
 
 namespace brpc{
 

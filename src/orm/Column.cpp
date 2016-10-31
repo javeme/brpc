@@ -1,6 +1,6 @@
 #pragma once
-#include "stdafx.h"
-#include "Column.h"
+#include "orm/Column.h"
+
 
 namespace brpc{
 

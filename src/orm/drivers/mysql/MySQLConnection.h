@@ -1,11 +1,11 @@
 #pragma once
+#include "blib/ClientSocket.h"
 #include "orm/drivers/mysql/include/mysql.h"
-#include "SqlExpression.h"
-#include "Driver.h"
+#include "orm/SqlExpression.h"
+#include "orm/Driver.h"
 
 
 namespace brpc{
-
 
 //½á¹û¼¯
 class MySQLResultSet : public ResultSet
@@ -106,21 +106,7 @@ public:
 		const char *username,
 		const char *password,
 		const char *db,
-		unsigned int port=0)
-	{
-		MYSQL *conn=NULL;
-		conn = mysql_init(NULL);
-		if (conn == NULL) {
-			cstring error=mysql_error(conn);
-			throw SQLException(error);
-		}
-		if ((mysql_real_connect(conn, host, username, password, db, port, NULL, 0)) == NULL) {
-			cstring error=mysql_error(conn);
-			throw SQLException(error);
-		}
-		return new MySQLConnection(conn);
-	}
+		unsigned int port=0);
 };
-
 
 }//end of namespace brpc

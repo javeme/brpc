@@ -1,7 +1,6 @@
 #pragma once
-#include "stdafx.h"
-#include "BRpcUtil.h"
-#include "TypeVisitor.h"
+#include "src/util/BRpcUtil.h"
+#include "src/type/TypeVisitor.h"
 
 
 namespace brpc{
@@ -103,6 +102,12 @@ protected:
 	String classType;
 };
 
+}//end of namespace brpc
+
+
+namespace blib{
+
+using brpc::ObjectMap;
 
 template <typename T>
 struct Converter<std::map<std::string,T>>
@@ -123,15 +128,15 @@ struct Converter<std::map<std::string,T>>
 
 	static inline Object* toObject(const std::map<std::string,T>& val)
 	{
-		ObjectMap* objMap = new ObjectMap();
+		ScopePointer<ObjectMap> objMap = new ObjectMap();
 		for (auto itor = val.begin(); itor != val.end(); ++itor)
 		{
 			objMap->putValue(itor->first.c_str(), itor->second);
 		}
-		return objMap;
+		return objMap.detach();
 	}
 };
 
 //map << key1: value1 << key2: value2;
 
-}//end of namespace brpc
+}//end of namespace blib

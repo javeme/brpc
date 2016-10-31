@@ -1,11 +1,10 @@
 #pragma once
-#include "stdafx.h"
-#include "RpcSocketFactory.h"
-#include "RpcOnJmtpSocket.h"
-#include "RpcOnHttpSocket.h"
+#include "src/rpc/trans/RpcSocketFactory.h"
+#include "src/rpc/trans/jmtp/RpcOnJmtpSocket.h"
+#include "src/rpc/trans/http/RpcOnHttpSocket.h"
+
 
 namespace brpc{
-
 
 RpcSocket* RpcSocketFactory::getRpcSocket(const String& name)
 {

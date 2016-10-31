@@ -1,12 +1,11 @@
 #pragma once
-#include "stdafx.h"
-#include "JmtpException.h"
+#include "src/rpc/trans/jmtp/JmtpException.h"
+
 
 namespace brpc{
 
 JmtpException::JmtpException(cstring msg) : Exception(msg)
 {
-	;
 }
 
 String JmtpException::name() const

@@ -1,7 +1,6 @@
 #pragma once
-#include "stdafx.h"
-#include "FunctionWrapper.h"
-#include "mfor.h"
+#include "src/fun/FunctionWrapper.h"
+#include "src/fun/mfor.h"
 
 
 namespace brpc{
@@ -44,6 +43,9 @@ FUN_AND_PFUN_OF_ARGS(
 #define _TYPENAME_ARGS1 ,typename Arg1
 #define _TYPENAME_ARGS(n, m)  m, typename JOIN(Arg, n)
 
+// NOTE: FORA3(_ARGS) => _ARGS(3, FORA2(_ARGS)) => FORA2(_ARGS), Arg3
+//    => _ARGS(2, FORA1(_ARGS)), Arg3 => FORA1(_ARGS), Arg2, Arg3
+//    => _ARGS1, Arg2, Arg3 => Arg1, Arg2, Arg3
 #define _ARGS1 Arg1
 #define _ARGS(n, m)  m, JOIN(Arg, n)
 

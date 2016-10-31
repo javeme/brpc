@@ -1,6 +1,5 @@
 #pragma once
-#include "blib.h"
-#include "TypeConverter.h"
+#include "src/type/TypeConverter.h"
 
 
 namespace brpc{
@@ -71,7 +70,7 @@ struct typename_getter<Type, true>
 }//end of namespace brpc
 
 
-namespace bluemei{
+namespace blib{
 
 //ÀàÐÍ×ª»»Æ÷(Object* <==> varchar<int>)
 template <>
@@ -105,4 +104,4 @@ struct Converter<brpc::varchar<int>>
 
 //template<> Value2String<brpc::varchar<32>>::operator String() const{ return (cstring)value; }
 
-}//end of namespace bluemei
+}//end of namespace blib

@@ -1,9 +1,11 @@
 #pragma once
-#include "blib.h"
+#include "blib/CodeUtil.h"
 
 
 namespace brpc{
 
+using namespace blib;
+using blib::byte;
 
 typedef struct ByteArray{
 	byte* data;
@@ -84,6 +86,5 @@ public:
 	virtual ResultSet* executeQuery(cstring sql, size_t len=0) = 0;
 	virtual int executeUpdate(cstring sql, size_t len=0) = 0;
 } DatabaseDriverConnection;
-
 
 }//end of namespace brpc

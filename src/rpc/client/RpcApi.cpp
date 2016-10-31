@@ -1,9 +1,8 @@
 #pragma once
-#include "stdafx.h"
-#include "RpcApi.h"
+#include "src/rpc/client/RpcApi.h"
+
 
 namespace brpc{
-
 
 RpcApi::RpcApi(cstring name, RpcApi* parent)
 	: serviceName(name), rpcClient(null), parent(parent)

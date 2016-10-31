@@ -1,7 +1,8 @@
 #pragma once
-#include "AuthException.h"
-#include "AuthChecker.h"
-#include "HashMap.h"
+#include "blib/HashMap.h"
+#include "src/auth/AuthException.h"
+#include "src/auth/AuthChecker.h"
+
 
 namespace brpc{
 

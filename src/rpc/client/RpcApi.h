@@ -1,7 +1,6 @@
 #pragma once
-#include "stdafx.h"
-#include "RpcClient.h"
-#include "RpcService.h"
+#include "src/rpc/client/RpcClient.h"
+#include "src/rpc/server/RpcService.h"
 
 
 namespace brpc{

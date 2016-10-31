@@ -1,7 +1,7 @@
 #pragma once
 #include "Markup.h"
-#include "ObjectMap.h"
-#include "ObjectList.h"
+#include "src/type/ObjectMap.h"
+#include "src/type/ObjectList.h"
 
 
 namespace Xml{

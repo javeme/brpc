@@ -1,8 +1,10 @@
 #pragma once
-#include "blib.h"
-#include "Condition.h"
-#include "Actions.h"
-#include "Connection.h"
+#include "blib/ArrayList.h"
+#include "blib/Pair.h"
+#include "blib/Ptr.h"
+#include "orm/Condition.h"
+#include "orm/Actions.h"
+#include "orm/Connection.h"
 
 
 namespace brpc{
@@ -99,6 +101,5 @@ private:
 
 	Connection* m_connection;
 };
-
 
 }//end of namespace brpc

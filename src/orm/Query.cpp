@@ -1,10 +1,9 @@
 #pragma once
-#include "stdafx.h"
-#include "Query.h"
-#include "Session.h"
+#include "orm/Query.h"
+#include "orm/Session.h"
+
 
 namespace brpc{
-
 
 _QueryResult::~_QueryResult()
 {
@@ -183,6 +182,5 @@ QueryResult Query::all()
 	// parse result
 	return Model::fromDatabase(result, m_tableClass);
 }
-
 
 }//end of namespace brpc

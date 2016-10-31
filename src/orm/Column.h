@@ -1,17 +1,15 @@
 #pragma once
-#include "blib.h"
-#include "Condition.h"
-#include "Types.h"
-#include "BRpcUtil.h"
+#include "orm/Condition.h"
+#include "orm/Types.h"
+#include "src/util/BRpcUtil.h"
 
 
 namespace brpc{
 
-
 /////////////////////////////////////////////////////////////////
 //field value with type info
 template <typename T/*, T deftVal=T()*/>
-class TypeField : public bluemei::Field<T>
+class TypeField : public blib::Field<T>
 {
 public:
     TypeField() : m_fieldInfo(null) {}
@@ -247,7 +245,7 @@ public:
 }//end of namespace brpc
 
 
-namespace bluemei{
+namespace blib{
 
 //ÀàÐÍ×ª»»Æ÷(Object* <==> TypeField)
 template <typename Type>
@@ -283,4 +281,4 @@ struct Converter<brpc::TypeColumn<Type>>
     }
 };
 
-}//end of namespace bluemei
+}//end of namespace blib

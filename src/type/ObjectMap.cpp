@@ -1,9 +1,7 @@
 #pragma once
-#include "stdafx.h"
-#include "ObjectMap.h"
+#include "src/type/ObjectMap.h"
 
 namespace brpc{
-
 
 Object* ObjectMap::remove(cstring name, bool del)
 {

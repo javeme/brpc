@@ -1,8 +1,7 @@
 #pragma once
-#include "stdafx.h"
-#include "RpcServer.h"
-#include "RpcSocket.h"
-#include "ChannelFactory.h"
+#include "bamqp/ChannelFactory.h"
+#include "src/rpc/server/RpcServer.h"
+#include "src/rpc/trans/RpcSocket.h"
 
 
 namespace brpc{

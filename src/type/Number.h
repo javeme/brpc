@@ -1,9 +1,11 @@
 #pragma once
-#include "blib.h"
-#include "TypeVisitor.h"
-
+#include "blib/Object.h"
+#include "blib/Class.h"
+#include "src/type/TypeVisitor.h"
 
 namespace brpc{
+
+using namespace blib;
 
 typedef __int64 lint;
 
@@ -25,7 +27,7 @@ class Long;
 class Float;
 class Double;
 
-class NumberVisiter : public bluemei::Object
+class NumberVisiter : public blib::Object
 {
 public:
     NumberVisiter(){
@@ -50,7 +52,7 @@ public:
 };
 
 
-class Number : public bluemei::Object, public TypeVisitable
+class Number : public blib::Object, public TypeVisitable
 {
 public:
     Number(){}
@@ -642,4 +644,3 @@ ADD_ASSIGN_INT_NumberVisiter(NumberAssignBOrVisiter        , |=  );
 
 
 }//end of namespace brpc
-

@@ -1,8 +1,7 @@
 #pragma once
-#include "stdafx.h"
-#include "RpcInvoker.h"
-#include "RpcService.h"
-#include "AuthChecker.h"
+#include "src/rpc/RpcInvoker.h"
+#include "src/rpc/server/RpcService.h"
+#include "src/auth/AuthChecker.h"
 
 
 namespace brpc{

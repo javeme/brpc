@@ -1,10 +1,10 @@
 #pragma once
-#include "RpcSocket.h"
-#include "ClientSocket.h"
+#include "blib/ClientSocket.h"
+#include "blib/Thread.h"
+#include "src/rpc/trans/RpcSocket.h"
 
 
 namespace brpc{
-
 
 //tcp socket
 class RpcOnTcpSocket : public RpcSocket

@@ -1,6 +1,5 @@
 #pragma once
-#include "stdafx.h"
-#include "ObjectList.h"
+#include "src/type/ObjectList.h"
 
 namespace brpc{
 

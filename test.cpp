@@ -2,12 +2,13 @@
 //
 
 #include "stdafx.h"
-#include "FuncDispatcher.h"
-#include "ObjectMap.h"
-#include "JsonSerializer.h"
+#include "blib/blib.h"
+#include "src/fun/FuncDispatcher.h"
+#include "src/type/ObjectMap.h"
+#include "src/serializer/json/JsonSerializer.h"
+#include "src/type/ObjectMap.h"
 
-
-using namespace bluemei;
+using namespace blib;
 using namespace brpc;
 
 
@@ -147,7 +148,7 @@ public:
 };
 
 template <>
-struct bluemei::Converter<User*>
+struct blib::Converter<User*>
 {
 	static inline User* valueOf(Object* obj)
 	{
@@ -174,7 +175,7 @@ struct bluemei::Converter<User*>
 
 
 template <>
-struct bluemei::Converter<User>
+struct blib::Converter<User>
 {
 	static inline User valueOf(Object* obj)
 	{
@@ -413,7 +414,7 @@ void testMapType(FuncDispatcher& dispatcher)
 
 	try{
 		ObjectList args;
-		args.addValue("hj:27,bluemei:25,pp:28");
+		args.addValue("hj:27,blib:25,pp:28");
 		Object* result = dispatcher.call("testString2Map", args);
 		delete result;
 	}catch (Exception& e){
@@ -584,7 +585,7 @@ void testJson()
 }
 
 
-#include "Column.h"
+#include "orm/Column.h"
 #include "orm/Session.h"
 #include "orm/Functions.h"
 

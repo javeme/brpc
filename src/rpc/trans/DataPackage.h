@@ -1,19 +1,22 @@
 #pragma once
-#include "blib.h"
+#include "blib/HashMap.h"
+#include "bLib/ByteBuffer.h"
 
 
 namespace brpc{
 
-#define KEY_STATUS		 "Status"
-#define KEY_RESPONSE	 "Response"
+using namespace blib;
+
+#define KEY_STATUS       "Status"
+#define KEY_RESPONSE     "Response"
 
 #define KEY_CONTENT_TYPE "Content-Type"
 #define KEY_CONTENT_LEN  "Content-Length"
 #define KEY_PACKAGE_ID   "X-Package-Id"
-#define KEY_CHARSET		 "Content-Charset"
+#define KEY_CHARSET      "Content-Charset"
 
 /*
-* Êý¾Ý°ü
+* class DataPackage
 * @author Javeme
  @create 2012/5/28
 */

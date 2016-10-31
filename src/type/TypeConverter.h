@@ -1,8 +1,9 @@
 #pragma once
-#include "blib.h"
-#include "Number.h"
-#include "TString.h"
-
+#include "blib/Converter.h"
+#include "bLib/RuntimeException.h"
+#include "bLib/SmartPtr.h"
+#include "src/type/Number.h"
+#include "src/type/TString.h"
 
 namespace brpc{
 
@@ -10,21 +11,21 @@ namespace brpc{
 template <typename Type>
 struct Converter
 {
-	static inline Type valueOf(bluemei::Object* obj)
+	static inline Type valueOf(blib::Object* obj)
 	{
-		return bluemei::Converter<Type>::valueOf(obj);
+		return blib::Converter<Type>::valueOf(obj);
 	}
 
-	static inline bluemei::Object* toObject(const Type& val)
+	static inline blib::Object* toObject(const Type& val)
 	{
-		return bluemei::Converter<Type>::toObject(val);
+		return blib::Converter<Type>::toObject(val);
 	}
 };
 
 }// end of namespace brpc
 
 
-namespace bluemei{
+namespace blib{
 
 /*
 * 类型不匹配异常类
@@ -289,4 +290,4 @@ struct Converter<SmartPtr<T>>
 //...
 
 
-}// end of namespace bluemei
+}// end of namespace blib

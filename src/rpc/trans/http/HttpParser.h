@@ -1,5 +1,5 @@
 #pragma once
-#include "HttpHeader.h"
+#include "src/rpc/trans/http/HttpHeader.h"
 
 
 namespace brpc{

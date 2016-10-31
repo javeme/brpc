@@ -1,7 +1,6 @@
 #pragma once
-#include "stdafx.h"
-#include "ObjectList.h"
-#include "RpcSerializeable.h"
+#include "src/type/ObjectList.h"
+#include "src/serializer/RpcSerializeable.h"
 
 
 namespace brpc{
@@ -38,6 +37,5 @@ public:
 	virtual bool invoke(const Headers& headers, const InputStream& input) =0;
 	virtual void notifyEvent(cstring event, Object* sender, const ObjectList& args) =0;
 };
-
 
 }//end of namespace brpc
