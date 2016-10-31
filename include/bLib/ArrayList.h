@@ -4,7 +4,7 @@
 #include "Object.h"
 #include "RuntimeException.h"
 
-namespace bluemei{
+namespace blib{
 
 template< class T >
 class BLUEMEILIB_TEMPLATE ArrayList : public Object
@@ -397,5 +397,5 @@ EXPORT_LIST_OF_BASE_TYPE(float);
 EXPORT_LIST_OF_BASE_TYPE(double);
 
 
-}//end of namespace bluemei
+}//end of namespace blib
 #endif

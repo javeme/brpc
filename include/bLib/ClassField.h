@@ -4,7 +4,7 @@
 #include "Converter.h"
 #include "Object.h"
 
-namespace bluemei{
+namespace blib{
 
 //for field in class
 class BLUEMEILIB_API FieldInfo : public Object

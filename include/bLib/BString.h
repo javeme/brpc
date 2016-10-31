@@ -4,7 +4,7 @@
 #include "Object.h"
 #include "ClassField.h"
 
-namespace bluemei{
+namespace blib{
 
 template<class T> class ArrayList;
 #define TRIM_LEFT 1
@@ -205,5 +205,5 @@ APPEND2STRING(long long);
 APPEND2STRING(float);
 APPEND2STRING(double);*/
 
-}//end of namespace bluemei
+}//end of namespace blib
 #endif

@@ -5,7 +5,7 @@
 #include "Pair.h"
 #include "Exception.h"
 
-namespace bluemei{
+namespace blib{
 
 template<typename Key,typename Value>
 class KVPairTree : public Object
@@ -110,5 +110,5 @@ protected:
 	Key m_type;//¿‡–Õ
 };
 
-}//end of namespace bluemei
+}//end of namespace blib
 #endif

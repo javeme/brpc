@@ -6,7 +6,7 @@
 #include "SmartPtrManager.h"
 
 
-namespace bluemei{
+namespace blib{
 
 #ifndef WIN32
 #include <fcntl.h>
@@ -71,5 +71,5 @@ public:
 };
 
 
-}//end of namespace bluemei
+}//end of namespace blib
 #endif

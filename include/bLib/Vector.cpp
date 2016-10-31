@@ -1,7 +1,7 @@
 #pragma once
 #include "Vector.h"
 
-namespace bluemei{
+namespace blib{
 
 template <class T>
 Vector<T>::Vector(void)
@@ -106,4 +106,4 @@ void Vector<T>::clear()
 	m_dataArray.clear();
 }
 
-}//end of namespace bluemei
+}//end of namespace blib

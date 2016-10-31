@@ -2,7 +2,7 @@
 #include "Object.h"
 #include "IOCompletionPortImpl.h"
 
-namespace bluemei{
+namespace blib{
 
 
 class BLUEMEILIB_API IOCompletionPort : public Object
@@ -30,4 +30,4 @@ protected:
 	IOCompletionPortImpl* m_impl;
 };
 
-}//end of namespace bluemei
+}//end of namespace blib

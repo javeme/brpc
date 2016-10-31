@@ -2,7 +2,7 @@
 
 #include "Exception.h"
 
-namespace bluemei{
+namespace blib{
 
 #ifdef WIN32
 #include <windows.h>
@@ -68,4 +68,4 @@ public:
 
 #endif
 
-}//end of namespace bluemei
+}//end of namespace blib

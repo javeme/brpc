@@ -6,7 +6,7 @@
 #include "Object.h"
 #include "BString.h"
 
-namespace bluemei{
+namespace blib{
 
 typedef SOCKET socket_t;
 
@@ -70,5 +70,5 @@ public:
 };
 
 
-}//end of namespace bluemei
+}//end of namespace blib
 #endif

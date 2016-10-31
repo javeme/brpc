@@ -2,7 +2,7 @@
 #include "MessageThread.h"
 #include "LambdaThread.h"
 
-namespace bluemei{
+namespace blib{
 
 class BLUEMEILIB_API Looper : public Object
 {
@@ -32,4 +32,4 @@ protected:
 	MessageThread* m_msgThread;
 };
 
-}//end of namespace bluemei
+}//end of namespace blib

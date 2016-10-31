@@ -5,7 +5,7 @@
 #include "Object.h"
 #include "MutexLock.h"
 
-namespace bluemei{
+namespace blib{
 
 #define DEFAULT_MAX_COUNT LONG_MAX
 #define waitTask() getLock()
@@ -34,4 +34,4 @@ public:
 };
 typedef ResourceLock SyncLock;
 
-}//end of namespace bluemei
+}//end of namespace blib

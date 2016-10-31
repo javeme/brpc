@@ -2,7 +2,7 @@
 #include "bluemeiLib.h"
 #include "Object.h"
 
-namespace bluemei{
+namespace blib{
 
 template<typename K,typename V>
 class Pair : public Object//BLUEMEILIB_API
@@ -23,4 +23,4 @@ public:
 	}
 };
 
-}//end of namespace bluemei
+}//end of namespace blib

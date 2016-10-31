@@ -4,7 +4,7 @@
 #include "Exception.h"
 #include "LinkedList.h"
 
-namespace bluemei{
+namespace blib{
 
 //¹Û²ìÕß£¨Observer£©½ÇÉ«
 template <class MessageType>
@@ -80,5 +80,5 @@ protected:
 	bool m_changed;
 };
 
-}//end of namespace bluemei
+}//end of namespace blib
 #endif

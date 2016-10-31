@@ -5,7 +5,7 @@
 #include "HashMap.h"
 #include "Looper.h"
 
-namespace bluemei{
+namespace blib{
 
 class Template;
 
@@ -130,5 +130,5 @@ private:
 	static LogManager* s_manager;
 };
 
-}//end of namespace bluemei
+}//end of namespace blib
 #endif

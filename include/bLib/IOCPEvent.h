@@ -3,7 +3,7 @@
 #include "IOCompletionPortImpl.h"
 
 
-namespace bluemei{
+namespace blib{
 
 class BLUEMEILIB_API IOCPEventHandle : public Object
 {
@@ -18,4 +18,4 @@ public:
 	virtual bool onException(Exception& e)=0;
 };
 
-}//end of namespace bluemei
+}//end of namespace blib

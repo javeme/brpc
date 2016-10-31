@@ -4,7 +4,7 @@
 #include "ClientSocket.h"
 
 
-namespace bluemei{
+namespace blib{
 
 class BLUEMEILIB_API IOCPException : public SocketException
 {
@@ -35,4 +35,4 @@ protected:
 	socket_t sock;
 };
 
-}//end of namespace bluemei
+}//end of namespace blib

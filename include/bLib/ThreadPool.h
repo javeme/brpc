@@ -5,7 +5,7 @@
 using std::queue;
 #define Queue queue
 
-namespace bluemei{
+namespace blib{
 
 #define TaskPool ThreadPool
 
@@ -43,4 +43,4 @@ public:
 	bool isStop() const;
 };
 
-}//end of namespace bluemei
+}//end of namespace blib

@@ -5,7 +5,7 @@
 #include "Object.h"
 #include "RuntimeException.h"
 
-namespace bluemei{
+namespace blib{
 
 typedef Map<String, Class*> ClassMap;
 
@@ -50,6 +50,6 @@ typedef struct StaticRegisterClass
 //´´½¨ÊµÀý
 #define newInstanceOf(name) ObjectFactory::instance().createObject(name)
 
-}//end of namespace bluemei
+}//end of namespace blib
 
 #endif

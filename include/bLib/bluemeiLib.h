@@ -49,7 +49,7 @@
 #define Map map
 
 
-namespace bluemei{
+namespace blib{
 
 using std::vector;
 using std::map;
@@ -58,4 +58,4 @@ using std::move;
 #define CODE2STRING(code) _CODE2STRING(code)//可以替换普通代码和宏展开代码
 #define _CODE2STRING(code) #code//可以替换普通代码和宏展开代码
 
-}//end of namespace bluemei
+}//end of namespace blib

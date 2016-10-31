@@ -6,7 +6,7 @@
 #include "SocketException.h"
 #include "ThreadException.h"
 
-namespace bluemei{
+namespace blib{
 
 
-}//end of namespace bluemei
+}//end of namespace blib

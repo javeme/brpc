@@ -3,7 +3,7 @@
 #include "bluemeiLib.h"
 #include "Object.h"
 
-namespace bluemei{
+namespace blib{
 
 using std::string;
 #define PropertiesMap map<string,string>
@@ -85,5 +85,5 @@ bool Util::isFloatNumber(const CharType* str,int len)
 	return true;
 }
 
-}//end of namespace bluemei
+}//end of namespace blib
 #endif

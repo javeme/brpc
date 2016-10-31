@@ -4,7 +4,7 @@
 
 #include "Exception.h"
 
-namespace bluemei{
+namespace blib{
 
 class BLUEMEILIB_API ThreadException : public Exception
 {
@@ -21,5 +21,5 @@ private:
 	int m_nError;
 };
 
-}//end of namespace bluemei
+}//end of namespace blib
 #endif

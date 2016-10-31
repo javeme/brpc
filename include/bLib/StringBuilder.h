@@ -43,7 +43,7 @@ exception statement from your version. */
 #include "ArrayList.h"
 #include "BString.h"
 
-namespace bluemei{
+namespace blib{
 
 /**
  * <code>StringBuilder</code> represents a changeable <code>String</code>.
@@ -70,7 +70,7 @@ namespace bluemei{
  * and the StringBuilder is not changed after that (quite common when
  * performing string concatenation).
  *
- * @author bluemei(javaloveme@gmai.com)(update)
+ * @author blib(javaloveme@gmai.com)(update)
  * @author Paul Fisher
  * @author John Keiser
  * @author Tom Tromey
@@ -758,4 +758,4 @@ sb.deleteSub(8,9);
 sb.insert(8,80);
 printf(sb.toString().c_str());//*/
 
-}//end of namespace bluemei
+}//end of namespace blib

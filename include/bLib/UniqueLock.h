@@ -4,7 +4,7 @@
 #include "bluemeiLib.h"
 #include "Object.h"
 
-namespace bluemei{
+namespace blib{
 
 class BLUEMEILIB_API UniqueLock : public Object
 {
@@ -38,5 +38,5 @@ private:
 };
 
 
-}//end of namespace bluemei
+}//end of namespace blib
 #endif

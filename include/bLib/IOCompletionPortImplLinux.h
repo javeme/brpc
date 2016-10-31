@@ -13,7 +13,7 @@
 //#include "IOCompletionPortImpl.h"
 
 
-namespace bluemei{
+namespace blib{
 
 #define MAX_FDS 256
 
@@ -67,4 +67,4 @@ private:
 	int m_hIOCompletionPort;
 };
 
-}//end of namespace bluemei
+}//end of namespace blib

@@ -3,7 +3,7 @@
 #include "bluemeiLib.h"
 #include "Object.h"
 
-namespace bluemei{
+namespace blib{
 
 //×Ö·û´®»¯
 #define _T2STR(type) #type
@@ -164,5 +164,5 @@ convertible = is_convertible<void,Object*>::value;
 convertible = is_convertible<Object*,void>::value;
 */
 
-}//end of namespace bluemei
+}//end of namespace blib
 #endif

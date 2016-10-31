@@ -4,7 +4,7 @@
 #include "Session.h"
 #include "Application.h"
 
-namespace bluemei{
+namespace blib{
 
 typedef std::map<string,Session*> SessionMap;
 
@@ -32,4 +32,4 @@ protected:
 
 
 
-}//end of namespace bluemei
+}//end of namespace blib

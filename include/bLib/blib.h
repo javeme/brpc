@@ -84,7 +84,7 @@
 
 
 namespace brpc{
-	using namespace bluemei;
+	using namespace blib;
 }
 
 

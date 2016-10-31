@@ -4,7 +4,7 @@
 #include "MemoryPool.h"
 
 
-namespace bluemei{
+namespace blib{
 
 enum IOCPEventType
 {
@@ -95,4 +95,4 @@ private:
 	 MemoryPool* m_pPoolIOCPData;
 };
 
-}//end of namespace bluemei
+}//end of namespace blib

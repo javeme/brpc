@@ -2,7 +2,7 @@
 #define Object_H_H
 #include "bluemeiLib.h"
 
-namespace bluemei{
+namespace blib{
 
 class Class;
 class String;
@@ -38,5 +38,5 @@ public:
 };
 
 
-}//end of namespace bluemei
+}//end of namespace blib
 #endif

@@ -58,7 +58,7 @@ constraints
 #include "System.h"
 
 
-namespace bluemei{
+namespace blib{
 
 //////////////////////////////////////////////////////////////////////
 //class SmartPtr
@@ -262,5 +262,5 @@ template<> Value2String<SmartPtr<Object>>::operator String() const{
 template class BLUEMEILIB_API HashMap<String,SmartPtr<Object>>;
 template class BLUEMEILIB_API MultiValueHashMap<String,SmartPtr<Object>>;
 
-}//end of namespace bluemei
+}//end of namespace blib
 #endif //__SMARTPTR_H__

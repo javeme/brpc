@@ -5,7 +5,7 @@
 #include "Exception.h"
 #include "UniqueLock.h"
 
-namespace bluemei{
+namespace blib{
 
 #ifdef WIN32
 	typedef HANDLE mutex_t;
@@ -33,5 +33,5 @@ public:
 	virtual long getWaitCount() const;
 };
 
-}//end of namespace bluemei
+}//end of namespace blib
 #endif

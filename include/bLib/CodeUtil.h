@@ -3,7 +3,7 @@
 #include "Util.h"
 #include "BString.h"
 
-namespace bluemei{
+namespace blib{
 
 using std::string;
 using std::wstring;
@@ -80,7 +80,7 @@ public:
 };
 
 template<typename Type>
-Type bluemei::CodeUtil::bytesToBigInt(byte *buf, bool bigEndian)
+Type blib::CodeUtil::bytesToBigInt(byte *buf, bool bigEndian)
 {
 	Type value = 0;
 	const int size = sizeof(value);
@@ -96,7 +96,7 @@ Type bluemei::CodeUtil::bytesToBigInt(byte *buf, bool bigEndian)
 }
 
 template<typename Type>
-void bluemei::CodeUtil::bigIntToBytes(byte *buf, Type value, bool bigEndian)
+void blib::CodeUtil::bigIntToBytes(byte *buf, Type value, bool bigEndian)
 {
 	const int size = sizeof(value);
 
@@ -137,5 +137,5 @@ struct BLUEMEILIB_API CONVSTR{
 	}
 };
 
-}//end of namespace bluemei
+}//end of namespace blib
 #endif

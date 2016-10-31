@@ -8,7 +8,7 @@
 #include "ClientSocket.h"
 
 
-namespace bluemei{
+namespace blib{
 
 class BLUEMEILIB_API ServerSocket : public Object
 {
@@ -33,5 +33,5 @@ protected:
 	int createSocket(int nPort);
 };
 
-}//end of namespace bluemei
+}//end of namespace blib
 #endif

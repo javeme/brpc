@@ -4,7 +4,7 @@
 #include "bluemeiLib.h"
 #include "Exception.h"
 
-namespace bluemei{
+namespace blib{
 
 class BLUEMEILIB_API IOException:public Exception
 {
@@ -14,5 +14,5 @@ public:
 	virtual String name() const;
 };
 
-}//namespace bluemei
+}//namespace blib
 #endif

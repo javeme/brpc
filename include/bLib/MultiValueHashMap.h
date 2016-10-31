@@ -2,7 +2,7 @@
 #include "HashMap.h"
 #include "LinkedList.h"
 
-namespace bluemei{
+namespace blib{
 
 //func map
 template<class K,class V>
@@ -106,4 +106,4 @@ String MultiValueHashMap<K, V>::toString() const
 template class BLUEMEILIB_API MultiValueHashMap<String,int>;
 template class BLUEMEILIB_API MultiValueHashMap<String,Object*>;
 
-}//end of namespace bluemei
+}//end of namespace blib

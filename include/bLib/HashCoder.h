@@ -2,7 +2,7 @@
 #include "Object.h"
 #include "BString.h"
 
-namespace bluemei{
+namespace blib{
 
 template<class T>
 class BLUEMEILIB_TEMPLATE hashCode{
@@ -70,4 +70,4 @@ template<> Value2String<Object*>::operator String() const{
 }template class BLUEMEILIB_API Value2String<Object*>;
 
 
-}//end of namespace bluemei
+}//end of namespace blib

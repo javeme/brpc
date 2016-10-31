@@ -4,7 +4,7 @@
 #include "bluemeiLib.h"
 #include "UniqueLock.h"
 
-namespace bluemei{
+namespace blib{
 
 class BLUEMEILIB_API CriticalLock : public UniqueLock
 {
@@ -31,5 +31,5 @@ public:
 	virtual long getMyThreadEnteredCount() const;
 };
 
-}//end of namespace bluemei
+}//end of namespace blib
 #endif

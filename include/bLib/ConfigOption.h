@@ -3,7 +3,7 @@
 #include "BString.h"
 #include "RuntimeException.h"
 
-namespace bluemei{
+namespace blib{
 
 /////////////////////////////////////////////////////////////////////
 // class ConfigOption
@@ -259,4 +259,4 @@ public:
 	virtual String name() const { return "ConfigException"; }
 };
 
-}//end of namespace bluemei
+}//end of namespace blib

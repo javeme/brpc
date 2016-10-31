@@ -3,7 +3,7 @@
 
 #include "KVPairTree.h"
 
-namespace bluemei{
+namespace blib{
 
 template<typename Key,typename Value>
 KVPairTree<Key,Value>::KVPairTree()
@@ -80,5 +80,5 @@ bool KVPairTree<Key, Value>::contain( const Key& k ) const
 	return false;
 }
 
-}//end of namespace bluemei
+}//end of namespace blib
 #endif

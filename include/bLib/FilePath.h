@@ -5,7 +5,7 @@
 #include "StringBuilder.h"
 #include "FileUtil.h"
 
-namespace bluemei{
+namespace blib{
 
 class BLUEMEILIB_API FilePath : public Object
 {
@@ -38,5 +38,5 @@ protected:
 	StringBuilder m_path;
 };
 
-}//end of namespace bluemei
+}//end of namespace blib
 #endif

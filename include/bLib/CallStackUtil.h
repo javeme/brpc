@@ -7,7 +7,7 @@
 #include "CriticalLock.h"
 #include "BString.h"
 
-namespace bluemei{
+namespace blib{
 
 class BLUEMEILIB_API CallStackUtil : public StackWalker
 {
@@ -29,5 +29,5 @@ protected:
 	static CallStackUtil staticCallStackUtil;
 };
 
-}//end of namespace bluemei
+}//end of namespace blib
 #endif

@@ -3,7 +3,7 @@
 #include "ResourceLock.h"
 #include "LambdaThread.h"
 
-namespace bluemei{
+namespace blib{
 
 class BLUEMEILIB_API Timer : public Object
 {
@@ -43,4 +43,4 @@ private:
 	WaiterCallback m_condition;
 };
 
-}//end of namespace bluemei
+}//end of namespace blib

@@ -6,7 +6,7 @@
 #include <vector>
 #include <map>
 
-namespace bluemei{
+namespace blib{
 
 /////////////////////////////////////////////////////////////////////
 // class MemoryPool
@@ -276,5 +276,5 @@ protected:
 	CriticalLock m_mutexLock;
 };
 
-}//end of namespace bluemei
+}//end of namespace blib
 #endif

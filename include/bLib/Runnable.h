@@ -4,7 +4,7 @@
 #include "bluemeiLib.h"
 #include "Object.h"
 
-namespace bluemei{
+namespace blib{
 
 
 class BLUEMEILIB_API Runnable : public Object
@@ -14,5 +14,5 @@ public:
 };
 
 
-}//end of namespace bluemei
+}//end of namespace blib
 #endif

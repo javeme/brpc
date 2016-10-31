@@ -1,7 +1,7 @@
 #pragma once
 #include "BeanContainer.h"
 
-namespace bluemei{
+namespace blib{
 
 class BLUEMEILIB_API Application : public BeanContainer
 {
@@ -15,4 +15,4 @@ protected:
 
 
 
-}//end of namespace bluemei
+}//end of namespace blib

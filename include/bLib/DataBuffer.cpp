@@ -3,7 +3,7 @@
 #include "Exception.h"
 #include "ArrayList.h"
 
-namespace bluemei{
+namespace blib{
 
 /*
 template<typename Type,int size=0>
@@ -218,14 +218,14 @@ void DataBuffer<Type>::setReadOffset(unsigned int offset)
 }
 
 template<typename Type>
-void bluemei::DataBuffer<Type>::skipn(unsigned int bytes)
+void blib::DataBuffer<Type>::skipn(unsigned int bytes)
 {
 	setReadOffset(m_nReadOffset+bytes);
 }
 
 //remove the first @bytes data
 template<typename Type>
-void bluemei::DataBuffer<Type>::shrink(unsigned int bytes)
+void blib::DataBuffer<Type>::shrink(unsigned int bytes)
 {
 	if(bytes==0)
 		return;
@@ -293,4 +293,4 @@ const Type* DataBuffer<Type>::array() const
 //导出字节缓冲类
 template class BLUEMEILIB_API DataBuffer<byte>;
 
-}//end of namespace bluemei
+}//end of namespace blib

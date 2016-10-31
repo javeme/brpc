@@ -1,5 +1,5 @@
 /*
-*edit by bluemei
+*edit by blib
 *write for java-users
 */
 #pragma once
@@ -12,7 +12,7 @@
 #include "ResourceLock.h"
 #include "CriticalLock.h"
 
-namespace bluemei{
+namespace blib{
 
 class BLUEMEILIB_API Thread : public Runnable
 {
@@ -58,6 +58,6 @@ private:
 	HANDLE m_hThread;
 };
 
-}//end of namespace bluemei
+}//end of namespace blib
 
 #endif

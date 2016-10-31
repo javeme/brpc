@@ -4,7 +4,7 @@
 #include "bluemeiLib.h"
 #include "CodeUtil.h"
 
-namespace bluemei{
+namespace blib{
 
 #define CP_GBK 950
 
@@ -22,5 +22,5 @@ public:
 	static int cleanUpSocketContext();
 };
 
-}//end of namespace bluemei
+}//end of namespace blib
 #endif

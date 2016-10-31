@@ -1,7 +1,7 @@
 #pragma once
 #include "Runnable.h"
 
-namespace bluemei{
+namespace blib{
 
 class BLUEMEILIB_API Task:public Runnable
 {
@@ -15,4 +15,4 @@ public:
 	virtual void setId(int id)=0;
 };
 
-}//end of namespace bluemei
+}//end of namespace blib

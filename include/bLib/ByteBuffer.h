@@ -2,7 +2,7 @@
 #include "DataBuffer.cpp"
 #include "CodeUtil.h"
 
-namespace bluemei{
+namespace blib{
 
 class BLUEMEILIB_API ByteBuffer : public DataBuffer<byte>
 {
@@ -119,4 +119,4 @@ public:
 };
 
 
-}//end of namespace bluemei
+}//end of namespace blib

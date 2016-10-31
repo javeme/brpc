@@ -5,7 +5,7 @@
 #include "IOException.h"
 #include "Object.h"
 
-namespace bluemei{
+namespace blib{
 
 #define BUFFER_SIZE 1024
 #define EOL "\n"
@@ -53,5 +53,5 @@ private:
 };
 
 
-}//end of namespace bluemei
+}//end of namespace blib
 #endif

@@ -3,7 +3,7 @@
 #include "Thread.h"
 #include <functional>
 
-namespace bluemei{
+namespace blib{
 
 typedef std::function<void (void)> ThreadFunction;
 
@@ -32,4 +32,4 @@ void download(string url,const function<void (int error)>& f)//f为下载完成后的回
 }
 #endif
 
-}//end of namespace bluemei
+}//end of namespace blib

@@ -4,7 +4,7 @@
 
 #include "Exception.h"
 
-namespace bluemei{
+namespace blib{
 
 
 class BLUEMEILIB_API SocketException : public Exception
@@ -30,5 +30,5 @@ public:
 	virtual String name() const { return "SocketClosedException"; }
 };
 
-}//end of namespace bluemei
+}//end of namespace blib
 #endif

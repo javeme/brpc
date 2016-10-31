@@ -3,7 +3,7 @@
 #include "bluemeiLib.h"
 #include "ClassField.h"
 
-namespace bluemei{
+namespace blib{
 
 class Object;
 class ClassField;
@@ -115,6 +115,6 @@ protected:
 	}																						   \
 //end of DECLARE_DCLASS
 
-}//end of namespace bluemei
+}//end of namespace blib
 
 #endif

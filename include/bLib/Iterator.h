@@ -2,7 +2,7 @@
 #include "bluemeiLib.h"
 #include "Ptr.h"
 
-namespace bluemei{
+namespace blib{
 
 template <class T>
 class Iterator : public PointerReference
@@ -14,4 +14,4 @@ public:
 	virtual bool remove()=0;
 };
 
-}//end of namespace bluemei
+}//end of namespace blib

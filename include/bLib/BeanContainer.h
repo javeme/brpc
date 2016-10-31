@@ -2,7 +2,7 @@
 #include "bluemeiLib.h"
 #include "Object.h"
 
-namespace bluemei{
+namespace blib{
 
 using std::string;
 
@@ -41,4 +41,4 @@ protected:
 	ObjectMap m_beanMap;
 };
 
-}//end of namespace bluemei
+}//end of namespace blib

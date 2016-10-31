@@ -3,7 +3,7 @@
 #include "ConfigOption.h"
 #include "File.h"
 
-namespace bluemei{
+namespace blib{
 
 // class SimpleCfgFile
 class BLUEMEILIB_API SimpleCfgFile : public Config
@@ -23,4 +23,4 @@ private:
 	String m_filePath;
 };
 
-}//end of namespace bluemei
+}//end of namespace blib

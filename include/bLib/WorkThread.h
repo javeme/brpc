@@ -4,7 +4,7 @@
 #include "Task.h"
 #include "ResourceLock.h"
 
-namespace bluemei{
+namespace blib{
 
 class ThreadPool;
 
@@ -27,4 +27,4 @@ public:
 };
 
 
-}//end of namespace bluemei
+}//end of namespace blib

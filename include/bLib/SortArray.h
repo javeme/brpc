@@ -1,7 +1,7 @@
 #pragma once
 #include "ArrayList.h"
 
-namespace bluemei{
+namespace blib{
 
 template <class T>
 class Compareable
@@ -67,4 +67,4 @@ public:
 	}
 };
 
-}//end of namespace bluemei
+}//end of namespace blib

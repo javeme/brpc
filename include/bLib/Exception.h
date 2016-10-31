@@ -6,7 +6,7 @@
 #include "Object.h"
 #include "BString.h"
 
-namespace bluemei{
+namespace blib{
 
 template class BLUEMEILIB_API std::allocator<String>;
 template class BLUEMEILIB_API List<String>;
@@ -123,5 +123,5 @@ typedef AutoReleaseException ARException;
 }
 */
 
-}//end of namespace bluemei
+}//end of namespace blib
 #endif

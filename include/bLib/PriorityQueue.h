@@ -5,7 +5,7 @@
 #include <queue>
 #include <map>
 
-namespace bluemei{
+namespace blib{
 
 //模板类无法被dll导出 BLUEMEILIB_API
 template<class EleType,class KeyGetter>
@@ -93,4 +93,4 @@ protected:
 	KeyGetter m_keyGetter;
 };
 
-}//end of namespace bluemei
+}//end of namespace blib

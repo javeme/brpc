@@ -7,7 +7,7 @@
 #include <queue>
 #include <map>
 
-namespace bluemei{
+namespace blib{
 
 
 typedef class BLUEMEILIB_API Message : public Object
@@ -130,4 +130,4 @@ private:
 	ResourceLock m_messageLock;
 };
 
-}//end of namespace bluemei
+}//end of namespace blib

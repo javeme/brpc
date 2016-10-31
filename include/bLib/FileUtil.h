@@ -6,7 +6,7 @@
 #include "ArrayList.h"
 #include "CodeUtil.h"
 
-namespace bluemei{
+namespace blib{
 
 #define PATH_SEPARATOR "/"
 
@@ -46,5 +46,5 @@ public:
 	static bool chdir(const String& path);
 };
 
-}//end of namespace bluemei
+}//end of namespace blib
 #endif

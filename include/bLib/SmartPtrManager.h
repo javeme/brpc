@@ -15,7 +15,7 @@
 #endif
 #endif
 
-namespace bluemei{
+namespace blib{
 
 class System;
 
@@ -249,5 +249,5 @@ protected:
 };
 
 
-}//end of namespace bluemei
+}//end of namespace blib
 #endif

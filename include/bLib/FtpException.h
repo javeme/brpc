@@ -3,7 +3,7 @@
 #include "bluemeiLib.h"
 #include "Exception.h"
 
-namespace bluemei{
+namespace blib{
 
 
 #define REFUSE -1
@@ -30,4 +30,4 @@ private:
 };
 
 
-}//end of namespace bluemei
+}//end of namespace blib

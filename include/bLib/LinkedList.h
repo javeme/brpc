@@ -7,7 +7,7 @@
 #include "RuntimeException.h"
 #include "StringBuilder.h"
 
-namespace bluemei{
+namespace blib{
 
 template <class EleType>
 class LinkedListIterator;
@@ -545,5 +545,5 @@ String LinkedList<EleType>::toString() const
 	return sb.toString();
 }
 
-}//end of namespace bluemei
+}//end of namespace blib
 #endif

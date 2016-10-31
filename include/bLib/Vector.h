@@ -3,7 +3,7 @@
 #include "bluemeiLib.h"
 #include "RuntimeException.h"
 
-namespace bluemei{
+namespace blib{
 
 //模板类无法被dll导出 BLUEMEILIB_API
 template <class T>
@@ -27,4 +27,4 @@ public:
 	void clear();
 };
 
-}//end of namespace bluemei
+}//end of namespace blib

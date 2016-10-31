@@ -2,7 +2,7 @@
 #include "Object.h"
 #include "Exception.h"
 
-namespace bluemei{
+namespace blib{
 
 class BLUEMEILIB_API IErrorHandler : public Object
 {
@@ -21,4 +21,4 @@ protected:
 	static IErrorHandler* s_errorHandler;
 };
 
-}//end of namespace bluemei
+}//end of namespace blib

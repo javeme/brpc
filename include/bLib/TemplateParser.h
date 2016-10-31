@@ -3,7 +3,7 @@
 #include "TemplateExpr.h"
 #include "CodeUtil.h"
 
-namespace bluemei{
+namespace blib{
 
 typedef char char_t;
 

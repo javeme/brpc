@@ -3,7 +3,7 @@
 #include "Object.h"
 
 
-namespace bluemei{
+namespace blib{
 
 class BLUEMEILIB_API PointerReference : virtual public Object
 {
@@ -115,4 +115,4 @@ private:
 	ScopePointer& operator=(const ScopePointer& other) const;
 };
 
-}//end of namespace bluemei
+}//end of namespace blib

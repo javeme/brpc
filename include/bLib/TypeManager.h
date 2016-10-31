@@ -7,7 +7,7 @@
 #include "Converter.h"
 
 
-namespace bluemei{
+namespace blib{
 
 class BLUEMEILIB_API Conver : public Object
 {
@@ -194,4 +194,4 @@ static bool objectIsItselfType(T* p){
 	return TypeManager::getTypeInfo(p) == TypeManager::getTypeInfo<T>();
 }
 
-}//end of namespace bluemei
+}//end of namespace blib

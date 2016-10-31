@@ -3,7 +3,7 @@
 #include "bluemeiLib.h"
 #include "Exception.h"
 
-namespace bluemei{
+namespace blib{
 
 class BLUEMEILIB_API RuntimeException : public Exception
 {
@@ -140,4 +140,4 @@ public:
 };
 
 
-}//end of namespace bluemei
+}//end of namespace blib

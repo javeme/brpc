@@ -7,7 +7,7 @@
 #include "HashMap.h"
 
 
-namespace bluemei{
+namespace blib{
 
 #define EVENT_ALL (EVENT_ERR|EVENT_IN|EVENT_ET)
 
@@ -58,4 +58,4 @@ private:
 	volatile bool m_bRunning;
 };
 
-}//end of namespace bluemei
+}//end of namespace blib

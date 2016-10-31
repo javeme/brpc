@@ -9,7 +9,7 @@
 #include "Object.h"
 #include "BString.h"
 
-namespace bluemei{
+namespace blib{
 
 typedef tm DateInfo;
 
@@ -84,4 +84,4 @@ private:
 	::AfxMessageBox(CString(task)+_T(",")+wstr.c_str());\
 }
 
-}//end of namespace bluemei
+}//end of namespace blib

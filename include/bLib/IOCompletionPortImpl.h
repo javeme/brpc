@@ -7,7 +7,7 @@
 	#include "IOCompletionPortImplLinux.h"
 #endif
 
-namespace bluemei{
+namespace blib{
 
 /*
 class IOCompletionPortImpl : public Object
@@ -24,4 +24,4 @@ public:
 	virtual void close()=0;
 };*/
 
-}//end of namespace bluemei
+}//end of namespace blib

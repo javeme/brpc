@@ -5,7 +5,7 @@
 #include "SocketTools.h"
 #include "FtpException.h"
 
-namespace bluemei{
+namespace blib{
 
 #define BUF_SIZE 256
 
@@ -36,4 +36,4 @@ public:
 };
 
 
-}//end of namespace bluemei
+}//end of namespace blib

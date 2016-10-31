@@ -4,7 +4,7 @@
 #include "Iterator.h"
 #include "RuntimeException.h"
 
-namespace bluemei{
+namespace blib{
 
 template<class K,class V>
 class BLUEMEILIB_TEMPLATE Entry : public Object
@@ -497,4 +497,4 @@ bool HashMap<K, V>::HashMapIterator::findNext(unsigned int& index,
 template class BLUEMEILIB_API HashMap<String,int>;
 template class BLUEMEILIB_API HashMap<String,Object*>;
 
-}//end of namespace bluemei
+}//end of namespace blib
