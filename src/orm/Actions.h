@@ -60,15 +60,15 @@ public:
 class TableCreater : public Action
 {
 public:
-	TableCreater(cstring table) : Action(String("create table ") + table) {}
+	TableCreater(cstring table)
+		: Action(String("create table if not exists ") + table) {}
 };
 
 class TableDroper : public Action
 {
 public:
 	TableDroper(cstring table)
-		: Action(String("drop table if exists ") + table) {
-	}
+		: Action(String("drop table if exists ") + table) {}
 };
 
 
