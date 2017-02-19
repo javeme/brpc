@@ -212,7 +212,16 @@ bool Session::createTable(Model* model)
 			sql.append(" default ");
 			sql.append(column->defaultValue());
 		}
-		// TODO: unique key / forgin key ...
+		// TODO: unique key ...
+		;
+		// forgin key
+		if (!column->foreignKey().empty()) {
+			sql.append(", foreign key(");
+			sql.append(column->columnName());
+			sql.append(") references ");
+			sql.append(column->foreignKey());
+		}
+		// separator in the last
 		sql.append(",");
 	}
 	if (cols.size() > 0)

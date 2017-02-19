@@ -13,7 +13,7 @@ class TypeField : public blib::Field<T>
 {
 public:
     TypeField() : m_fieldInfo(null) {}
-    TypeField(const T& val) : Field<T>(val) {}
+    TypeField(const T& val) : Field<T>(val), m_fieldInfo(null) {}
     virtual ~TypeField() {}
 public:
     virtual TypeField& operator=(const T& val) {
@@ -39,15 +39,20 @@ class ColumnModel : public Object
 {
 public:
     ColumnModel(cstring name="", bool primary=false, bool unique=false,
-        bool notNull=false, cstring default="", bool store=true)
+        bool notNull=false, cstring default="", cstring foreignKey="",
+        bool store=true)
         : m_name(name), m_primary(primary), m_unique(unique),
-        m_notNull(notNull), m_default(default), m_needStore(store) {}
+          m_notNull(notNull), m_default(default), m_foreignKey(foreignKey),
+          m_needStore(store) {}
 public:
     virtual void setColumnName(cstring str) { m_name = str; }
     virtual String columnName() const { return m_name; }
 
     virtual String defaultValue() const { return m_default; }
     virtual void setDefaultValue(cstring val) { m_default = val; }
+
+    virtual String foreignKey() const { return m_foreignKey; }
+    virtual void setForeignKey(cstring val) { m_foreignKey = val; }
 
     virtual bool isPrimary() const { return m_primary; }
     virtual void setPrimary(bool val) { m_primary = val; }
@@ -63,6 +68,7 @@ public:
 protected:
     String m_name;
     String m_default;
+    String m_foreignKey;
     bool m_primary;
     bool m_unique;
     bool m_notNull;
@@ -97,6 +103,15 @@ public:
     virtual void setDefaultValue(cstring val) {
         checkNullPtr(this->m_model);
         m_model->setDefaultValue(val);
+    }
+
+    virtual String foreignKey() const {
+        checkNullPtr(this->m_model);
+        return m_model->foreignKey();
+    }
+    virtual void setForeignKey(cstring val) {
+        checkNullPtr(this->m_model);
+        m_model->setForeignKey(val);
     }
 
     virtual bool isPrimary() const {
@@ -199,7 +214,7 @@ public:
 
 //define table name
 #define TABLE(table) \
-    static cstring tableName() { return #table; }                             \
+    static cstring tableName() { return table; }                              \
     virtual String getTableName() const { return tableName(); }               \
 /*end of TABLE*/
 
@@ -225,13 +240,18 @@ public:
 /*end of COLUME_REG*/
 
 //define a db column(field)
-#define COLUME8(name, type, colName, primary, unique, notNull, deflt, store)  \
+#define COLUME9(name, type, colName, primary, unique, notNull, deflt,         \
+                foreign, store)                                               \
     TypeColumn<type> name;                                                    \
-    COLUME_REG(name, colName, primary, unique, notNull, deflt, store)         \
-/*end of COLUME8*/
+    COLUME_REG(name, colName, primary, unique, notNull, deflt, foreign, store)\
+/*end of COLUME9*/
 
+#define COLUME8(name, type, colName, primary, unique, notNull, deflt, store)  \
+    COLUME9(name, type, colName, primary, unique, notNull, deflt, "", store)
 #define COLUME_P(name, type, colName, primary)                                \
-    COLUME8(name, type, colName, primary, false, false, "", true)
+    COLUME9(name, type, colName, primary, false, false, "", "", true)
+#define COLUME_F(name, type, colName, forgin)                                 \
+    COLUME9(name, type, colName, false, false, false, "", forgin, true)
 #define COLUME_N(name, type, colName) COLUME_P(name, type, colName, false)
 #define COLUME_T(name, type) COLUME_N(name, type, "")
 #define COLUME_S(name) COLUME_T(name, varchar<32>)

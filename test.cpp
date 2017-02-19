@@ -593,7 +593,7 @@ class UserModel : public Model
 public:
 	DECLARE_DCLASS(UserModel);
 public:
-	TABLE(users);
+	TABLE("users");
 	ID(varchar<32>, "_id");
 	COLUME_N(name, varchar<32>, "user_name");
 	COLUME(age, int);
@@ -731,7 +731,7 @@ class TestTable : public Model
 public:
 	DECLARE_DCLASS(TestTable);
 public:
-	TABLE(test_table);
+	TABLE("test_table");
 	ID(varchar<32>, "_id");
 	COLUME8(uuid, varchar<32>, "uuid", true, true, true, "0", true);
 	COLUME_N(name, varchar<32>, "user_name");
