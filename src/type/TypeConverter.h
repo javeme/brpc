@@ -22,6 +22,34 @@ struct Converter
 	}
 };
 
+template <typename Type>
+struct Converter<Type&> // we should return a value rather than a ref
+{
+	static inline Type valueOf(blib::Object* obj)
+	{
+		return blib::Converter<Type>::valueOf(obj);
+	}
+
+	static inline blib::Object* toObject(const Type& val)
+	{
+		return blib::Converter<Type>::toObject(val);
+	}
+};
+
+template <typename Type>
+struct Converter<const Type&>
+{
+	static inline Type valueOf(blib::Object* obj)
+	{
+		return blib::Converter<Type>::valueOf(obj);
+	}
+
+	static inline blib::Object* toObject(const Type& val)
+	{
+		return blib::Converter<Type>::toObject(val);
+	}
+};
+
 }// end of namespace brpc
 
 

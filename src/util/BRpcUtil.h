@@ -104,21 +104,28 @@ struct MapObjectHelper<Type, false>
  * @author Javeme
  * @create 2014/7/4
  */
+template <typename Type> class RealTypeWrapper;
+#define RealTypeOf(Type) typename RealTypeWrapper<Type>::RealType
+
 template <typename Type>
-inline Type valueOf(Object* obj)
+inline RealTypeOf(Type) valueOf(Object* obj)
 {
 	checkNullPtr(obj);
 
 	try{
+		// NOTE: if the `Type` itself is a reference(like 'const &' or '&'),
+		// the value memory would be released here when returning a reference,
+		// so let's return the original type `brpc::Converter<Type>::RealType`
 		return brpc::Converter<Type>::valueOf(obj);
 	}catch(BadCastException&){
-		//Type is a sub-Object pointer?
-		const bool IS_SUB_OBJ = blib::is_convertible<Type, Object*>::value;
+		//is `Type` a sub-Object pointer?
+		const bool IS_SUB_OBJ = blib::is_convertible<
+			RealTypeOf(Type), Object*>::value;
 		bool needMap2Object = false;
 		if (IS_SUB_OBJ) {
 			needMap2Object = true;
 			try{
-				//parse a map to a object
+				//parse a map to a object(a pointer of subclass of Object)
 				return MapObjectHelper<Type, IS_SUB_OBJ>::map2object(obj);
 			}catch(NotMapException&){
 				needMap2Object = false;
@@ -126,10 +133,11 @@ inline Type valueOf(Object* obj)
 		}
 		//needMap2Object must be false
 		assert(!needMap2Object);
-		//rethrow while there is no need to conv map to object
+		//rethrow exception if there is no need to conv map to object
 		throw;
 	}
 }
+
 
 /*
 * 指定类型转换为Object对象(无法转换时抛出异常)
@@ -264,24 +272,61 @@ protected:
 };
 
 
+template <typename Type>
+class RealTypeWrapper : public TypeWrapper<Type>
+{
+public:
+	typedef Type RealType;
+
+	RealTypeWrapper(const Type& val=Type(), bool dontDelete=false)
+		: TypeWrapper(val, dontDelete) {
+	}
+};
+
+// when the `Type` itself is a reference, let's remove the `&`
+template <typename Type>
+class RealTypeWrapper<Type&> : public TypeWrapper<Type>
+{
+public:
+	typedef Type RealType;
+
+	RealTypeWrapper(const Type& val=Type(), bool dontDelete=false)
+		: TypeWrapper(val, dontDelete) {
+	}
+};
+
+template <typename Type>
+class RealTypeWrapper<const Type&> : public TypeWrapper<Type>
+{
+public:
+	typedef Type RealType;
+
+	RealTypeWrapper(const Type& val=Type(), bool dontDelete=false)
+		: TypeWrapper(val, dontDelete) {
+	}
+};
+
+
 // convert arg object to a value of Type
 template <typename Type>
-inline TypeWrapper<Type> methodArg(Object* obj)
+inline RealTypeWrapper<Type> methodArg(Object* obj)
 {
 	checkNullPtr(obj);
 	ObjectRef* ref = dynamic_cast<ObjectRef*>(obj);
 	if (ref)
 	{
 		Object* originalObj = ref->getObject();
-		// this should return the `originalObj`
-		const bool IS_OBJ_PTR = blib::is_convertible<Type, Object*>::value;
-		return TypeWrapper<Type>(
+		// this should return the `originalObj` which could not be deleted
+		const bool IS_OBJ_PTR = blib::is_convertible<
+			RealTypeOf(Type), Object*>::value;
+		return RealTypeWrapper<Type>(
 			blib::dynamic_caster<Type, IS_OBJ_PTR>::toType(originalObj),
 			true);
 	}
 	else
 	{
-		return valueOf<Type>(obj);
+		// even if the `Type` is a reference, valueOf() will return orig type
+		return RealTypeWrapper<Type>(valueOf<Type>(obj));
 	}
 }
 
@@ -296,7 +341,7 @@ inline MatchLevel matchLevel(Object* obj)
 {
 	try{
 		// whether `obj` can be cast to a value of `Type`
-		TypeWrapper<Type> val = methodArg<Type>(obj);
+		RealTypeWrapper<Type> val = methodArg<Type>(obj);
 
 		// if expected type is number, the `obj` may be not the same type
 		// like expected type is int but `obj` is a Double, and we should
