@@ -73,18 +73,26 @@ struct typename_getter<Type, true>
 namespace blib{
 
 //类型转换器(Object* <==> varchar<int>)
-template <>
-struct Converter<brpc::varchar<32>>
-{
-	static inline brpc::varchar<32> valueOf(Object* obj)
-	{
-		return Converter<cstring>::valueOf(obj);
-	}
-	static inline Object* toObject(const brpc::varchar<32>& val)
-	{
-		return Converter<cstring>::toObject(val.value());
-	}
-};
+#define DEFINE_VARCHAR_CONVERTER(len)                                         \
+template <>                                                                   \
+struct Converter<brpc::varchar<len>>                                          \
+{                                                                             \
+    static inline brpc::varchar<len> valueOf(Object* obj)                     \
+    {                                                                         \
+        return Converter<cstring>::valueOf(obj);                              \
+    }                                                                         \
+    static inline Object* toObject(const brpc::varchar<len>& val)             \
+    {                                                                         \
+        return Converter<cstring>::toObject(val.value());                     \
+    }                                                                         \
+};                                                                            \
+//end of DEFINE_VARCHAR_CONVERTER
+
+DEFINE_VARCHAR_CONVERTER(16);
+DEFINE_VARCHAR_CONVERTER(32);
+DEFINE_VARCHAR_CONVERTER(64);
+DEFINE_VARCHAR_CONVERTER(128);
+DEFINE_VARCHAR_CONVERTER(256);
 
 /*
 //类型转换器(Object* <==> varchar<int>)
