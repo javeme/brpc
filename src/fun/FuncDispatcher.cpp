@@ -154,9 +154,10 @@ Object* FuncDispatcher::call(cstring obj, cstring name, const ObjectList& args)
 	checkNullPtr(name);
 	if(strlen(obj) == 0)
 		return call(name, args);
-	/*//@TODO: not use const_cast
-	ObjectList& argsWithThis = const_cast<ObjectList&>(args);*/
-	ObjectList argsWithThis = args;
+	//NOTE: don't use const_cast which is a dangerous operation
+	/*ObjectList& argsWithThis = const_cast<ObjectList&>(args);*/
+	ObjectList argsWithThis;
+	argsWithThis.lease(args); // argsWithEvent will not be auto deleted!
 	ScopePointer<ObjectRef> thisObj = new ObjectRef(obj, this);
 	(void)argsWithThis.insert(0, thisObj);//this
 	AnyFunction* func = getFunctionFromAll(name, argsWithThis);

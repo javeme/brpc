@@ -27,8 +27,8 @@ public:
 	virtual String signatureOf(cstring method);
 	virtual String typeOfVar(cstring var);
 public:
-	virtual bool subscribe(cstring event, cstring method, RpcContext* ctx);
-	virtual bool unsubscribe(cstring event, cstring method, RpcContext* ctx);
+	virtual bool subscribe(RpcContext* ctx, cstring event, cstring method);
+	virtual bool unsubscribe(RpcContext* ctx, cstring event, cstring method);
 public:
 	//call service method
 	virtual Object* call(RpcContext* ctx,

@@ -9,13 +9,30 @@ ObjectList::ObjectList() :autoDelete(true)
 
 ObjectList::~ObjectList()
 {
-	destroy(autoDelete);
+	destroy(this->autoDelete);
 }
 
-ObjectList& ObjectList::operator=(const ObjectList& other)
+ObjectList::ObjectList(ObjectList&& other)
 {
-	//TODO: it change the default behavior to set autoDelete=false!
-	autoDelete = false;
+	*this = std::move(other);
+}
+
+ObjectList& ObjectList::operator=(ObjectList&& other)
+{
+	this->autoDelete = other.autoDelete;
+	other.autoDelete = true; // reset
+
+	Vector<Object*>::operator=((Vector<Object*>&&)other);
+	return *this;
+}
+
+ObjectList& ObjectList::lease(const ObjectList& other)
+{
+	//NOTE: this object's life cycle should be shorter than the other!
+	//TODO: expect to be improved! it changes the default behavior that
+	//      set autoDelete=false, so we should be careful with it!
+	destroy(this->autoDelete);
+	this->autoDelete = false;
 	Vector<Object*>::operator=(other);
 	return *this;
 }

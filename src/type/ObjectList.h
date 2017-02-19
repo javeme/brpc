@@ -17,7 +17,11 @@ public:
 	ObjectList();
 	virtual ~ObjectList();
 public:
-	ObjectList(const ObjectList& other){ *this = other; }
+	ObjectList(ObjectList&& other);
+	ObjectList& operator=(ObjectList&& other);
+	ObjectList& lease(const ObjectList& other);
+private:
+	ObjectList(const ObjectList& other);
 	ObjectList& operator=(const ObjectList& other);
 public:
 	template<typename Type>

@@ -336,7 +336,8 @@ RpcSerializeable* RpcConnection::getSerializer(cstring name)
 void RpcConnection::notifyEvent(cstring event, Object* sender,
 	const ObjectList& args)
 {
-	ObjectList argsWithEvent = args;
+	ObjectList argsWithEvent;
+	argsWithEvent.lease(args); // argsWithEvent will not be auto deleted!
 	ScopePointer<Object> eventObject = toObject(event);
 	(void)argsWithEvent.insert(0, eventObject);//event
 	onNotifyEvent(event, argsWithEvent);

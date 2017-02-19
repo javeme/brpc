@@ -124,8 +124,9 @@ Object* RpcService::call(RpcContext* ctx,
 	}
 
 	if(isNeedContext(fthis, fname)) {
-		ObjectList argsWithCtx = args;
-		argsWithCtx.add(ctx);
+		ObjectList argsWithCtx;
+		argsWithCtx.lease(args); // argsWithCtx will not be auto deleted!
+		argsWithCtx.insert(0, ctx);
 		Object* result = dispatcher.call(fthis, fname, argsWithCtx);
 		return result;
 	}
@@ -223,13 +224,13 @@ String RpcService::typeOfVar(cstring var)
 	return ObjectRef(var, &dispatcher).objectType();
 }
 
-bool RpcService::subscribe(cstring event, cstring method, RpcContext* ctx)
+bool RpcService::subscribe(RpcContext* ctx, cstring event, cstring method)
 {
 	checkNullPtr(ctx);
 	return ctx->getInvoker().subscribe(event, method);
 }
 
-bool RpcService::unsubscribe(cstring event, cstring method, RpcContext* ctx)
+bool RpcService::unsubscribe(RpcContext* ctx, cstring event, cstring method)
 {
 	checkNullPtr(ctx);
 	return ctx->getInvoker().unsubscribe(event, method);
