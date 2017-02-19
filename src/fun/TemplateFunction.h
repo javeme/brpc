@@ -97,18 +97,28 @@ public:
 	virtual String toString() const
 	{
 		//String paras = typeid(Func).name();
+
 		List<cstring> paras = m_fw.paraTypes();
-		String strParas;
-		//for_each(paras.begin(), paras.end(), [&](cstring i){ strParas.append(i).append(','); });
+		StringBuilder sb(64 + paras.size() * 16);
+
+		// return type
+		sb.append(m_fw.retParaType());
+		sb.append(" ");
+
+		// function name
+		sb.append(this->fullName());
+
+		// function paras
+		sb.append("(");
 		for (auto itor = paras.begin(); itor != paras.end(); ++itor)
 		{
-			strParas.append(*itor).append(",");
+			sb.append(*itor).append(", ");
 		}
-		if (strParas.length() > 0)
-			strParas = strParas.getLeftSub(strParas.length()-1);
-		cstring retPara = m_fw.retParaType();
-		String name = fullName();
-		return String::format("%s %s(%s)", retPara, name.c_str(), strParas.c_str());
+		if (paras.size() > 0) // remove the last ", "
+			sb.deleteSub(sb.length() - 2, sb.length());
+		sb.append(")");
+
+		return sb.toString();
 	}
 
 	virtual String fullName() const
