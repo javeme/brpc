@@ -2,9 +2,12 @@
 //
 
 #include "stdafx.h"
-#include "blib/blib.h"
 #include "CheckMemLeaks.h"
 CHECK_MEMORY_LEAKS
+
+#include "bLib/SimpleCfgFile.h"
+#include "bLib/Log.h"
+#include "bLib/SocketTools.h"
 
 #include "MyRpcService.h"
 #include "MyRpcApi.h"
