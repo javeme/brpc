@@ -117,4 +117,32 @@ struct Converter<std::vector<T>>
 	}
 };
 
+template <typename T>
+struct Converter<ArrayList<T>>
+{
+	static inline ArrayList<T> valueOf(Object* obj)
+	{
+		checkNullPtr(obj);
+		ObjectList* pList = castAndCheck<ObjectList*>(obj, "ArrayList");
+
+		ArrayList<T> vec;
+		ObjectList& list = *pList;
+		for (unsigned int i=0; i < list.size(); i++)
+		{
+			vec.add(brpc::valueOf<T>(list[i]));
+		}
+		return vec;
+	}
+
+	static inline Object* toObject(const ArrayList<T>& val)
+	{
+		ScopePointer<ObjectList> list = new ObjectList();
+		for (unsigned int i=0; i<val.size(); i++)
+		{
+			list->addValue(val[i]);
+		}
+		return list.detach();
+	}
+};
+
 }//end of namespace blib
