@@ -1,9 +1,9 @@
 #pragma once
 #include "stdafx.h"
 #include <assert.h>
-#include <crtdbg.h>
 
-#ifdef _DEBUG
+#if defined(WIN32) && defined(_DEBUG)
+#include <crtdbg.h>
 #define checkMemLeaks 1
 #define DEBUG_CLIENTBLOCK   new( _CLIENT_BLOCK, __FILE__, __LINE__)
 #define new DEBUG_CLIENTBLOCK
@@ -18,8 +18,10 @@
 struct CheckMemLeaksRegister
 {
 	static void exitAndCheck(){
+#ifdef WIN32
 		int i = _CrtDumpMemoryLeaks();
 		//assert( i == 0);
+#endif
 	}
 	CheckMemLeaksRegister()
 	{

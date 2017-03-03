@@ -1,5 +1,5 @@
 #pragma once
-#include "blib/Vector.cpp"
+#include "blib/Vector.h"
 #include "src/util/BRpcUtil.h"
 #include "src/type/TypeVisitor.h"
 

@@ -64,7 +64,8 @@ void Type2BinarySerializer::visit(ObjectMap* v)
 	append(TAG_INT_BEGIN);
 	append(v->size());
 	//class
-	visit(&v->getClassType());
+	String clsType=v->getClassType();
+	visit(&clsType);
 
 	v->visitElements(this);
 }
@@ -79,10 +80,13 @@ void Type2BinarySerializer::visit(TypeIterator* v)
 		}
 		else{
 			TypeVisitable* visitable=dynamic_cast<TypeVisitable*>(value);
-			if(visitable)
+			if(visitable) {
 				visitable->accept(this);
-			else
-				visit(&value->toString());
+			}
+			else {
+				String vstr = value->toString();
+				visit(&vstr);
+			}
 		}
 	}
 	else if(dynamic_cast<ObjectMap::Iterator*>(v))
@@ -98,10 +102,13 @@ void Type2BinarySerializer::visit(TypeIterator* v)
 		}
 		else{
 			TypeVisitable* visitable=dynamic_cast<TypeVisitable*>(itor->value);
-			if(visitable)
+			if(visitable) {
 				visitable->accept(this);
-			else
-				visit(&itor->value->toString());
+			}
+			else {
+				String vstr = itor->value->toString();
+				visit(&vstr);
+			}
 		}
 	}
 	else
@@ -136,7 +143,7 @@ RpcMethodBinarySerializer::RpcMethodBinarySerializer()
 }
 
 int RpcMethodBinarySerializer::write(OutputStream& output, const RpcMethod& method,
-	const String& encoding)
+	const String& encoding) throw(SerializeException)
 {
 	if (method.status == RpcMethod::STATUS_REQUEST
 		&& method.methodName == "")
@@ -155,7 +162,7 @@ int RpcMethodBinarySerializer::write(OutputStream& output, const RpcMethod& meth
 }
 
 int RpcMethodBinarySerializer::read(RpcMethod& method, const InputStream& input,
-	const String& encoding)
+	const String& encoding) throw(SerializeException)
 {
 	method.reset();
 

@@ -23,7 +23,7 @@ RpcOnHttpSocket::~RpcOnHttpSocket(void)
 }
 
 //send: header data tail
-void RpcOnHttpSocket::send(const DataPackage& package) throw(IOException)
+void RpcOnHttpSocket::send(const DataPackage& package) throw(Exception)
 {
 	ScopedLock lock(this->sendLock);
 
@@ -35,6 +35,8 @@ void RpcOnHttpSocket::send(const DataPackage& package) throw(IOException)
 	const ByteBuffer& output = package.body;
 	unsigned int len = output.size();
 
+#ifdef DEBUG_SEG_BUG
+	// Bug: segment error 11
 	//发送头部
 	SmartPtr<HttpHeader> header = null;
 	//package.headers.getDefault(KEY_RESPONSE, "false") == "true"
@@ -49,6 +51,22 @@ void RpcOnHttpSocket::send(const DataPackage& package) throw(IOException)
 		request->setRequestUrl(PATH_RPC_SERVICE);
 		header = request;
 	}
+#else
+	//发送头部
+	ScopePointer<HttpHeader> header = null;
+	//package.headers.getDefault(KEY_RESPONSE, "false") == "true"
+	bool isResponse = this->isInServer();
+	if (isResponse){
+		header = new HttpResponse(package.headers);
+		//header->addCookie("sessionId", "abcd-2234-dddd-cccc-bbbb-aaaa");
+	}
+	else{
+		ScopePointer<HttpRequest> request = new HttpRequest(package.headers);
+		request->setRequestType(HttpRequest::HTTP_POST);
+		request->setRequestUrl(PATH_RPC_SERVICE);
+		header = request.detach();
+	}
+#endif
 
 	if(!package.headers.contain(KEY_CONTENT_LEN))
 		header->setContentLength(len);
@@ -64,7 +82,7 @@ void RpcOnHttpSocket::send(const DataPackage& package) throw(IOException)
 	notifyHookSent(sock.getPeerHost(), package);
 }
 
-void RpcOnHttpSocket::receive() throw(RpcException)
+void RpcOnHttpSocket::receive() throw(Exception)
 {
 	if(this->clientSocket==null){
 		throwpe(IOException("null socket"));
@@ -87,7 +105,7 @@ void RpcOnHttpSocket::receive() throw(RpcException)
 	}
 
 	HttpParser parser;
-	SmartPtr<HttpHeader> header = parser.parse(lines);
+	ScopePointer<HttpHeader>&& header(parser.parse(lines));
 
 	//bad request [in server]
 	bool isRequest = this->isInServer();
@@ -107,7 +125,7 @@ void RpcOnHttpSocket::receive() throw(RpcException)
 	}
 	//error response [in client]
 	else{
-		SmartPtr<HttpResponse> resp = header.dynamicCast<HttpResponse>();
+		HttpResponse* resp = dynamic_cast<HttpResponse*>((HttpHeader*)header);
 		if(resp == null){
 			throwpe(HttpException("Invalid Http Response"));
 		}
@@ -150,7 +168,8 @@ void RpcOnHttpSocket::receive() throw(RpcException)
 	notifyReceive(package);
 }
 
-void RpcOnHttpSocket::sendResponse(HttpResponse::Status status, const String& pkgId)
+void RpcOnHttpSocket::sendResponse(HttpResponse::Status status,
+		const String& pkgId) throw(Exception)
 {
 	DataPackage package;
 	package.headers.put(KEY_STATUS, HttpResponse::status2str(status));

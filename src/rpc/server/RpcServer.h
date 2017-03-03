@@ -66,7 +66,7 @@ public:
 	RpcConnAcceptor(RpcServer* server) : server(server){}
 	virtual ~RpcConnAcceptor(){}
 
-	virtual void wait(){ Thread::wait(); }
+	virtual void wait() throw(Exception) { Thread::wait(); }
 protected:
 	RpcServer* server;
 };

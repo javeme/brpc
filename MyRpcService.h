@@ -1,7 +1,6 @@
 #pragma once
 #include "blib/LambdaThread.h"
 #include "src/rpc/server/RpcService.h"
-#include <shellapi.h>
 
 using namespace brpc;
 
@@ -221,22 +220,25 @@ private:
 	{
 		String str = String::format("\"%s\"", name);
 		name = str.c_str();
-		HINSTANCE i = ::ShellExecuteA(NULL, "open",
-			name, para, "", SW_HIDE);
-		return int(i)>32;
+		return blib::CodeUtil::open(name, para);
 	}
+
 	//÷¥––cmd√¸¡Ó
 	static bool exec(cstring cmd)
 	{
+#ifdef WIN32
 		String str = String::format("/c \"%s\"", cmd);
 		cmd = str.c_str();
-		HINSTANCE i = ::ShellExecuteA(NULL, "open",
-			"cmd.exe", cmd, "", SW_HIDE);//SW_SHOWNORMAL
-		return int(i)>32;
+		return open("cmd.exe", cmd);
+#else
+		return open("bash", cmd);
+#endif
 	}
+
 	//÷¥––cmd√¸¡Ó,≤¢ªÿœ‘
 	static String executeCommand(cstring cmd)
 	{
+#ifdef WIN32
 		String str = String::format("cmd /c \"%s\"", cmd);
 		cstring cmdLine = str.c_str();
 
@@ -310,8 +312,10 @@ private:
 		/*CodeUtil::replaceString(strOut,"\r","");
 		CodeUtil::replaceString(strOut,"\n","");
 		CodeUtil::replaceString(strOut,"/","//");*/
-
 		//printf(strOut.c_str());
 		return strOut;
+#else
+		return "ERROR: Not supported now!";
+#endif
 	}
 };

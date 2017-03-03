@@ -4,7 +4,7 @@
 
 namespace brpc{
 
-HttpException::HttpException(cstring msg):Exception(msg)
+HttpException::HttpException(cstring msg) : RpcException(msg)
 {
 	;
 }
@@ -15,7 +15,7 @@ String HttpException::name()const
 }
 
 
-HttpParseException::HttpParseException(cstring msg):HttpException(msg)
+HttpParseException::HttpParseException(cstring msg) : HttpException(msg)
 {
 	;
 }
@@ -26,7 +26,8 @@ String HttpParseException::name()const
 }
 
 
-HttpBadRequestException::HttpBadRequestException(cstring msg):HttpException(msg)
+HttpBadRequestException::HttpBadRequestException(cstring msg)
+	: HttpException(msg)
 {
 	;
 }

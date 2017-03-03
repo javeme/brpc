@@ -1,6 +1,5 @@
 #pragma once
-#include "blib/MutexLock.h"
-#include "blib/ResourceLock.h"
+#include "blib/ConditionLock.h"
 #include "blib/Date.h"
 #include "blib/Log.h"
 #include "src/rpc/trans/DataPackage.h"
@@ -39,12 +38,13 @@ public:
 	RpcSocket();
 	virtual ~RpcSocket();
 public:
-	virtual void connect(const HashMap<String,String>& paras) throw(RpcException)=0;//或Map,也可用stl map,但操作稍微麻烦
-	virtual void acceptWith(Object* server,const HashMap<String,String>& paras) throw(RpcException)=0;
-	virtual void close() throw(RpcException)=0;
+	virtual void connect(const HashMap<String,String>& paras) throw(Exception)=0;
+	virtual void acceptWith(Object* server,
+			const HashMap<String,String>& paras) throw(Exception)=0;
+	virtual void close() throw(Exception)=0;
 
-	virtual void send(const DataPackage& output) throw(RpcException)=0;
-	virtual void receive() throw(RpcException)=0;
+	virtual void send(const DataPackage& output) throw(Exception)=0;
+	virtual void receive() throw(Exception)=0;
 	virtual void setReceiveListener(RpcReceiveListener* listener);
 
 	virtual void setDataHookHandler(RpcDataHookHandler* hook);
@@ -52,7 +52,7 @@ public:
 	virtual bool isAlive() const=0;
 	virtual bool isInServer() const=0;
 
-	virtual DataPackage sendSynch(const DataPackage& output);
+	virtual DataPackage sendSynch(const DataPackage& output) throw(Exception);
 protected:
 	virtual bool notifyReceive(DataPackage& input);
 	virtual bool notifyException(Exception& e);
@@ -67,11 +67,9 @@ protected:
 	DataPackage recvPacket;
 	bool isWaitingData;
 	String idOfWaitData;
-	SyncLock waitLock;
+	ConditionLock sendLock;
 
 	unsigned int timeout;
-protected:
-	MutexLock sendLock;
 };
 
 }//end of namespace brpc

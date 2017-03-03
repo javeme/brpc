@@ -4,7 +4,7 @@
 
 namespace brpc{
 
-class HttpException : public blib::Exception
+class HttpException : public RpcException
 {
 public:
 	HttpException(cstring msg);

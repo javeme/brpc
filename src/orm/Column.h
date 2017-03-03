@@ -39,10 +39,10 @@ class ColumnModel : public Object
 {
 public:
     ColumnModel(cstring name="", bool primary=false, bool unique=false,
-        bool notNull=false, cstring default="", cstring foreignKey="",
+        bool notNull=false, cstring deflt="", cstring foreignKey="",
         bool store=true)
         : m_name(name), m_primary(primary), m_unique(unique),
-          m_notNull(notNull), m_default(default), m_foreignKey(foreignKey),
+          m_notNull(notNull), m_default(deflt), m_foreignKey(foreignKey),
           m_needStore(store) {}
 public:
     virtual void setColumnName(cstring str) { m_name = str; }
@@ -193,7 +193,7 @@ public:
 
     virtual String columnName() const {
         String col = Column::columnName();
-        return col.length() ? col : fieldName();
+        return col.length() ? col : String(this->fieldName());
     }
     virtual ConditionWrapper columnValue() const {
         //return Value2String<T>(*this);
@@ -203,11 +203,11 @@ public:
     }
 
     virtual String field() const {
-        return fieldName();
+        return this->fieldName();
     }
     virtual String columnType() const {
         const bool convertible = is_convertible<T, dbtype>::value;
-        return typename_getter<T, convertible>::typeName(value());
+        return typename_getter<T, convertible>::typeName(this->value());
     }
 };
 
@@ -219,7 +219,7 @@ public:
 /*end of TABLE*/
 
 //define column register method
-#define COLUME_REG(name, col, primary, unique, notNull, deflt, store)         \
+#define COLUME_REG(name, col, primary, unique, notNull, deflt, foreign, store)\
     class InerClassForRegField_##name                                         \
     {                                                                         \
     public:                                                                   \
@@ -228,7 +228,7 @@ public:
                 _instanceOfInerClassForRegField_##name));                     \
             static bool notReged = true;                                      \
             static ColumnModel model(col, primary, unique,                    \
-                notNull, deflt, store);                                       \
+                notNull, deflt, foreign, store);                              \
             if(notReged) {                                                    \
                 regField(#name, &Self::name);                                 \
                 notReged = false;                                             \

@@ -12,8 +12,8 @@ public:
 	HttpParser();
 	virtual ~HttpParser();
 public:
-	SmartPtr<HttpHeader>  parse(const String& text);
-	SmartPtr<HttpHeader>  parse(const LinkedList<String>& lines);
+	ScopePointer<HttpHeader>  parse(const String& text);
+	ScopePointer<HttpHeader>  parse(const LinkedList<String>& lines);
 public:
 	static HashMap<String,String> paramSplit(const String& str);
 	static HashMap<String,String> parseCookies(const String& str);

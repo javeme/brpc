@@ -14,6 +14,10 @@ P2pRpcConnAcceptor::P2pRpcConnAcceptor(RpcServer* server)
 	url = Url(server->getUrl());
 }
 
+P2pRpcConnAcceptor::~P2pRpcConnAcceptor()
+{
+}
+
 void P2pRpcConnAcceptor::run()
 {
 	Log* logger = Log::getLogger();
@@ -51,13 +55,13 @@ void P2pRpcConnAcceptor::waitConnection()
 		RpcSocket* rpcSocket = RpcSocketFactory::getRpcSocket(proto);
 		try{
 			logger->debug("wait for connection @" + url.toString());
-			BRpcUtil::debug("====wait for connection...\n");
+			BRpcUtil::debug("====wait for a connection...\n");
 			rpcSocket->acceptWith(&serverSocket, paras);
-			BRpcUtil::debug("====connection accepted: %s\n", rpcSocket->toString().c_str());
+			BRpcUtil::debug("====connection accepted: %s\n",
+					rpcSocket->toString().c_str());
 			logger->debug("connection accepted: " + rpcSocket->toString());
 			this->addConnection(rpcSocket);
-		}catch (Exception& e)
-		{
+		}catch (Exception& e) {
 			logger->warn("connection error: " + e.toString());
 			delete rpcSocket;
 		}
@@ -80,13 +84,13 @@ void P2pRpcConnAcceptor::addConnection(RpcSocket* rpcSocket)
 	this->pool.addSocket(rpcSocket);
 }
 
-void P2pRpcConnAcceptor::stop()
+void P2pRpcConnAcceptor::stop() throw(Exception)
 {
 	this->running = false;
 	this->wait();
 }
 
-void P2pRpcConnAcceptor::wait()
+void P2pRpcConnAcceptor::wait() throw(Exception)
 {
 	RpcConnAcceptor::wait();
 	this->pool.stopAndWait();

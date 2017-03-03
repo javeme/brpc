@@ -114,10 +114,13 @@ void Type2XmlSerializer::visit(TypeIterator* v)
 		}
 		else{
 			TypeVisitable* visitable=dynamic_cast<TypeVisitable*>(value);
-			if(visitable)
+			if(visitable) {
 				visitable->accept(this);
-			else
-				visit(&value->toString());
+			}
+			else {
+				String vstr = value->toString();
+				visit(&vstr);
+			}
 		}
 		append(TAG_ELE_END);
 	}
@@ -140,10 +143,13 @@ void Type2XmlSerializer::visit(TypeIterator* v)
 		}
 		else{
 			TypeVisitable* visitable=dynamic_cast<TypeVisitable*>(itor->value);
-			if(visitable)
+			if(visitable) {
 				visitable->accept(this);
-			else
-				visit(&itor->value->toString());
+			}
+			else {
+				String vstr = itor->value->toString();
+				visit(&vstr);
+			}
 		}
 		append(TAG_VAL_END);
 		append(TAG_KV_END);
@@ -232,7 +238,7 @@ RpcMethodXmlSerializer::RpcMethodXmlSerializer()
 }
 
 int RpcMethodXmlSerializer::write(OutputStream& output, const RpcMethod& method,
-	const String& encoding)
+	const String& encoding) throw(SerializeException)
 {
 	if (method.status == RpcMethod::STATUS_REQUEST
 		&& method.methodName == "")
@@ -257,7 +263,7 @@ int RpcMethodXmlSerializer::write(OutputStream& output, const RpcMethod& method,
 }
 
 int RpcMethodXmlSerializer::read(RpcMethod& method, const InputStream& input,
-	const String& encoding)
+	const String& encoding) throw(SerializeException)
 {
 	method.reset();
 

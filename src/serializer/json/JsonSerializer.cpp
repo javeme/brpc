@@ -85,10 +85,13 @@ void Type2JsonSerializer::visit(TypeIterator* v)
 			return;
 		}
 		TypeVisitable* visitable=dynamic_cast<TypeVisitable*>(value);
-		if(visitable)
+		if(visitable) {
 			visitable->accept(this);
-		else
-			visit(&value->toString());
+		}
+		else {
+			String vstr = value->toString();
+			visit(&vstr);
+		}
 	}
 	else if(dynamic_cast<ObjectMap::Iterator*>(v))
 	{
@@ -107,10 +110,13 @@ void Type2JsonSerializer::visit(TypeIterator* v)
 			return;
 		}
 		TypeVisitable* visitable=dynamic_cast<TypeVisitable*>(itor->value);
-		if(visitable)
+		if(visitable) {
 			visitable->accept(this);
-		else
-			visit(&itor->value->toString());
+		}
+		else {
+			String vstr = itor->value->toString();
+			visit(&vstr);
+		}
 	}
 	else
 	{
@@ -232,7 +238,7 @@ RpcMethodJsonSerializer::RpcMethodJsonSerializer()
 }
 
 int RpcMethodJsonSerializer::write(OutputStream& output, const RpcMethod& method,
-	const String& encoding)
+	const String& encoding) throw(SerializeException)
 {
 	if (method.status == RpcMethod::STATUS_REQUEST
 		&& method.methodName == "")
@@ -257,7 +263,7 @@ int RpcMethodJsonSerializer::write(OutputStream& output, const RpcMethod& method
 }
 
 int RpcMethodJsonSerializer::read(RpcMethod& method, const InputStream& input,
-	const String& encoding)
+	const String& encoding) throw(SerializeException)
 {
 	method.reset();
 
@@ -289,6 +295,7 @@ int RpcMethodJsonSerializer::read(RpcMethod& method, const InputStream& input,
 		methodObjMap = null;
 
 		std::string err = reader.getFormatedErrorMessages();
+		err += " when parsing \"" + strValue + "\"\n";
 		throwpe(SerializeException(err.c_str()));
 	}
 	return -1;

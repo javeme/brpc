@@ -61,7 +61,7 @@ public:
 public:
 	virtual Object* operator()(const ObjectList& args)
 	{
-		typedef FunctionWrapper<Func>::RetType RetType;
+		typedef typename FunctionWrapper<Func>::RetType RetType;
 		//if(std::is_same<void, RetType>::value)
 		//	return null;
 		//toObject(m_fw(args)

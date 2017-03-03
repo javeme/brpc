@@ -14,17 +14,117 @@ CHECK_MEMORY_LEAKS
 #include "src/type/ObjectMap.h"
 #include "src/rpc/server/RpcServer.h"
 
+#ifndef WIN32
+#include <signal.h>
+#include <pthread.h>
+
+class SignalHandler
+{
+public:
+	static void catchSignals(int sigs[])
+	{
+		//signal(SIGSEGV, signalHandle);
+		for(int i = 0; sigs[i] != 0; i++)
+		{
+			assert(SIG_ERR != signal(sigs[i], signalHandle));
+		}
+	}
+
+	static void signalHandle(int sig)
+	{
+		printf("Signal %d\n", sig);
+		Util::dumpStack();
+		exit(-1);
+	}
+
+	static void ignoreSignal(int sig) throw(Exception)
+	{
+		struct sigaction sa;
+		sa.sa_handler = SIG_IGN;
+		sa.sa_flags = 0;
+		if(sigemptyset(&sa.sa_mask) == -1 || sigaction(sig, &sa, 0) == -1)
+		{
+			throw Exception(String::format(
+					"Failed to set ignore signal %d.", sig));
+		}
+
+		sigset_t signal_mask;
+		sigemptyset(&signal_mask);
+		sigaddset(&signal_mask, sig);
+		if(pthread_sigmask(SIG_BLOCK, &signal_mask, NULL) != 0)
+		{
+			throw Exception(String::format(
+					"Failed to set pthread ignore signal %d.", sig));
+		}
+	}
+
+	static void ignoreSignals(int sigs[]) throw(Exception)
+	{
+		for(int i = 0; sigs[i] != 0; i++)
+		{
+			ignoreSignal(sigs[i]);
+		}
+	}
+};
+
+// for linux like
+static void initSignalHandler() throw(Exception)
+{
+	int catches[] = {SIGSEGV, SIGBUS, SIGABRT, 0};
+	SignalHandler::catchSignals(catches);
+
+	int ignores[] = {SIGPIPE, 0};
+	SignalHandler::ignoreSignals(ignores);
+}
+
+#else
+
+static void initSignalHandler() throw(Exception)
+{
+}
+
+#endif
 
 using namespace brpc;
 
 class LogErrorHandler : public blib::IErrorHandler
 {
 public:
-	virtual bool handle(Exception& e)
+	LogErrorHandler()
+	{
+		// set unexpected exception handler, for more details please see:
+		// http://dev.yesky.com/307/2628307.shtml
+		std::set_unexpected(LogErrorHandler::unexpectedException);
+	}
+public:
+	virtual bool handle(const Exception& e)
 	{
 		Log* log = Log::getLogger();
 		log->warn(e.toString());
 		return true;
+	}
+
+	static void unexpectedException()
+	{
+		Log* log = Log::getLogger();
+		const String PREFIX = "[Unexpected specified exception] ";
+
+		try {
+			throw;
+		} catch (Exception& e) {
+			printf("%s%s\n", PREFIX.c_str(), e.toString().c_str());e.printStackTrace();
+			log->warn(PREFIX + e.toString());
+			//rethrow
+			throw RpcException(e);
+		} catch (std::exception& e) {
+			log->warn(PREFIX + e.what());
+			//rethrow
+			throw RpcException(e.what());
+		} catch (...) {
+			log->warn(PREFIX + "unknown exception");
+			//rethrow
+			throw;
+		}
 	}
 };
 
@@ -93,22 +193,25 @@ void testMyRpcApiPerf(int count, int threads=4)
 {
 	cstring name = "test", password = "123456";
 
-	auto perfTest = [&, count]() {
-		printf("start thread...\n");
+	auto perfTest = [&, count](int t) {
+		printf("start thread %d...\n", t);
 		MyRpcApi myApi(url, name, password);
 
 		String ping = myApi.ping();
 		printf("ping: %s\n", ping.c_str());
 
+		int timeouts = 0;
 		Date startTime = Date::getCurrentTime();
 		for (int i=0; i<count; i++)
 		{
 			try{
-				String result = myApi.echo(String::format("fake-%d", i));
+				String result = myApi.echo(String::format("fake-%d-%d", t, i));
 				printf("echo() returned: %s\n", result.c_str());
 				/*ObjectList args;
 				args.addValue(String::format("fake-%d", i));
 				myApi.cast("echo", args);*/
+			}catch(TimeoutException& e){
+				timeouts++;
 			}catch(Exception& e){
 				e.printStackTrace();
 			}
@@ -116,15 +219,16 @@ void testMyRpcApiPerf(int count, int threads=4)
 		Date endTime = Date::getCurrentTime();
 		float seconds = (endTime - startTime) / 1000.0;
 		float speed = count / seconds;
-		printf("end thread, total %d in %.2fs [%.2f reqs/s].\n",
-			count, seconds, speed);
+		printf("thread-%d finished, total %d(%d timeout) in "
+				"%.2fs [%.2f reqs/s].\n", t, count, timeouts, seconds, speed);
 	};
 
 	for (int t=0; t<threads; t++) {
-		Thread* thread = new LambdaThread([&]{
+		Thread* thread = new LambdaThread([&, t]{
 			try {
-				perfTest();
+				perfTest(t);
 			} catch (Exception& e) {
+				printf("Thread %d finished with exception.\n", t);
 				e.printStackTrace();
 			}
 		});
@@ -133,7 +237,7 @@ void testMyRpcApiPerf(int count, int threads=4)
 	getchar();
 }
 
-int run(int argc, char* argv[])
+int run(int argc, char* argv[]) throw(Exception)
 {
 	Log* logger = Log::getLogger();
 	cstring usage = "usage: brpc server|client [options...]\n";
@@ -190,7 +294,7 @@ int run(int argc, char* argv[])
 					else if (t == 'f' && arg == "false")
 						args.addValue(false);
 					else
-						printf("invalid para: %s\n", argv[i]);
+						printf("invalid parameter: %s\n", argv[i]);
 				}
 				testClient(method, args);
 			}
@@ -224,9 +328,10 @@ int run(int argc, char* argv[])
 int main(int argc, char* argv[])
 {
 	//_CrtSetBreakAlloc(3011);
+	initSignalHandler();
 
 	System::instance().init();
-	BRpcUtil::setBrpcDebug(true);
+	BRpcUtil::setBrpcDebug(false);
 
 	String name = "brpc";
 	if (argc > 1){
@@ -235,7 +340,7 @@ int main(int argc, char* argv[])
 	}
 
 	try{
-		String file = String::format("/var/log/%s.log", name.c_str());
+		String file = String::format("/var/log/brpc/%s.log", name.c_str());
 		LogManager::instance().initLogger(name, file, Log::LOG_DEBUG);
 	}catch (Exception& e){
 		e.printStackTrace();

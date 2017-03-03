@@ -14,10 +14,11 @@ public:
 	RpcOnHttpSocket(void);
 	virtual ~RpcOnHttpSocket(void);
 public:
-	virtual void send(const DataPackage& package) throw(RpcException);
-	virtual void receive() throw(RpcException);
+	virtual void send(const DataPackage& package) throw(Exception);
+	virtual void receive() throw(Exception);
 public:
-	virtual void sendResponse(HttpResponse::Status status, const String& pkgId);
+	virtual void sendResponse(HttpResponse::Status status,
+			const String& pkgId) throw(Exception);
 };
 
 }//end of namespace brpc

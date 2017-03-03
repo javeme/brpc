@@ -66,7 +66,7 @@ struct Ptr2Type<T*>
 	typedef T Type;
 };
 
-template<typename Type, typename bool>
+template<typename Type, bool convertible>
 struct MapObjectHelper;
 
 template<typename Type>
@@ -78,7 +78,7 @@ struct MapObjectHelper<Type, true>
 	}
 	static Type map2object(Object* map)
 	{
-		typedef Ptr2Type<Type>::Type Cls;
+		typedef typename Ptr2Type<Type>::Type Cls;
 		//cstring cls = Cls::thisClass()->getName();
 		const Class* cls = Cls::thisClass();
 		return dynamic_cast<Type>(MapObjectConverter::map2object(map, cls));
@@ -154,7 +154,7 @@ template <typename Type>
 inline Object* objectToMap(Type obj)
 {
 	//Type is a sub-Object
-	const bool IS_SUB_OBJ = is_convertible<Type, Object*>::value;
+	const bool IS_SUB_OBJ = blib::is_convertible<Type, Object*>::value;
 	return MapObjectHelper<Type, IS_SUB_OBJ>::object2map(obj);
 }
 
@@ -162,14 +162,14 @@ template <typename Type>
 inline Type mapToObject(Object* map)
 {
 	//Type is a sub-Object
-	const bool IS_SUB_OBJ = is_convertible<Type, Object*>::value;
+	const bool IS_SUB_OBJ = blib::is_convertible<Type, Object*>::value;
 	return MapObjectHelper<Type, IS_SUB_OBJ>::map2object(map);
 }
 
 
 /////////////////////////////////////////////////////////////
 // TypeWrapperHelper for TypeWrapper
-template<typename Type, typename bool>
+template<typename Type, bool convertible>
 struct TypeWrapperHelper;
 
 template<typename Type>
@@ -279,7 +279,7 @@ public:
 	typedef Type RealType;
 
 	RealTypeWrapper(const Type& val=Type(), bool dontDelete=false)
-		: TypeWrapper(val, dontDelete) {
+		: TypeWrapper<Type>(val, dontDelete) {
 	}
 };
 
@@ -291,7 +291,7 @@ public:
 	typedef Type RealType;
 
 	RealTypeWrapper(const Type& val=Type(), bool dontDelete=false)
-		: TypeWrapper(val, dontDelete) {
+		: TypeWrapper<Type>(val, dontDelete) {
 	}
 };
 
@@ -302,7 +302,7 @@ public:
 	typedef Type RealType;
 
 	RealTypeWrapper(const Type& val=Type(), bool dontDelete=false)
-		: TypeWrapper(val, dontDelete) {
+		: TypeWrapper<Type>(val, dontDelete) {
 	}
 };
 
@@ -368,14 +368,15 @@ inline MatchLevel matchLevel(Object* obj)
 
 /////////////////////////////////////////////////////////////
 // string_caster
-template <typename Type, typename bool>
+template <typename Type, bool>
 struct string_caster;
 
 template <typename Type>
 struct string_caster<Type, true>
 {
 	static String toString(const Type& val){
-		return String::format("'%s'", String(val).c_str());
+		String str = val;
+		return String::format("'%s'", str.c_str());
 	}
 };
 
@@ -383,7 +384,7 @@ template <typename Type>
 struct string_caster<Type, false>
 {
 	static String toString(const Type& val){
-		return Value2String<Type>(val);;
+		return Value2String<Type>(val);
 	}
 };
 

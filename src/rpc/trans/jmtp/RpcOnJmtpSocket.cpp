@@ -24,7 +24,7 @@ RpcOnJmtpSocket::~RpcOnJmtpSocket(void)
 }
 
 //send package: header + data + tail
-void RpcOnJmtpSocket::send(const DataPackage& package) throw(IOException)
+void RpcOnJmtpSocket::send(const DataPackage& package) throw(Exception)
 {
 	ScopedLock lock(this->sendLock);
 
@@ -75,7 +75,7 @@ void RpcOnJmtpSocket::receive(ByteBuffer& buffer)
 }
 */
 
-void RpcOnJmtpSocket::receive() throw(RpcException)
+void RpcOnJmtpSocket::receive() throw(Exception)
 {
 	if(this->clientSocket==null){
 		throwpe(IOException("null socket"));

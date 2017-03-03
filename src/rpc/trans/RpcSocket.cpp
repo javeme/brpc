@@ -40,14 +40,14 @@ bool RpcSocket::notifyReceive(DataPackage& input)
 	{
 		if (this->isWaitingData && input.getId()==this->idOfWaitData)
 		{
-			this->recvPacket = input;
+			this->recvPacket = std::move(input);
 			// to ensure that:
 			// 1.if there is no waiter, we don't signal
 			// 2.if there is a waiter, we send a signal
 			// so, we use notify() instead of signal()
 			// signal() may lead to send mult signals but
 			// no consumer(such as all consumers timeout)
-			this->waitLock.notify();
+			this->sendLock.wakeup();
 			return true;
 		}
 		else
@@ -69,18 +69,20 @@ bool RpcSocket::notifyException(Exception& e)
 	return false;
 }
 
-DataPackage RpcSocket::sendSynch(const DataPackage& output)
+DataPackage RpcSocket::sendSynch(const DataPackage& output) throw(Exception)
 {
 	ScopedLock lock(this->sendLock);
 
 	this->isWaitingData=true;
 	this->idOfWaitData=output.getId();
 
+	// TODO: deal with block(or timeout)
 	this->send(output);
+
 	unsigned int timeout = this->timeout + 100;
 	if(this->timeout == 0)
 		timeout = INFINITE;
-	if(!this->waitLock.wait(this->sendLock, timeout))
+	if(!this->sendLock.wait(timeout))
 		throwpe(TimeoutException(timeout));
 
 	DataPackage& result = this->recvPacket;
@@ -97,7 +99,7 @@ DataPackage RpcSocket::sendSynch(const DataPackage& output)
 	}
 
 	this->isWaitingData=false;
-	return result;
+	return std::move(result);
 }
 
 void RpcSocket::notifyHookReceived(cstring name,const DataPackage& data,long time)
