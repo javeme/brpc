@@ -17,6 +17,21 @@ public:
 		return m_action;
 	}
 
+public:
+	Action(Action&& other) {
+		*this = std::move(other);
+	}
+
+	Action& operator=(Action&& other) {
+		SQLExpression::operator=(std::move(other));
+		this->m_action = std::move(other.m_action);
+		return *this;
+	}
+
+private:
+	explicit Action(const Action&);
+	Action&  operator=(const Action&);
+
 private:
 	String m_action;  // from table
 };
@@ -79,6 +94,21 @@ class CURD : public Action
 public:
 	CURD(cstring table) : Action("CURD"), m_tableName(table) {}
 
+	CURD(CURD&& other) : Action("CURD") {
+		*this = std::move(other);
+	}
+
+	CURD& operator=(CURD&& other) {
+		Action::operator=(std::move(other));
+		this->m_tableName = std::move(other.m_tableName);
+		return *this;
+	}
+
+private:
+	explicit CURD(const CURD&);
+	CURD&  operator=(const CURD&);
+
+public:
 	cstring table() const { return m_tableName; }
 protected:
 	String m_tableName;  // from table

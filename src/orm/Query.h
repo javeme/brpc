@@ -56,6 +56,7 @@ public:
 		unsigned int limit=0,
 		unsigned int offset=0,
 		bool distinct=false);
+	virtual ~Query();
 
 	virtual Query& query(cstring field);
 	virtual Query& query(const Column& field);
@@ -87,6 +88,15 @@ public:
 	virtual QueryResult all();
 	//virtual Model* one();
 	//virtual Model* first();
+
+public:
+	Query(Query&& other);
+	Query& operator=(Query&& other);
+
+private:
+	explicit Query(const Query&);
+	Query&  operator=(const Query&);
+
 private:
 	const Class* m_tableClass;  // the class mapping the table
 	//String m_tableName;  // from table

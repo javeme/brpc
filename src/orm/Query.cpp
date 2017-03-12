@@ -31,7 +31,33 @@ Query::Query(Connection* conn,
 	m_groupBy(groupBy), m_having(having), m_orderBy(orderBy),
 	m_limit(limit), m_offset(offset), m_distinct(distinct)
 {
-	;
+}
+
+Query::~Query()
+{
+}
+
+Query::Query(Query&& other) : CURD("")
+{
+	*this = std::move(other);
+}
+
+Query& Query::operator=(Query&& other)
+{
+	CURD::operator=(std::move(other));
+
+	this->m_tableClass = std::move(other.m_tableClass);
+	this->m_distinct = std::move(other.m_distinct);
+	this->m_expectedFileds = std::move(other.m_expectedFileds);
+	this->m_where = std::move(other.m_where);
+	this->m_groupBy = std::move(other.m_groupBy);
+	this->m_having = std::move(other.m_having);
+	this->m_orderBy = std::move(other.m_orderBy);
+	this->m_limit = std::move(other.m_limit);
+	this->m_offset = std::move(other.m_offset);
+	this->m_connection = std::move(other.m_connection);
+
+	return *this;
 }
 
 Query& Query::query(cstring field)
