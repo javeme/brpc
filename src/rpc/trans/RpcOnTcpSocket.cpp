@@ -51,7 +51,7 @@ void RpcOnTcpSocket::initSocket(const HashMap<String,String>& paras)
 }
 
 void RpcOnTcpSocket::acceptWith(Object* server,
-	const HashMap<String,String>& paras) throw(RpcException)
+	const HashMap<String,String>& paras) throw(Exception)
 {
 	ServerSocket* serverSocket = dynamic_cast<ServerSocket*>(server);
 	if (serverSocket)
@@ -67,7 +67,7 @@ void RpcOnTcpSocket::acceptWith(Object* server,
 	}
 }
 
-void RpcOnTcpSocket::connect(const HashMap<String,String>& paras) throw(IOException)
+void RpcOnTcpSocket::connect(const HashMap<String,String>& paras) throw(Exception)
 {
 	//释放原来的Socket内存
 	if(this->clientSocket != null)
@@ -100,7 +100,7 @@ void RpcOnTcpSocket::connect(const HashMap<String,String>& paras) throw(IOExcept
 	initSocket(paras);
 }
 
-void RpcOnTcpSocket::close() throw(IOException)
+void RpcOnTcpSocket::close() throw(Exception)
 {
 	if (this->clientSocket == null)
 	{
@@ -121,7 +121,7 @@ void RpcOnTcpSocket::startReceiveLoop()
 	this->timeoutCount = 0;
 	while(this->recving){
 		try{
-			receive();
+			this->receive();
 			this->timeoutCount = 0;
 			this->hasError = false;
 		}catch(TimeoutException& e){
@@ -133,6 +133,8 @@ void RpcOnTcpSocket::startReceiveLoop()
 				BRpcUtil::debug("====timeout count > %d, stop reveiver.\n",
 					maxTimeoutCount);
 			}
+		}catch(SocketTryAgainException&){
+			BRpcUtil::debug("====exception, try again later.\n");
 		}catch(SocketClosedException&){
 			// closed by peer (peer -> self)
 			this->hasError = false;
@@ -166,6 +168,7 @@ void RpcOnTcpSocket::startReceiveLoop()
 void RpcOnTcpSocket::stopReceiveLoop()
 {
 	this->recving=false;
+	// interrupt the block read operation by changing the timeout
 	if(this->clientSocket!=null)
 		this->clientSocket->setTimeout(1);
 }

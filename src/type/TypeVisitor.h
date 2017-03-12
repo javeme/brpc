@@ -19,7 +19,7 @@ public:
 	}
 public:
 	virtual void visit(Number* v)=0;
-	virtual void visit(String* v)=0;
+	virtual void visit(blib::String* v)=0;
 	virtual void visit(ObjectList* v)=0;
 	virtual void visit(ObjectMap* v)=0;
 	virtual void visit(TypeIterator* v)=0;
@@ -55,7 +55,7 @@ class Visitable : public Object
 {
 public:
 	virtual void accept(Visitor* visitor)=0;
-}
-;*/
+};
+*/
 
 }//end of namespace brpc

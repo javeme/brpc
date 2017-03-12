@@ -4,9 +4,10 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include "orm/drivers/mysql/MySQLConnection.h"
+#include <assert.h>
 #include "src/type/Number.h"
 #include "src/util/Url.h"
+#include "orm/drivers/mysql/MySQLConnection.h"
 
 
 namespace brpc{
@@ -214,7 +215,7 @@ Object* MySQLResultSet::getObject(uint32 columnIndex)
 	case MYSQL_TYPE_LONG:
 		return new Integer(CodeUtil::str2Int(val));
 	case MYSQL_TYPE_LONGLONG:
-		return new Long(::_atoi64(val));
+		return new Long(CodeUtil::str2Int64(val));
 	case MYSQL_TYPE_FLOAT:
 		return new Float((float)CodeUtil::str2Float(val));
 	case MYSQL_TYPE_DOUBLE:
@@ -371,7 +372,8 @@ void MySQLConnection::executeSQLWithBytes(cstring sql,cstring buf,size_t len)
 	pos+=mysql_real_escape_string(m_mysql, newbuf+pos, buf, len);
 	newbuf[pos++]='\'';
 	++tail;
-	strncpy_s(newbuf+pos,total-pos,tail,strlen(tail));//sql"?"号后面的字符串
+	assert(total>=pos+strlen(tail));
+	strncpy(newbuf+pos,tail,strlen(tail));//sql"?"号后面的字符串
 	total=pos+strlen(tail);
 	try
 	{
@@ -395,21 +397,23 @@ void MySQLConnection::executeSQLWithBytesArray(cstring sql,ByteArray bufs[],int 
 	char* newbuf=new char[total];
 
 	size_t pos=0;
-	cstring startSql=sql;
+	cstring current=sql;
 	for(int i=0;i<num;i++)
 	{
-		cstring tail=strstr(startSql,"?");
-		size_t size=tail-startSql;
-		memcpy(newbuf+pos,startSql,size);//"?"号前面的字符串
+		cstring tail=strstr(current,"?");
+		size_t size=tail-current;
+		memcpy(newbuf+pos,current,size);//"?"号前面的字符串
 		pos+=size;
 		newbuf[pos++]='\'';
-		pos+=mysql_real_escape_string(m_mysql, newbuf+pos, (cstring)bufs[i].data, bufs[i].length);
+		pos+=mysql_real_escape_string(m_mysql,newbuf+pos,
+				(cstring)bufs[i].data,bufs[i].length);
 		newbuf[pos++]='\'';
 
-		startSql=tail+1;
+		current=tail+1;
 	}
-	strncpy_s(newbuf+pos,total-pos,startSql,strlen(startSql));//sql最后一个"?"号后面的字符串
-	total=pos+strlen(startSql);
+	assert(total>=pos+strlen(current));
+	strncpy(newbuf+pos,current,strlen(current));//sql最后一个"?"号后面的字符串
+	total=pos+strlen(current);
 	try
 	{
 		this->execute(newbuf,total);

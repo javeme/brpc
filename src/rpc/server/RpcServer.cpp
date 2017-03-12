@@ -14,14 +14,14 @@ RpcServer::RpcServer(cstring url, AuthChecker* authChecker,
 	  serializerType(serializerType), name(name)
 {
 	this->running = false;
-	this->timeout = timeout;//ms
+	this->timeout = timeout; //ms
 	this->connAcceptor = RpcInvokerFacatory::loadRpcAcceptor(url, this);
 }
 
 RpcServer::~RpcServer()
 {
 	destroy();
-	delete connAcceptor;
+	delete this->connAcceptor;
 }
 
 void RpcServer::addConnection(RpcConnection* conn)
@@ -29,7 +29,7 @@ void RpcServer::addConnection(RpcConnection* conn)
 	if (conn == null)
 		return;
 	BRpcUtil::debug("RpcServer.addConnection: %s\n", conn->toString().c_str());
-	connList.addToLast(conn);
+	this->connList.addToLast(conn);
 	conn->setDataHookHandler(this);
 }
 
@@ -38,55 +38,55 @@ void RpcServer::removeConnection(RpcConnection* conn)
 	if (conn == null)
 		return;
 	BRpcUtil::debug("RpcServer.removeConnection: %s\n", conn->toString().c_str());
-	if(connList.remove(conn) >= 0)
+	if(this->connList.remove(conn) >= 0)
 		delete conn;
 }
 
 void RpcServer::start(RpcService* service)
 {
-	if (running)
+	if (this->running)
 		return;
 
 	checkNullPtr(service);
-	dispatcher = service;
-	dispatcher->setEventHandler(this);
+	this->dispatcher = service;
+	this->dispatcher->setEventHandler(this);
 
-	checkNullPtr(connAcceptor);
-	connAcceptor->start();
+	checkNullPtr(this->connAcceptor);
+	this->connAcceptor->start();
 
-	running = true;
+	this->running = true;
 }
 
 void RpcServer::wait()
 {
-	checkNullPtr(connAcceptor);
-	connAcceptor->wait();
+	checkNullPtr(this->connAcceptor);
+	this->connAcceptor->wait();
 
 	destroy();
-	running = false;
+	this->running = false;
 }
 
 void RpcServer::stop()
 {
-	running = false;
+	this->running = false;
 	//wait for stop
 	this->wait();
 }
 
 void RpcServer::destroy()
 {
-	auto itor = connList.iterator();
+	auto itor = this->connList.iterator();
 	while (itor->hasNext())
 	{
 		RpcConnection* conn = itor->next();
 		delete conn;
 	}
-	connList.clear();
+	this->connList.clear();
 }
 
 void RpcServer::onEvent(cstring event, Object* sender, const ObjectList& args)
 {
-	auto itor = connList.iterator();
+	auto itor = this->connList.iterator();
 	while (itor->hasNext())
 	{
 		RpcConnection* conn = itor->next();

@@ -13,29 +13,29 @@ HttpParser::~HttpParser()
 {
 }
 
-SmartPtr<HttpHeader> HttpParser::parse(const String& text)
+ScopePointer<HttpHeader> HttpParser::parse(const String& text)
 {
 	//@Todo: parse from string
 	;
 	return null;
 }
 
-SmartPtr<HttpHeader> HttpParser::parse(const LinkedList<String>& lines)
+ScopePointer<HttpHeader> HttpParser::parse(const LinkedList<String>& lines)
 {
-	SmartPtr<HttpHeader> header = null;
+	ScopePointer<HttpHeader> header = null;
 
 	String line = lines.get(0);
 	//Response
 	if (line.startWith(HTTP_NAME))//HTTP/1.0 200 OK
 	{
-		auto list = line.splitWith(" ");
+		auto list = line.splitWith(" ", 3);
 		if(list.size() < 3)
 			throw HttpParseException("Invalid http response: "+line);
-		SmartPtr<HttpResponse> response = new HttpResponse();
-		header = response;
+		ScopePointer<HttpResponse> response = new HttpResponse();
 		response->setVersion(list[0].splitWith("/")[1]);
 		response->setStatus(HttpResponse::str2status(list[1]));
-		response->setDescription(line.substring(line.find(list[2],list[0].length())));
+		response->setDescription(list[2]);
+		header = response.detach();
 	}
 	//Request
 	else//GET /index HTTP/1.1
@@ -44,11 +44,11 @@ SmartPtr<HttpHeader> HttpParser::parse(const LinkedList<String>& lines)
 		if(list.size() != 3)
 			throw HttpParseException("Invalid http request");
 
-		SmartPtr<HttpRequest> request= new HttpRequest();
-		header = request;
+		ScopePointer<HttpRequest> request = new HttpRequest();
 		request->setRequestType(HttpRequest::str2requestType(list[0]));
 		request->setUrlWithParas(list[1]);
 		request->setVersion(list[2].splitWith("/")[1]);
+		header = request.detach();
 	}
 
 	//Entities
@@ -65,7 +65,7 @@ SmartPtr<HttpHeader> HttpParser::parse(const LinkedList<String>& lines)
 	}
 
 	header->update();
-	return header;
+	return std::move(header);
 }
 
 HashMap<String,String> HttpParser::paramSplit(const String& str)

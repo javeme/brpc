@@ -124,7 +124,7 @@ Query Session::query(const Class* cls, cstring table,
 	if (fields.size() == 0) {
 		fields.add("*");
 	}
-	return Query(m_connection, cls, table, fields);
+	return std::move(Query(m_connection, cls, table, fields));
 }
 
 void Session::add(Model* model)

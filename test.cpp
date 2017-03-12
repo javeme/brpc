@@ -146,8 +146,10 @@ public:
 	}
 };
 
+namespace blib {
+
 template <>
-struct blib::Converter<User*>
+struct Converter<User*>
 {
 	static inline User* valueOf(Object* obj)
 	{
@@ -174,7 +176,7 @@ struct blib::Converter<User*>
 
 
 template <>
-struct blib::Converter<User>
+struct Converter<User>
 {
 	static inline User valueOf(Object* obj)
 	{
@@ -196,6 +198,8 @@ struct blib::Converter<User>
 		return objMap;
 	}
 };
+
+}
 
 User* testReturnUserPtr(cstring name, int age)
 {
@@ -268,8 +272,10 @@ protected:
 	int m_age;
 };
 
+namespace brpc{
+
 template <>
-struct brpc::Converter<TestClass*>
+struct Converter<TestClass*>
 {
 	static inline TestClass* valueOf(Object* obj)
 	{
@@ -295,6 +301,7 @@ struct brpc::Converter<TestClass*>
 	}
 };
 
+}
 
 void testBaseType(FuncDispatcher& dispatcher)
 {
@@ -774,10 +781,10 @@ void testCreateDrop()
 
 int main2(int argc, char* argv[])
 {
-	_CrtSetBreakAlloc(249);
-	cstring s0=CODE2STRING(CLS_PF_OF_ARGS(0));
-	cstring s1=CODE2STRING(COLUME(name, varchar<32>));
-	cstring s2=CODE2STRING(FUNCTION_C(avg, age));
+	//_CrtSetBreakAlloc(249);
+	//cstring s0=CODE2STRING(CLS_PF_OF_ARGS(0));
+	//cstring s1=CODE2STRING(COLUME(name, varchar<32>));
+	//cstring s2=CODE2STRING(FUNCTION_C(avg, age));
 
 	BRpcUtil::setBrpcDebug(true);
 

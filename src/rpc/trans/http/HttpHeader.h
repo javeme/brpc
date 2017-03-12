@@ -68,7 +68,7 @@ public:
 	cstring getCharset() const { return charset; }
 	void setCharset(cstring val) { charset = val; }
 public:
-	String geEntity(const String& key, const String& default)const;
+	String geEntity(const String& key, const String& deflt)const;
 	void setEntity(const String& key, const String& val);
 	unsigned int getEntrySize() const { return entities.size(); }
 	bool contain(const String& key) const { return entities.contain(key); }
@@ -134,7 +134,7 @@ public:
 	String getRequestUrl() const { return requestUrl; }
 	void setRequestUrl(const String& val) { requestUrl = val; }
 
-	String getParameter(const String& key, const String& default) const;
+	String getParameter(const String& key, const String& deflt) const;
 	bool setParameter(const String& key, const String& val);
 public:
 	virtual String getParametersAsString() const;

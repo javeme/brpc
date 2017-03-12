@@ -5,15 +5,6 @@
 
 namespace brpc{
 
-//函数定义
-
-// FUN_AND_PFUN_OF_ARGS(
-//     VA_ARGS(),
-//     VA_ARGS(),
-//     VA_ARGS(),
-//     VA_ARGS()
-//     )//多余出逗号
-
 /*
 FUN_AND_PFUN_OF_ARGS(
     VA_ARGS(TYPENAME_ARG(Arg1)),
@@ -30,46 +21,37 @@ FUN_AND_PFUN_OF_ARGS(
     )
 */
 
-/*
-//#define FORA0(f)    f(0,)
-//#define FORA1(f)    f(1,FORA0(f))
-#define FORA0(f)
-#define FORA1(f)    f##1
-#define FORA2(f)    f(2,FORA1(f))
-#define FORA3(f)    f(3,FORA2(f))
-#define FORA4(f)    f(4,FORA3(f))
-*/
 
-#define _TYPENAME_ARGS1 ,typename Arg1
+#define _TYPENAME_ARGS1  ,typename Arg1
 #define _TYPENAME_ARGS(n, m)  m, typename JOIN(Arg, n)
 
 // NOTE: FORA3(_ARGS) => _ARGS(3, FORA2(_ARGS)) => FORA2(_ARGS), Arg3
 //    => _ARGS(2, FORA1(_ARGS)), Arg3 => FORA1(_ARGS), Arg2, Arg3
 //    => _ARGS1, Arg2, Arg3 => Arg1, Arg2, Arg3
-#define _ARGS1 Arg1
-#define _ARGS(n, m)  m, JOIN(Arg, n)
+#define _ARG_LIST1  Arg1
+#define _ARG_LIST(n, m)  m, JOIN(Arg, n)
 
-#define _INDEX_ARGS1 Arg1,
-#define _INDEX_ARGS(n, m)  m JOIN(Arg, n),
+#define _ARGS_INDEX1  INDEX_NAME(Arg1),
+#define _ARGS_INDEX(n, m)  m INDEX_NAME(JOIN(Arg, n)),
 
-#define _ARG_TYPES1 ARG_TYPE(Arg1)
-#define _ARG_TYPES(n, m)  m; ARG_TYPE(JOIN(Arg, n))
+#define _ARGS_TYPE1  ARG_TYPE(Arg1)
+#define _ARGS_TYPE(n, m)  m; ARG_TYPE(JOIN(Arg, n))
 
-#define _VALUE_OF_ARGS1 VALUE_OF_ARG(Arg1)
+#define _VALUE_OF_ARGS1  VALUE_OF_ARG(Arg1)
 #define _VALUE_OF_ARGS(n, m)  m, VALUE_OF_ARG(JOIN(Arg, n))
 
-#define _FUN_R_ARGS(R, ARGS) R(ARGS)
-#define _PFN_R_ARGS(R, ARGS) R(*)(ARGS)
-#define _CPFRARGS(C, R, ARGS) R(C::*)(ARGS)
+#define _FUN_R_ARGS(R, ARGS)  R(ARGS)
+#define _PFN_R_ARGS(R, ARGS)  R(*)(ARGS)
+#define _CPFRARGS(C, R, ARGS)  R(C::*)(ARGS)
 
 #define FUNC_OF_ARGS(n)                                                       \
     FUN_OF_ARGS(                                                              \
         VA_ARGS(                                          R),                 \
         VA_ARGS(              JOIN(FORA, n)( _TYPENAME_ARGS)),                \
-        VA_ARGS(_FUN_R_ARGS(R,JOIN(FORA, n)(          _ARGS))),               \
-        VA_ARGS(              JOIN(FORA, n)(          _ARGS)),                \
-        VA_ARGS(              JOIN(FORA, n)(    _INDEX_ARGS)),                \
-        VA_ARGS(              JOIN(FORA, n)(     _ARG_TYPES)),                \
+        VA_ARGS(_FUN_R_ARGS(R,JOIN(FORA, n)(      _ARG_LIST))),               \
+        VA_ARGS(              JOIN(FORA, n)(      _ARG_LIST)),                \
+        VA_ARGS(              JOIN(FORA, n)(    _ARGS_INDEX)),                \
+        VA_ARGS(              JOIN(FORA, n)(     _ARGS_TYPE)),                \
         VA_ARGS(              JOIN(FORA, n)( _VALUE_OF_ARGS))                 \
         )
 
@@ -77,10 +59,10 @@ FUN_AND_PFUN_OF_ARGS(
     FUN_OF_ARGS(                                                              \
         VA_ARGS(                                          R),                 \
         VA_ARGS(              JOIN(FORA, n)( _TYPENAME_ARGS)),                \
-        VA_ARGS(_PFN_R_ARGS(R,JOIN(FORA, n)(          _ARGS))),               \
-        VA_ARGS(              JOIN(FORA, n)(          _ARGS)),                \
-        VA_ARGS(              JOIN(FORA, n)(    _INDEX_ARGS)),                \
-        VA_ARGS(              JOIN(FORA, n)(     _ARG_TYPES)),                \
+        VA_ARGS(_PFN_R_ARGS(R,JOIN(FORA, n)(      _ARG_LIST))),               \
+        VA_ARGS(              JOIN(FORA, n)(      _ARG_LIST)),                \
+        VA_ARGS(              JOIN(FORA, n)(    _ARGS_INDEX)),                \
+        VA_ARGS(              JOIN(FORA, n)(     _ARGS_TYPE)),                \
         VA_ARGS(              JOIN(FORA, n)( _VALUE_OF_ARGS))                 \
         )
 
@@ -89,10 +71,10 @@ FUN_AND_PFUN_OF_ARGS(
         VA_ARGS(                                          C),                 \
         VA_ARGS(                                          R),                 \
         VA_ARGS(              JOIN(FORA, n)( _TYPENAME_ARGS)),                \
-        VA_ARGS(_CPFRARGS(C,R,JOIN(FORA, n)(          _ARGS))),               \
-        VA_ARGS(              JOIN(FORA, n)(          _ARGS)),                \
-        VA_ARGS(            C,JOIN(FORA, n)(    _INDEX_ARGS)),                \
-        VA_ARGS(              JOIN(FORA, n)(     _ARG_TYPES)),                \
+        VA_ARGS(_CPFRARGS(C,R,JOIN(FORA, n)(      _ARG_LIST))),               \
+        VA_ARGS(              JOIN(FORA, n)(      _ARG_LIST)),                \
+        VA_ARGS(INDEX_NAME(C),JOIN(FORA, n)(    _ARGS_INDEX)),                \
+        VA_ARGS(              JOIN(FORA, n)(     _ARGS_TYPE)),                \
         VA_ARGS(              JOIN(FORA, n)( _VALUE_OF_ARGS)),                \
         VA_ARGS(                                           )                  \
         )
@@ -102,10 +84,10 @@ FUN_AND_PFUN_OF_ARGS(
         VA_ARGS(                                          C),                 \
         VA_ARGS(                                          R),                 \
         VA_ARGS(              JOIN(FORA, n)( _TYPENAME_ARGS)),                \
-        VA_ARGS(_CPFRARGS(C,R,JOIN(FORA, n)(          _ARGS))),               \
-        VA_ARGS(              JOIN(FORA, n)(          _ARGS)),                \
-        VA_ARGS(            C,JOIN(FORA, n)(    _INDEX_ARGS)),                \
-        VA_ARGS(              JOIN(FORA, n)(     _ARG_TYPES)),                \
+        VA_ARGS(_CPFRARGS(C,R,JOIN(FORA, n)(      _ARG_LIST))),               \
+        VA_ARGS(              JOIN(FORA, n)(      _ARG_LIST)),                \
+        VA_ARGS(INDEX_NAME(C),JOIN(FORA, n)(    _ARGS_INDEX)),                \
+        VA_ARGS(              JOIN(FORA, n)(     _ARGS_TYPE)),                \
         VA_ARGS(              JOIN(FORA, n)( _VALUE_OF_ARGS)),                \
         VA_ARGS(                                      const)                  \
         )

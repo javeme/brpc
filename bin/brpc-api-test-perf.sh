@@ -1,0 +1,1 @@
+./brpc api-test-perf 1000

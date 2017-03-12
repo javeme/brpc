@@ -127,9 +127,9 @@ void HttpHeader::update()
 	setContentType(this->entities.getDefault(KEY_CONTENT_TYPE, ""));
 }
 
-String HttpHeader::geEntity(const String& key, const String& default)const
+String HttpHeader::geEntity(const String& key, const String& deflt)const
 {
-	return this->entities.getDefault(key, default);
+	return this->entities.getDefault(key, deflt);
 }
 
 void HttpHeader::setEntity(const String& key, const String& val)
@@ -165,7 +165,7 @@ String HttpHeader::getContentEncoding() const
 	return this->geEntity("Content-Encoding", "");
 }
 
-void HttpHeader::setContentEncoding( const String& val )
+void HttpHeader::setContentEncoding(const String& val)
 {
 	return this->setEntity("Content-Encoding", val);
 }
@@ -175,7 +175,7 @@ dword HttpHeader::getKeepAlive() const
 	return (dword)CodeUtil::str2Int(this->geEntity("Keep-Alive", "0"));
 }
 
-void HttpHeader::setKeepAlive( dword sec )
+void HttpHeader::setKeepAlive(dword sec)
 {
 	if (sec > 0)
 	{
@@ -201,7 +201,7 @@ String HttpHeader::getDateString() const
 	return this->geEntity("Date", "");
 }
 
-void HttpHeader::setDate( const String& date )
+void HttpHeader::setDate(const String& date)
 {
 	return this->setEntity("Date", date);
 }
@@ -211,29 +211,29 @@ Date HttpHeader::getDate() const
 	return Date::parseDate(DATE_FORMAT_GMT, getDateString());
 }
 
-void HttpHeader::setDate( const Date& date )
+void HttpHeader::setDate(const Date& date)
 {
 	return this->setDate(date.formatDate(DATE_FORMAT_GMT));
 }
 
-void HttpHeader::writeCrlfTo( OutputStream& output )
+void HttpHeader::writeCrlfTo(OutputStream& output)
 {
 	output.writeBytes((byte*)CRLF, strlen(CRLF));
 }
 
 
 
-HttpRequest::HttpRequest( cstring url/*="/"*/ )
+HttpRequest::HttpRequest(cstring url/*="/"*/)
 	:HttpHeader(),requestUrl(url),requestType(HTTP_GET)
 {
 }
 
-HttpRequest::HttpRequest( dword len, cstring type )
+HttpRequest::HttpRequest(dword len, cstring type)
 	:HttpHeader(len, type),requestType(HTTP_GET),requestUrl("/")
 {
 }
 
-HttpRequest::HttpRequest( const HashMap<String,String>& headers )
+HttpRequest::HttpRequest(const HashMap<String,String>& headers)
 	:HttpHeader(headers),requestType(HTTP_GET),requestUrl("/")
 {
 }
@@ -246,14 +246,14 @@ const static cstring requestTypes[HttpRequest::REQUEST_TYPE_COUNT] = {
 	"GET", "POST", "PUT", "DELETE",
 	"HEAD", "TRACE", "OPTIONS"
 };
-cstring HttpRequest::requestType2Str( RequestType val )
+cstring HttpRequest::requestType2Str(RequestType val)
 {
 	if (0 <= val && val < REQUEST_TYPE_COUNT)
 		return requestTypes[val];
 	throw HttpException(String::format("invalid method: %d", val));
 }
 
-HttpRequest::RequestType HttpRequest::str2requestType( cstring val )
+HttpRequest::RequestType HttpRequest::str2requestType(cstring val)
 {
 	checkNullPtr(val);
 	RequestType type = REQUEST_TYPE_COUNT;
@@ -268,12 +268,12 @@ HttpRequest::RequestType HttpRequest::str2requestType( cstring val )
 	return type;
 }
 
-String HttpRequest::getParameter( const String& key, const String& default ) const
+String HttpRequest::getParameter(const String& key, const String& deflt) const
 {
-	return this->parameters.getDefault(key, default);
+	return this->parameters.getDefault(key, deflt);
 }
 
-bool HttpRequest::setParameter( const String& key, const String& val )
+bool HttpRequest::setParameter(const String& key, const String& val)
 {
 	return this->parameters.put(key, val);
 }
@@ -283,7 +283,7 @@ String HttpRequest::getAccept() const
 	return this->geEntity("Accept", "");
 }
 
-void HttpRequest::setAccept( const String& val )
+void HttpRequest::setAccept(const String& val)
 {
 	return this->setEntity("Accept", val);
 }
@@ -293,7 +293,7 @@ String HttpRequest::getAcceptCharset() const
 	return this->geEntity("Accept-Charset", "");
 }
 
-void HttpRequest::setAcceptCharset( const String& val )
+void HttpRequest::setAcceptCharset(const String& val)
 {
 	return this->setEntity("Accept-Charset", val);
 }
@@ -303,7 +303,7 @@ String HttpRequest::getAcceptEncoding() const
 	return this->geEntity("Accept-Encoding", "");
 }
 
-void HttpRequest::setAcceptEncoding( const String& val )
+void HttpRequest::setAcceptEncoding(const String& val)
 {
 	return this->setEntity("Accept-Encoding", val);
 }
@@ -313,12 +313,12 @@ String HttpRequest::getUserAgent() const
 	return this->geEntity("User-Agent", "");
 }
 
-void HttpRequest::setUserAgent( const String& val )
+void HttpRequest::setUserAgent(const String& val)
 {
 	return this->setEntity("User-Agent", val);
 }
 
-void HttpRequest::writeTo( OutputStream& output ) throw(Exception)
+void HttpRequest::writeTo(OutputStream& output) throw(Exception)
 {
 	//such as: "GET /index?paras HTTP/1.1"
 	String url = getUrlWithParas();
@@ -332,12 +332,12 @@ void HttpRequest::writeTo( OutputStream& output ) throw(Exception)
 	writeCrlfTo(output);
 }
 
-void HttpRequest::readFrom( InputStream& input ) throw(Exception)
+void HttpRequest::readFrom(InputStream& input) throw(Exception)
 {
 	throw Exception("not implement");
 }
 
-void HttpRequest::writeCookiesTo( OutputStream& output ) throw(Exception)
+void HttpRequest::writeCookiesTo(OutputStream& output) throw(Exception)
 {
 	const String cookieTag = "Cookie: ";
 
@@ -362,7 +362,7 @@ void HttpRequest::writeCookiesTo( OutputStream& output ) throw(Exception)
 	}
 }
 
-void HttpRequest::readCookiesFrom( InputStream& input ) throw(Exception)
+void HttpRequest::readCookiesFrom(InputStream& input) throw(Exception)
 {
 	throw Exception("not implement");
 }
@@ -518,12 +518,12 @@ String HttpResponse::getServer() const
 	return this->geEntity("Server", "");
 }
 
-void HttpResponse::setServer( const String& val )
+void HttpResponse::setServer(const String& val)
 {
 	return this->setEntity("Server", val);
 }
 
-void HttpResponse::writeTo( OutputStream& output ) throw(Exception)
+void HttpResponse::writeTo(OutputStream& output) throw(Exception)
 {
 	String line = String::format("%s/%s %s", //HTTP/1.0 200 OK
 		name.c_str(), version.c_str(), status2str(status).c_str());
@@ -533,12 +533,12 @@ void HttpResponse::writeTo( OutputStream& output ) throw(Exception)
 	writeCrlfTo(output);
 }
 
-void HttpResponse::readFrom( InputStream& input ) throw(Exception)
+void HttpResponse::readFrom(InputStream& input) throw(Exception)
 {
 	throw Exception("not implement");
 }
 
-void HttpResponse::writeCookiesTo( OutputStream& output ) throw(Exception)
+void HttpResponse::writeCookiesTo(OutputStream& output) throw(Exception)
 {
 	const String cookieTag = "Set-Cookie: ";
 	auto itor = this->cookies.iterator();
@@ -552,7 +552,7 @@ void HttpResponse::writeCookiesTo( OutputStream& output ) throw(Exception)
 	}
 }
 
-void HttpResponse::readCookiesFrom( InputStream& input ) throw(Exception)
+void HttpResponse::readCookiesFrom(InputStream& input) throw(Exception)
 {
 	throw Exception("not implement");
 }

@@ -20,7 +20,7 @@ private:
 
 /////////////////////////////////////////////////////////////////
 //varchar
-template <int SIZE=32>
+template <size_t SIZE=32>
 class varchar : public dbtype
 {
 private:
@@ -29,10 +29,10 @@ private:
 public:
 	varchar(cstring str="") : dbtype(String::format("varchar(%d)", SIZE)) {
 		memset(chars, 0, sizeof(chars));
-		strncpy_s(chars, str, min(SIZE, strlen(str)));
+		strncpy(chars, str, std::min(SIZE, strlen(str)));
 	}
 	varchar& operator=(cstring str) {
-		strncpy_s(chars, str, min(SIZE, strlen(str)));
+		strncpy(chars, str, std::min(SIZE, strlen(str)));
 		return *this;
 	}
 
@@ -46,7 +46,7 @@ public:
 
 /////////////////////////////////////////////////////////////
 // string_caster
-template <typename Type, typename bool>
+template <typename Type, bool>
 struct typename_getter;
 
 template <typename Type>

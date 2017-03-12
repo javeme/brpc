@@ -15,6 +15,7 @@ class RpcException : public blib::Exception
 public:
 	RpcException(void);
 	RpcException(cstring str);
+	RpcException(const blib::Exception& e);
 	virtual ~RpcException(void);
 	String name() const;
 };

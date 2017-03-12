@@ -10,11 +10,11 @@ class P2pRpcConnAcceptor : public RpcConnAcceptor
 {
 public:
 	P2pRpcConnAcceptor(RpcServer* server);
-	virtual ~P2pRpcConnAcceptor(){}
+	virtual ~P2pRpcConnAcceptor();
 public:
 	virtual void run();
-	virtual void stop();
-	virtual void wait();
+	virtual void stop() throw(Exception);
+	virtual void wait() throw(Exception);
 protected:
 	virtual void waitConnection();
 	virtual void addConnection(RpcSocket* rpcSocket);

@@ -13,9 +13,10 @@ public:
 	RpcOnTcpSocket(void);
 	virtual ~RpcOnTcpSocket(void);
 public:
-	virtual void connect(const HashMap<String,String>& paras) throw(RpcException);
-	virtual void acceptWith(Object* server, const HashMap<String,String>& paras) throw(RpcException);
-	virtual void close() throw(RpcException);
+	virtual void connect(const HashMap<String,String>& paras) throw(Exception);
+	virtual void acceptWith(Object* server,
+			const HashMap<String,String>& paras) throw(Exception);
+	virtual void close() throw(Exception);
 public:
 	virtual void startReceiveLoop();
 	virtual void stopReceiveLoop();

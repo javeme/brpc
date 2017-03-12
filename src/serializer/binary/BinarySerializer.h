@@ -42,9 +42,9 @@ public:
 	RpcMethodBinarySerializer();
 public:
 	virtual int write(OutputStream& output, const RpcMethod& method,
-		const String& encoding="");
+		const String& encoding="") throw(SerializeException);
 	virtual int read(RpcMethod& method, const InputStream& input,
-		const String& encoding="");
+		const String& encoding="") throw(SerializeException);
 };
 
 

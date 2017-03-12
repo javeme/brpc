@@ -12,13 +12,17 @@ RpcException::RpcException(cstring str) : blib::Exception(str)
 {
 }
 
+RpcException::RpcException(const blib::Exception& e) : blib::Exception(e)
+{
+}
+
 RpcException::~RpcException(void)
 {
 }
 
 String RpcException::name() const
 {
-	return "RpcExceptions";
+	return "RpcException";
 }
 
 

@@ -13,6 +13,23 @@ namespace brpc{
 class SQLExpression : public PointerReference
 {
 public:
+	SQLExpression() {}
+	virtual ~SQLExpression() {}
+
+	SQLExpression(SQLExpression&& other) {
+		*this = std::move(other);
+	}
+
+	SQLExpression& operator=(SQLExpression&& other) {
+		PointerReference::operator=(std::move(other));
+		return *this;
+	}
+
+private:
+	explicit SQLExpression(const SQLExpression&);
+	SQLExpression&  operator=(const SQLExpression&);
+
+public:
 	virtual String toString() const { return toSQL(); }
 	virtual String toSQL() const = 0;
 
