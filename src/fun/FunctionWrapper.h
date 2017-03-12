@@ -67,8 +67,7 @@ private:
     FuncType* m_fun;
 
 private:
-    struct ArgsCounter{ enum{I_Arg1, I_Arg2, COUNT}; };
-    enum { ARGS_COUNT = ArgsCounter::COUNT};
+    enum ArgsCounter{ I_Arg1, I_Arg2, ARGS_COUNT };
 
 private:
     struct None;
@@ -147,8 +146,7 @@ public:
 private:
     FuncType m_fun;
 private:
-    struct ArgsCounter{ enum{I_C, COUNT}; };
-    enum { ARGS_COUNT = ArgsCounter::COUNT};
+    enum ArgsCounter{ I_C, ARGS_COUNT };
 private:
     struct None;
     template<int INDEX, typename S=void>
@@ -211,17 +209,45 @@ private:
 
 #define JOIN(LEFT, RIGHT)  LEFT##RIGHT
 
-#define TYPENAME_ARG(T)  typename T
+#define TYPENAME(T)  typename T
 
 // index of ArgType
 #define INDEX_NAME(T)  JOIN(I_, T)
-#define ARG_INDEX(T)  ArgsCounter::INDEX_NAME(T)
-
-#define ARG_TYPE(T) \
-    template<typename S> struct argsType<ARG_INDEX(T), S>{ typedef T Type; }
+#define ARG_INDEX(T)  ((int) INDEX_NAME(T)) /*ArgsCounter::INDEX_NAME(T)*/
 
 #define VALUE_OF_ARG(T) \
     methodArg<T>(args[ARG_INDEX(T)])
+// end of VALUE_OF_ARG
+
+#ifdef WIN32
+// msvc supports full member template specialization inside of the class body,
+// we use it and also avoiding vs2010-bug-of-partial-template-specialization:
+// https://www.pcreview.co.uk/threads/vs2010-bug-of-partial-template-specialization.4071879/
+#define DECLARE_PARTIAL_TEMPLATE
+
+#define ARG_TYPE(T) \
+    template<> struct argsType<ARG_INDEX(T)>{ typedef T Type; }
+// end of ARG_TYPE
+
+#define CLS_TYPE(C) \
+    template<> struct argsType<ARG_INDEX(C)>{ typedef C* Type; }
+// end of CLS_TYPE
+
+#else
+
+// must define the full specialization of member templates
+// outside of the class body with gcc
+#define DECLARE_PARTIAL_TEMPLATE , typename S=void
+
+#define ARG_TYPE(T) \
+    template<typename S> struct argsType<ARG_INDEX(T), S>{ typedef T Type; }
+// end of ARG_TYPE
+
+#define CLS_TYPE(C) \
+    template<typename S> struct argsType<ARG_INDEX(C), S>{ typedef C* Type; }
+// end of CLS_TYPE
+
+#endif // end of WIN32
 
 
 //函数指针包装类 宏
@@ -273,13 +299,12 @@ private:                                                                      \
     FuncType m_fun;                                                           \
                                                                               \
 private:                                                                      \
-    struct ArgsCounter{ enum{ARGS_INDEX/*,*/ COUNT}; };                       \
-    enum { ARGS_COUNT = ArgsCounter::COUNT};                                  \
+    enum ArgsCounter{ ARGS_INDEX/*,*/ ARGS_COUNT };                           \
                                                                               \
 private:                                                                      \
     struct None;                                                              \
                                                                               \
-    template<int INDEX, typename S=void>                                      \
+    template<int INDEX DECLARE_PARTIAL_TEMPLATE>                              \
     struct argsType{ typedef None Type; };                                    \
                                                                               \
     ARG_TYPES;                                                                \
@@ -345,6 +370,7 @@ private:                                                                      \
         }                                                                     \
     };                                                                        \
 };                                                                            \
+//end of FUN_OF_ARGS
 
 
 //类成员函数指针包装类 宏
@@ -401,18 +427,15 @@ private:                                                                      \
     FuncType m_fun;                                                           \
                                                                               \
 private:                                                                      \
-    struct ArgsCounter{ enum{ARGS_INDEX/*,*/ COUNT}; };                       \
-    enum { ARGS_COUNT = ArgsCounter::COUNT};                                  \
+    enum ArgsCounter{ ARGS_INDEX/*,*/ ARGS_COUNT };                           \
                                                                               \
 private:                                                                      \
     struct None;                                                              \
                                                                               \
-    template<int INDEX, typename S=void>                                      \
+    template<int INDEX DECLARE_PARTIAL_TEMPLATE>                              \
     struct argsType{ typedef None Type; };                                    \
                                                                               \
-    template<typename S>                                                      \
-    struct argsType<ARG_INDEX(C), S>{ typedef C* Type; };                     \
-                                                                              \
+    CLS_TYPE(C);                                                              \
     ARG_TYPES;                                                                \
                                                                               \
 private:                                                                      \
@@ -476,5 +499,6 @@ private:                                                                      \
         }                                                                     \
     };                                                                        \
 };                                                                            \
+//end of CLS_FUN_OF_ARGS
 
 }//end of namespace brpc
