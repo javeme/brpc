@@ -105,7 +105,7 @@ void RpcOnHttpSocket::receive() throw(Exception)
 	}
 
 	HttpParser parser;
-	ScopePointer<HttpHeader>&& header(parser.parse(lines));
+	ScopePointer<HttpHeader> header = std::move(parser.parse(lines));
 
 	//bad request [in server]
 	bool isRequest = this->isInServer();
