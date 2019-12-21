@@ -35,48 +35,48 @@ public:
 };
 ```
 
-* 2.add class `MyRpcApi` as stub:
+* 2.add class `MyRpcApi` as client stub:
 ```c++
-	class MyRpcApi : public RpcApi
+class MyRpcApi : public RpcApi
+{
+public:
+	MyRpcApi(cstring url, cstring name, cstring password) : 
+		checker(name, password),
+		dispatcher("callback"),
+		client(url, &dispatcher, &checker, "text/json", 1000*10),
+		RpcApi("serviceName4Test")
 	{
-	public:
-		MyRpcApi(cstring url, cstring name, cstring password) : 
-			checker(name, password),
-			dispatcher("callback"),
-			client(url, &dispatcher, &checker, "text/json", 1000*10),
-			RpcApi("serviceName4Test")
-		{
-			ObjectList loginArgs;
-			loginArgs.addValue(name);
-			loginArgs.addValue(password);
-			init(&client, loginArgs);
+		ObjectList loginArgs;
+		loginArgs.addValue(name);
+		loginArgs.addValue(password);
+		init(&client, loginArgs);
+	}
+
+	virtual ~MyRpcApi()
+	{
+		try{
+			logout();
+		}catch (Exception& e) {
+			ErrorHandler::handle(e);
 		}
-		
-		virtual ~MyRpcApi()
-		{
-			try{
-				logout();
-			}catch (Exception& e) {
-				ErrorHandler::handle(e);
-			}
-		}
-		
-	public:
-		std::string hello(const char* who)
-		{
-			ObjectList args;
-			args.addValue(who);
-			return call<std::string>("hello", args);
-		}
-		
-		double sum(int a, double b)
-		{
-			ObjectList args;
-			args.addValue(a);
-			args.addValue(b);
-			return call<double>("sum", args);
-		}
-	};
+	}
+
+public:
+	std::string hello(const char* who)
+	{
+		ObjectList args;
+		args.addValue(who);
+		return call<std::string>("hello", args);
+	}
+
+	double sum(int a, double b)
+	{
+		ObjectList args;
+		args.addValue(a);
+		args.addValue(b);
+		return call<double>("sum", args);
+	}
+};
 ```
 
 * 3.start server:
